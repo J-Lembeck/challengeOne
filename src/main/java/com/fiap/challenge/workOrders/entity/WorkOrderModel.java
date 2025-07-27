@@ -2,23 +2,30 @@ package com.fiap.challenge.workOrders.entity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fiap.challenge.customers.entity.CustomerModel;
+import com.fiap.challenge.parts.entity.WorkOrderPart;
 import com.fiap.challenge.users.entity.UserModel;
 import com.fiap.challenge.vehicles.entity.VehicleModel;
+import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,8 +61,17 @@ public class WorkOrderModel {
     @JoinColumn(name = "assigned_mechanic_id")
     private UserModel assignedMechanic;
 
-    @Column(name = "status", nullable = false, length = 50)
-    private String status;
+    @OneToMany(
+        mappedBy = "workOrder",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    private List<WorkOrderPart> usedParts;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private WorkOrderStatus status;
 
     @Column(name = "total_amount", precision = 10, scale = 2)
     private BigDecimal totalAmount;

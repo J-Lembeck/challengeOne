@@ -1,4 +1,4 @@
-package com.fiap.challenge.parets.entity;
+package com.fiap.challenge.parts.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

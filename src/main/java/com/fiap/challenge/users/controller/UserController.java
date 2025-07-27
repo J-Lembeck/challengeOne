@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fiap.challenge.users.dto.CreateUserRequestDTO;
 import com.fiap.challenge.users.dto.UserResponseDTO;
 import com.fiap.challenge.users.entity.UserModel;
-import com.fiap.challenge.users.usecases.CreateUserUseCase;
+import com.fiap.challenge.users.usecases.create.CreateUserUseCase;
+import com.fiap.challenge.users.usecases.create.CreateUserUseCaseImpl;
 
 import jakarta.validation.Valid;
 
@@ -20,15 +21,12 @@ public class UserController {
 
     private final CreateUserUseCase createUserUseCase;
 
-    public UserController(CreateUserUseCase createUserUseCase) {
+    public UserController(CreateUserUseCaseImpl createUserUseCase) {
         this.createUserUseCase = createUserUseCase;
     }
 
     @PostMapping
     public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid CreateUserRequestDTO requestDTO) {
-        UserModel createdUser = createUserUseCase.execute(requestDTO);
-        UserResponseDTO responseBody = new UserResponseDTO(createdUser);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createUserUseCase.execute(requestDTO));
     }
 }
