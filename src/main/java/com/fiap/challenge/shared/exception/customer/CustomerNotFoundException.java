@@ -13,4 +13,8 @@ public class CustomerNotFoundException extends RuntimeException {
 	public CustomerNotFoundException(UUID id) {
         super("Customer with ID " + id + " not found.");
     }
+
+	public CustomerNotFoundException(String message) {
+		super(message);
+	}
 }
