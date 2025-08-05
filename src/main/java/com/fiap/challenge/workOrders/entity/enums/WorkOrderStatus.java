@@ -6,5 +6,13 @@ public enum WorkOrderStatus {
     AWAITING_APPROVAL,
     IN_PROGRESS,
     COMPLETED,
-    DELIVERED
+    DELIVERED;
+
+    public static WorkOrderStatus fromString(String status) {
+        try {
+            return WorkOrderStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+    }
 }
