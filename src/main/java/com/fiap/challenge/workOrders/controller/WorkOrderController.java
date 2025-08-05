@@ -1,7 +1,7 @@
-package com.fiap.challenge.workorders.controller;
+package com.fiap.challenge.workOrders.controller;
 
-import com.fiap.challenge.workorders.dto.StatusWorkOrderRespondeDTO;
-import com.fiap.challenge.workorders.useCases.update.UpdateStatusWorkOrderUseCase;
+import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
+import com.fiap.challenge.workOrders.useCases.update.UpdateStatusWorkOrderUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
