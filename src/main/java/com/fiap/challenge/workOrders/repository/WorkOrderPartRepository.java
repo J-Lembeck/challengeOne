@@ -1,4 +1,4 @@
-package com.fiap.challenge.workOrders.repoisitory;
+package com.fiap.challenge.workOrders.repository;
 
 import java.util.UUID;
 

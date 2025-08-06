@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fiap.challenge.parts.repository.PartsRepository;
 import com.fiap.challenge.shared.exception.part.PartDeletionException;
 import com.fiap.challenge.shared.exception.part.PartNotFoundException;
-import com.fiap.challenge.workOrders.repoisitory.WorkOrderPartRepository;
+import com.fiap.challenge.workOrders.repository.WorkOrderPartRepository;
 
 import lombok.RequiredArgsConstructor;
 
