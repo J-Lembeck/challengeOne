@@ -2,13 +2,13 @@ package com.fiap.challenge.parts.useCases.delete;
 
 import java.util.UUID;
 
+import com.fiap.challenge.parts.repository.WorkOrderPartRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fiap.challenge.parts.repository.PartsRepository;
 import com.fiap.challenge.shared.exception.part.PartDeletionException;
 import com.fiap.challenge.shared.exception.part.PartNotFoundException;
-import com.fiap.challenge.workOrders.repoisitory.WorkOrderPartRepository;
 
 import lombok.RequiredArgsConstructor;
 

@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import com.fiap.challenge.workOrders.dto.AssignedMechanicResponseDTO;
+import com.fiap.challenge.workOrders.dto.InputAssignMechanicDTO;
+import com.fiap.challenge.workOrders.useCases.update.AssignedMechanicUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,7 @@ public class WorkOrderController {
 
     private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
     private final AceptedOrRefuseWorkOrderUseCase aceptedOrRefuseWorkOrderUseCase;
+    private final AssignedMechanicUseCase assignedMechanicUseCase;
 
     @Operation(
         summary = "Altera o status de uma ordem de serviço",
@@ -40,6 +44,16 @@ public class WorkOrderController {
     @PatchMapping("/{id}/decision")
     public ResponseEntity<StatusWorkOrderRespondeDTO> aceptedOrRefuse(@PathVariable UUID id, @RequestBody boolean decision) {
         return ResponseEntity.ok(aceptedOrRefuseWorkOrderUseCase.execute(id, decision));
+    }
+
+    @Operation(
+            summary = "Vincula um mecânico a uma ordem de serviço",
+            description = "Endpoint para vincular um mecânico a uma ordem de serviço pelo ID da OS e do Mecânico")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Mecânico vinculado com sucesso.") })
+    @PutMapping("/{workOrderId}/assigned-mechanic")
+    public ResponseEntity<AssignedMechanicResponseDTO> assignMechanic(@PathVariable UUID workOrderId, @RequestBody InputAssignMechanicDTO inputAssignMechanicDTO) {
+        return ResponseEntity.ok(assignedMechanicUseCase.execute(workOrderId, inputAssignMechanicDTO));
     }
 
 }
