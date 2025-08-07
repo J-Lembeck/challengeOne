@@ -1,5 +1,8 @@
 package com.fiap.challenge.users.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +22,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Autenticação", description = "Controlador para autenticação de usuários.")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
@@ -28,6 +32,10 @@ public class AuthenticationController {
         this.tokenService = tokenService;
     }
 
+    @Operation(
+        summary = "Realiza o login do usuário",
+        description = "Endpoint para autenticar um usuário e gerar um token JWT.")
+    @ApiResponse(responseCode = "200", description = "Login realizado com sucesso.")
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO data) {
         UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());

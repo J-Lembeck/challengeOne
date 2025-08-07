@@ -2,6 +2,7 @@ package com.fiap.challenge.parts.useCases.delete;
 
 import java.util.UUID;
 
+import com.fiap.challenge.parts.repository.WorkOrderPartRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
