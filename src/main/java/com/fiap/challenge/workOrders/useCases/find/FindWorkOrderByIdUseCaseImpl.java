@@ -2,7 +2,7 @@ package com.fiap.challenge.workOrders.useCases.find;
 
 import com.fiap.challenge.shared.exception.workOrder.WorkOrderNotFoundException;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
-import com.fiap.challenge.workOrders.repoisitory.WorkOrderRepository;
+import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

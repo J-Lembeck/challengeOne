@@ -61,13 +61,8 @@ public class WorkOrderModel {
     @JoinColumn(name = "assigned_mechanic_id")
     private UserModel assignedMechanic;
 
-    @OneToMany(
-            mappedBy = "workOrder",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    private List<WorkOrderPart> usedParts;
+    @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<WorkOrderItem> items;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -86,4 +81,14 @@ public class WorkOrderModel {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
+
+    public void recalculateTotal() {
+        if (items == null || items.isEmpty()) {
+            this.totalAmount = BigDecimal.ZERO;
+        } else {
+            this.totalAmount = items.stream()
+                    .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+    }
 }

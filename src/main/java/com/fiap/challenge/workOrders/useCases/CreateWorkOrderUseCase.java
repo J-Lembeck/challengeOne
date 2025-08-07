@@ -7,8 +7,8 @@ import com.fiap.challenge.parts.repository.PartsRepository;
 import com.fiap.challenge.services.repository.ServiceRepository;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
-import com.fiap.challenge.workOrders.entity.WorkOrder;
 import com.fiap.challenge.workOrders.entity.WorkOrderItem;
+import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -29,7 +29,7 @@ public class CreateWorkOrderUseCase {
     private final PartsRepository partsRepository;
     private final ServiceRepository serviceRepository;
 
-    public WorkOrder execute(WorkOrderDTO dto) {
+    public WorkOrderModel execute(WorkOrderDTO dto) {
 
         var customer = customerRepository.findById(dto.customerId())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
@@ -46,7 +46,7 @@ public class CreateWorkOrderUseCase {
                 : null;
 
         // Cria a OS com status inicial correto
-        WorkOrder workOrder = WorkOrder.builder()
+        WorkOrderModel workOrder = WorkOrderModel.builder()
                 .customer(customer)
                 .vehicle(vehicle)
                 .createdBy(createdBy)
@@ -66,7 +66,7 @@ public class CreateWorkOrderUseCase {
         return workOrderRepository.save(workOrder);
     }
 
-    private WorkOrderItem buildWorkOrderItem(WorkOrderItemDTO dto, WorkOrder workOrder) {
+    private WorkOrderItem buildWorkOrderItem(WorkOrderItemDTO dto, WorkOrderModel workOrder) {
         var part = dto.partId() != null
                 ? partsRepository.findById(dto.partId())
                 .orElseThrow(() -> new EntityNotFoundException("Peça não encontrada"))
