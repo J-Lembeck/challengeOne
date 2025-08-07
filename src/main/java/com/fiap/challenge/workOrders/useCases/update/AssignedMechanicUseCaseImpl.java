@@ -29,7 +29,7 @@ public class AssignedMechanicUseCaseImpl implements AssignedMechanicUseCase{
     public AssignedMechanicResponseDTO execute(UUID workOrderId, InputAssignMechanicDTO inputAssignMechanicDTO) {
         WorkOrderModel workOrderModel = findWorkOrderByIdUseCase.execute(workOrderId);
 
-        if (workOrderModel.getStatus() != WorkOrderStatus.DELIVERED) {
+        if (workOrderModel.getStatus() != WorkOrderStatus.RECEIVED) {
             throw new WorkOrderNotAvailableException((workOrderId));
         }
 
