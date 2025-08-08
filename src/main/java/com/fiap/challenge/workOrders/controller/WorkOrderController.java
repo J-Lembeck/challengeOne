@@ -4,7 +4,7 @@ import java.util.UUID;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
-import com.fiap.challenge.workOrders.entity.WorkOrder;
+import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.useCases.CreateWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.GetWorkOrderByIdUseCase;
 import org.springframework.http.HttpStatus;
@@ -68,7 +68,7 @@ public class WorkOrderController {
   
   @PostMapping
     public ResponseEntity<WorkOrderResponseDTO> createWorkOrder(@RequestBody WorkOrderDTO dto) {
-        WorkOrder created = createWorkOrderUseCase.execute(dto);
+        WorkOrderModel created = createWorkOrderUseCase.execute(dto);
 
         WorkOrderResponseDTO response = new WorkOrderResponseDTO(
                 created.getId(),
@@ -85,9 +85,9 @@ public class WorkOrderController {
 
     @GetMapping("/{id}")
     public ResponseEntity<WorkOrderResponseDTO> getWorkOrderById(@PathVariable UUID id) {
-        var workOrder = getWorkOrderByIdUseCase.execute(id);
+        var workOrderModel = getWorkOrderByIdUseCase.execute(id);
 
-        var items = workOrder.getItems().stream()
+        var items = workOrderModel.getItems().stream()
                 .map(item -> new WorkOrderItemDTO(
                         item.getPart() != null ? item.getPart().getId() : null,
                         item.getService() != null ? item.getService().getId() : null,
@@ -96,12 +96,12 @@ public class WorkOrderController {
                 )).toList();
 
         WorkOrderResponseDTO response = new WorkOrderResponseDTO(
-                workOrder.getId(),
-                workOrder.getCustomer().getId(),
-                workOrder.getVehicle().getId(),
-                workOrder.getCreatedBy().getId(),
-                workOrder.getAssignedMechanic() != null ? workOrder.getAssignedMechanic().getId() : null,
-                workOrder.getTotalAmount(),
+                workOrderModel.getId(),
+                workOrderModel.getCustomer().getId(),
+                workOrderModel.getVehicle().getId(),
+                workOrderModel.getCreatedBy().getId(),
+                workOrderModel.getAssignedMechanic() != null ? workOrderModel.getAssignedMechanic().getId() : null,
+                workOrderModel.getTotalAmount(),
                 items
         );
 

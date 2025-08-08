@@ -3,7 +3,7 @@ package com.fiap.challenge.workOrders.useCases.update;
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
-import com.fiap.challenge.workOrders.repoisitory.WorkOrderRepository;
+import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
