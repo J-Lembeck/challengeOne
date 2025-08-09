@@ -16,6 +16,16 @@
             <column name="created_at" valueComputed="now()"/>
             <column name="updated_at" valueComputed="now()"/>
         </insert>
+        <insert tableName="vehicles">
+            <column name="id" value="40e6215d-b5c6-4896-987c-144a6312a2a6"/>
+            <column name="customer_id" value="50e6215d-b5c6-4896-987c-144a6312a2a4"/>
+            <column name="license_plate" value="DCQ1354"/>
+            <column name="brand" value="Audi"/>
+            <column name="model" value="XPTO"/>
+            <column name="year" value="2018"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>
