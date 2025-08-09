@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-customer-01" author="Sistema">
+        <insert tableName="customers">
+            <column name="id" value="40e6215d-b5c6-4896-987c-144a6312a2a4"/>
+            <column name="name" value="Cliente Teste"/>
+            <column name="cpf_cnpj" value="11153575060"/>
+            <column name="phone" value="11999999999"/>
+            <column name="email" value="clienteTeste@cli.com.br"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+        <insert tableName="customers">
+            <column name="id" value="50e6215d-b5c6-4896-987c-144a6312a2a4"/>
+            <column name="name" value="Cliente Teste Segundo"/>
+            <column name="cpf_cnpj" value="14593090067"/>
+            <column name="phone" value="1163874168"/>
+            <column name="email" value="clienteTeste2@cli.com.br"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
