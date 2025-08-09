@@ -83,7 +83,7 @@ public class CustomerController {
         description = "Endpoint para buscar clientes por uma lista de IDs.")
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso.") })
-    @GetMapping
+    @GetMapping("/findById")
     public ResponseEntity<List<CustomerResponseDTO>> findById(@RequestParam List<UUID> ids) {
         List<CustomerResponseDTO> customer = findCustomersByIdsUseCase.execute(ids);
         return ResponseEntity.ok(customer);
@@ -105,7 +105,7 @@ public class CustomerController {
         description = "Endpoint para buscar um cliente pelo CPF parcial.")
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
-    @GetMapping("/{id}")
+    @GetMapping("/findByCpfCnpjLike/{cpfCnpj}")
     public ResponseEntity<List<CustomerResponseDTO>> findByCpfLike(@PathVariable String cpfCnpj) {
         List<CustomerResponseDTO> customers = findCustomerByCpfCnpjLike.execute(cpfCnpj);
         return ResponseEntity.ok(customers);
@@ -116,7 +116,7 @@ public class CustomerController {
         description = "Endpoint para buscar um cliente pelo CPF.")
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
-    @GetMapping("/{id}")
+    @GetMapping("/findByCpfCnpj/{cpfCnpj}")
     public ResponseEntity<CustomerResponseDTO> findByCpfCnpj(@PathVariable String cpfCnpj) {
         CustomerResponseDTO customer = findCustomerByCpfCnpj.execute(cpfCnpj);
         return ResponseEntity.ok(customer);
