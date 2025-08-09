@@ -1,4 +1,4 @@
 package com.fiap.challenge.vehicles.dto;
 
-public class VehicleResumeDTO {
+public record VehicleResumeDTO (String brand, String model, Integer year) {
 }

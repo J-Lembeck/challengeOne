@@ -1,17 +1,17 @@
-package com.fiap.challenge.customers.mapper;
+package com.fiap.challenge.vehicles.mapper;
 
-import com.fiap.challenge.customers.dto.CustomerResumeDTO;
-import com.fiap.challenge.customers.entity.CustomerModel;
+import com.fiap.challenge.vehicles.dto.VehicleResumeDTO;
+import com.fiap.challenge.vehicles.entity.VehicleModel;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomerMapper {
+public class VehicleMapper {
 
-    public CustomerResumeDTO toCustomerResumeDTO(CustomerModel customer) {
-        return new CustomerResumeDTO(
-                customer.getName(),
-                customer.getCpfCnpj(),
-                customer.getPhone(),
-                customer.getEmail());
+    public VehicleResumeDTO toVehicleResumeDTO(VehicleModel vehicle) {
+        return new VehicleResumeDTO(
+                vehicle.getBrand(),
+                vehicle.getModel(),
+                vehicle.getYear()
+        );
     }
 }

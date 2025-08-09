@@ -1,9 +1,11 @@
 package com.fiap.challenge.workOrders.useCases.find;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.fiap.challenge.workOrders.dto.WorkOrderFilterDTO;
+import com.fiap.challenge.workOrders.dto.WorkOrderResumeDTO;
 
-@Service
-@RequiredArgsConstructor
-public class FindWorkOrdersByFilterUseCaseImpl {
+import java.util.List;
+
+public interface FindWorkOrdersByFilterUseCase {
+
+    List<WorkOrderResumeDTO> execute(WorkOrderFilterDTO filterDTO);
 }

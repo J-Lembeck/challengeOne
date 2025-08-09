@@ -1,14 +1,15 @@
 package com.fiap.challenge.workOrders.controller;
 
+import java.util.List;
 import java.util.UUID;
-import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
-import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
-import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
+
+import com.fiap.challenge.workOrders.dto.*;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
+import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 import com.fiap.challenge.workOrders.useCases.CreateWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.GetWorkOrderByIdUseCase;
+import com.fiap.challenge.workOrders.useCases.find.FindWorkOrdersByFilterUseCase;
 import org.springframework.http.HttpStatus;
-import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.useCases.update.AceptedOrRefuseWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.update.UpdateStatusWorkOrderUseCase;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,8 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import com.fiap.challenge.workOrders.dto.AssignedMechanicResponseDTO;
-import com.fiap.challenge.workOrders.dto.InputAssignMechanicDTO;
 import com.fiap.challenge.workOrders.useCases.update.AssignedMechanicUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +34,7 @@ public class WorkOrderController {
     private final AssignedMechanicUseCase assignedMechanicUseCase;
     private final CreateWorkOrderUseCase createWorkOrderUseCase;
     private final GetWorkOrderByIdUseCase getWorkOrderByIdUseCase;
+    private final FindWorkOrdersByFilterUseCase findWorkOrdersByFilterUseCase;
 
     @Operation(
         summary = "Altera o status de uma ordem de serviço",
@@ -61,9 +61,9 @@ public class WorkOrderController {
             description = "Endpoint para vincular um mecânico a uma ordem de serviço pelo ID da OS e do Mecânico")
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Mecânico vinculado com sucesso.") })
-    @PutMapping("/{workOrderId}/assigned-mechanic")
-    public ResponseEntity<AssignedMechanicResponseDTO> assignMechanic(@PathVariable UUID workOrderId, @RequestBody InputAssignMechanicDTO inputAssignMechanicDTO) {
-        return ResponseEntity.ok(assignedMechanicUseCase.execute(workOrderId, inputAssignMechanicDTO));
+    @PutMapping("/{id}/assign-mechanic")
+    public ResponseEntity<AssignedMechanicResponseDTO> assignMechanic(@PathVariable UUID id, @RequestBody InputAssignMechanicDTO inputAssignMechanicDTO) {
+        return ResponseEntity.ok(assignedMechanicUseCase.execute(id, inputAssignMechanicDTO));
     }
   
   @PostMapping
@@ -104,6 +104,20 @@ public class WorkOrderController {
                 workOrderModel.getTotalAmount(),
                 items
         );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<WorkOrderResumeDTO>> getWorkOrders(
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "dataCriacao") String sortBy,
+            @RequestParam(defaultValue = "DESC") String sortDirection
+    ) {
+        WorkOrderFilterDTO filter = new WorkOrderFilterDTO();
+        filter.setStatus(WorkOrderStatus.fromString(status));
+
+        List<WorkOrderResumeDTO> response = findWorkOrdersByFilterUseCase.execute(filter);
 
         return ResponseEntity.ok(response);
     }
