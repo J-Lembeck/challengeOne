@@ -3,10 +3,6 @@ package com.fiap.challenge.customers.controller;
 import java.util.List;
 import java.util.UUID;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +19,17 @@ import com.fiap.challenge.customers.dto.CreateCustomerRequestDTO;
 import com.fiap.challenge.customers.dto.CustomerResponseDTO;
 import com.fiap.challenge.customers.useCases.create.CreateCustomerUseCase;
 import com.fiap.challenge.customers.useCases.delete.DeleteCustomerUseCase;
+import com.fiap.challenge.customers.useCases.find.FindCustomerByCpfCnpj;
+import com.fiap.challenge.customers.useCases.find.FindCustomerByCpfCnpjLike;
 import com.fiap.challenge.customers.useCases.find.FindCustomerByIdUseCase;
 import com.fiap.challenge.customers.useCases.find.FindCustomersByIdsUseCase;
 import com.fiap.challenge.customers.useCases.update.UpdateCustomerUseCase;
 import com.fiap.challenge.users.dto.UpdateCustomerRequestDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,6 +43,8 @@ public class CustomerController {
     private final FindCustomerByIdUseCase findCustomerByIdUseCase;
     private final FindCustomersByIdsUseCase findCustomersByIdsUseCase;
     private final DeleteCustomerUseCase deleteCustomerUseCase;
+    private final FindCustomerByCpfCnpjLike findCustomerByCpfCnpjLike;
+    private final FindCustomerByCpfCnpj findCustomerByCpfCnpj;
 
     @Operation(
         summary = "Cria um novo cliente",
@@ -94,5 +98,27 @@ public class CustomerController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteCustomerUseCase.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+        summary = "Busca um cliente pelo CPF parcial.",
+        description = "Endpoint para buscar um cliente pelo CPF parcial.")
+    @ApiResponses(
+        value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
+    @GetMapping("/{id}")
+    public ResponseEntity<List<CustomerResponseDTO>> findByCpfLike(@PathVariable String cpfCnpj) {
+        List<CustomerResponseDTO> customers = findCustomerByCpfCnpjLike.execute(cpfCnpj);
+        return ResponseEntity.ok(customers);
+    }
+
+    @Operation(
+        summary = "Busca um cliente pelo CPF.",
+        description = "Endpoint para buscar um cliente pelo CPF.")
+    @ApiResponses(
+        value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> findByCpfCnpj(@PathVariable String cpfCnpj) {
+        CustomerResponseDTO customer = findCustomerByCpfCnpj.execute(cpfCnpj);
+        return ResponseEntity.ok(customer);
     }
 }
