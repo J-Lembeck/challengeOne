@@ -1,28 +1,40 @@
 package com.fiap.challenge.workOrders.controller;
 
+import java.util.List;
 import java.util.UUID;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.fiap.challenge.workOrders.dto.AssignedMechanicResponseDTO;
+import com.fiap.challenge.workOrders.dto.InputAssignMechanicDTO;
+import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
+import com.fiap.challenge.workOrders.history.dto.WorkOrderWithHistoryResponseDTO;
+import com.fiap.challenge.workOrders.history.useCases.get.GetWorkOrderHistoryByCpfUseCase;
 import com.fiap.challenge.workOrders.useCases.CreateWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.GetWorkOrderByIdUseCase;
-import org.springframework.http.HttpStatus;
-import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.useCases.update.AceptedOrRefuseWorkOrderUseCase;
+import com.fiap.challenge.workOrders.useCases.update.AssignedMechanicUseCase;
 import com.fiap.challenge.workOrders.useCases.update.UpdateStatusWorkOrderUseCase;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import com.fiap.challenge.workOrders.dto.AssignedMechanicResponseDTO;
-import com.fiap.challenge.workOrders.dto.InputAssignMechanicDTO;
-import com.fiap.challenge.workOrders.useCases.update.AssignedMechanicUseCase;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/work-orders")
@@ -35,6 +47,7 @@ public class WorkOrderController {
     private final AssignedMechanicUseCase assignedMechanicUseCase;
     private final CreateWorkOrderUseCase createWorkOrderUseCase;
     private final GetWorkOrderByIdUseCase getWorkOrderByIdUseCase;
+    private final GetWorkOrderHistoryByCpfUseCase getWorkOrderHistoryByCpfUseCase;
 
     @Operation(
         summary = "Altera o status de uma ordem de serviço",
@@ -106,5 +119,15 @@ public class WorkOrderController {
         );
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/cpf/{cpf}/latest-work-order-history")
+    public ResponseEntity<List<WorkOrderWithHistoryResponseDTO>> getHistoryByCpf(@PathVariable String cpf) {
+        try {
+        	List<WorkOrderWithHistoryResponseDTO> history = getWorkOrderHistoryByCpfUseCase.execute(cpf);
+            return ResponseEntity.ok(history);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

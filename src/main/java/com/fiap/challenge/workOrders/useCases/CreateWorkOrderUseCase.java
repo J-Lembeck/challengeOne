@@ -1,22 +1,26 @@
 package com.fiap.challenge.workOrders.useCases;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.fiap.challenge.customers.repository.CustomerRepository;
-import com.fiap.challenge.vehicles.repository.VehicleRepository;
-import com.fiap.challenge.users.repository.UserRepository;
 import com.fiap.challenge.parts.repository.PartsRepository;
 import com.fiap.challenge.services.repository.ServiceRepository;
+import com.fiap.challenge.users.repository.UserRepository;
+import com.fiap.challenge.vehicles.repository.VehicleRepository;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderItem;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
+import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderStatusCommand;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
+
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +32,7 @@ public class CreateWorkOrderUseCase {
     private final UserRepository userRepository;
     private final PartsRepository partsRepository;
     private final ServiceRepository serviceRepository;
+    private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
 
     public WorkOrderModel execute(WorkOrderDTO dto) {
 
@@ -62,8 +67,11 @@ public class CreateWorkOrderUseCase {
 
         workOrder.setItems(items);
         workOrder.recalculateTotal(); // Agora a soma é responsabilidade da entidade
+        
+        workOrder = workOrderRepository.save(workOrder);
 
-        return workOrderRepository.save(workOrder);
+        updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), workOrder.getStatus()));
+        return workOrder;
     }
 
     private WorkOrderItem buildWorkOrderItem(WorkOrderItemDTO dto, WorkOrderModel workOrder) {
