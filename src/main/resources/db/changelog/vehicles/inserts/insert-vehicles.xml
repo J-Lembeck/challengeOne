@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-vehicle-01" author="Sistema">
+        <insert tableName="vehicles">
+            <column name="id" value="40e6215d-b5c6-4896-987c-144a6312a2a5"/>
+            <column name="customer_id" value="40e6215d-b5c6-4896-987c-144a6312a2a4"/>
+            <column name="license_plate" value="IBF7027"/>
+            <column name="brand" value="BMW"/>
+            <column name="model" value="XPTO"/>
+            <column name="year" value="2016"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
