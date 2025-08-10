@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="insert-service-01" author="Sistema">
+        <insert tableName="services">
+            <column name="id" value="40e6215d-b5c6-4896-987c-144a6312a2a7"/>
+            <column name="name" value="Troca de Óleo"/>
+            <column name="description" value="Trocar Óleo"/>
+            <column name="base_price" value="150"/>
+            <column name="estimated_time_min" value="50"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+        <insert tableName="services">
+            <column name="id" value="40e6215d-b5c6-4896-987c-144a6312a2a8"/>
+            <column name="name" value="Revisão Geral"/>
+            <column name="description" value="Revisão Geral do Veículo"/>
+            <column name="base_price" value="75"/>
+            <column name="estimated_time_min" value="120"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

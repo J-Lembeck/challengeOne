@@ -8,5 +8,6 @@ public record WorkOrderDTO(
         UUID vehicleId,
         UUID createdById,
         UUID assignedMechanicId,
-        List<WorkOrderItemDTO> items
+        List<WorkOrderPartDTO> parts,
+        List<WorkOrderServiceDTO> services
 ) {}
