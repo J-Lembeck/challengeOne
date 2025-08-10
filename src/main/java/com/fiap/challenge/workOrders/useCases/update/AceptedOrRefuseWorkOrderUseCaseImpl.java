@@ -1,5 +1,6 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
+import com.fiap.challenge.parts.useCases.update.ReturnPartsToStockUseCase;
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
@@ -8,6 +9,7 @@ import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrd
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -17,7 +19,9 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
 
     private final WorkOrderRepository workOrderRepository;
     private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private final ReturnPartsToStockUseCase returnPartsToStockUseCase;
 
+    @Transactional
     @Override
     public StatusWorkOrderRespondeDTO execute(UUID workOrderId, boolean accepted) {
         var workOrder = workOrderRepository.findById(workOrderId)
@@ -25,6 +29,11 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
 
         if (!accepted) {
             workOrder.setStatus(WorkOrderStatus.REFUSED);
+            workOrder.getWorkOrderPartModels().forEach(workOrderPart -> {
+                var partId = workOrderPart.getPart().getId();
+                var quantity = workOrderPart.getQuantity();
+                returnPartsToStockUseCase.execute(partId, quantity);
+            });
         }else {
             workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
         }
