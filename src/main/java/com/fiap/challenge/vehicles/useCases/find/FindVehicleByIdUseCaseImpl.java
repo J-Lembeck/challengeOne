@@ -11,6 +11,7 @@ import com.fiap.challenge.vehicles.entity.VehicleModel;
 import com.fiap.challenge.vehicles.repository.VehicleRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class FindVehicleByIdUseCaseImpl implements FindVehicleByIdUseCase {
     private final VehicleRepository vehicleRepository;
 
     @Override
+    @Transactional
     public VehicleResponseDTO execute(UUID id) {
         return vehicleRepository.findById(id)
                 .map(this::convertToDto)

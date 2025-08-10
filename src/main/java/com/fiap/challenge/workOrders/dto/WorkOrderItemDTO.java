@@ -1,11 +1,8 @@
 package com.fiap.challenge.workOrders.dto;
 
-import java.math.BigDecimal;
-import java.util.UUID;
+import java.util.List;
 
 public record WorkOrderItemDTO(
-        UUID partId,
-        UUID serviceId,
-        Integer quantity,
-        BigDecimal price
+        List<WorkOrderPartDTO> parts,
+        List<WorkOrderServiceDTO> services
 ) {}

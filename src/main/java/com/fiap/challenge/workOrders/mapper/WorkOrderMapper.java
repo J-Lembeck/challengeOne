@@ -13,6 +13,8 @@ public class WorkOrderMapper {
 
     private final CustomerMapper customerMapper;
     private final VehicleMapper vehicleMapper;
+    private final WorkOrderPartMapper workOrderPartMapper;
+    private final WorkOrderServiceMapper workOrderServiceMapper;
 
     public WorkOrderResumeDTO toWorkOrderResumeDTO(WorkOrderModel workOrderModel) {
         return new WorkOrderResumeDTO(
@@ -20,7 +22,11 @@ public class WorkOrderMapper {
                 customerMapper.toCustomerResumeDTO(workOrderModel.getCustomer()),
                 vehicleMapper.toVehicleResumeDTO(workOrderModel.getVehicle()),
                 workOrderModel.getCreatedBy().getName(),
-                workOrderModel.getAssignedMechanic().getName()
+                workOrderModel.getAssignedMechanic() != null ? workOrderModel.getAssignedMechanic().getName() : null,
+                workOrderPartMapper.toWorkOrderPartsDTO(workOrderModel.getWorkOrderPartModels()),
+                workOrderServiceMapper.toWorkOrderServicesDTO(workOrderModel.getWorkOrderServices()),
+                workOrderModel.getTotalAmount(),
+                workOrderModel.getStatus()
         );
     }
 }

@@ -8,6 +8,7 @@ import com.fiap.challenge.workOrders.repository.WorkOrderSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ public class FindWorkOrdersByFilterUseCaseImpl implements FindWorkOrdersByFilter
     private final WorkOrderMapper workOrderMapper;
 
     @Override
+    @Transactional
     public List<WorkOrderResumeDTO> execute(WorkOrderFilterDTO filterDTO) {
         Sort sort = Sort.by(Sort.Direction.fromString(filterDTO.getSortDirection()), filterDTO.getSortBy());
 
@@ -28,8 +30,8 @@ public class FindWorkOrdersByFilterUseCaseImpl implements FindWorkOrdersByFilter
         List<WorkOrderResumeDTO> listWorkOrders = new ArrayList<>();
 
         for (var workOrder : workOrders) {
-            var worOrderResume = workOrderMapper.toWorkOrderResumeDTO(workOrder);
-            listWorkOrders.add(worOrderResume);
+            var workOrderResume = workOrderMapper.toWorkOrderResumeDTO(workOrder);
+            listWorkOrders.add(workOrderResume);
         }
 
         return listWorkOrders;
