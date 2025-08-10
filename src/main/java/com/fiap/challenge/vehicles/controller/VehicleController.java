@@ -64,7 +64,7 @@ public class VehicleController {
         responseCode = "200",
         description = "Veículo atualizado com sucesso.")
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> update(@PathVariable("id") UUID vehicleId, @RequestBody InputVehicleDTO updateVehicleDTO) {
+    public ResponseEntity<VehicleResponseDTO> update(@PathVariable("id") UUID vehicleId, @RequestBody @Valid InputVehicleDTO updateVehicleDTO) {
         return ResponseEntity.ok(updateVehicleUseCase.execute(vehicleId, updateVehicleDTO));
     }
 

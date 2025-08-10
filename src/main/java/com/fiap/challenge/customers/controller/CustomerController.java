@@ -3,10 +3,6 @@ package com.fiap.challenge.customers.controller;
 import java.util.List;
 import java.util.UUID;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,11 +19,18 @@ import com.fiap.challenge.customers.dto.CreateCustomerRequestDTO;
 import com.fiap.challenge.customers.dto.CustomerResponseDTO;
 import com.fiap.challenge.customers.useCases.create.CreateCustomerUseCase;
 import com.fiap.challenge.customers.useCases.delete.DeleteCustomerUseCase;
+import com.fiap.challenge.customers.useCases.find.FindCustomerByCpfCnpj;
+import com.fiap.challenge.customers.useCases.find.FindCustomerByCpfCnpjLike;
 import com.fiap.challenge.customers.useCases.find.FindCustomerByIdUseCase;
 import com.fiap.challenge.customers.useCases.find.FindCustomersByIdsUseCase;
 import com.fiap.challenge.customers.useCases.update.UpdateCustomerUseCase;
 import com.fiap.challenge.users.dto.UpdateCustomerRequestDTO;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -41,6 +44,8 @@ public class CustomerController {
     private final FindCustomerByIdUseCase findCustomerByIdUseCase;
     private final FindCustomersByIdsUseCase findCustomersByIdsUseCase;
     private final DeleteCustomerUseCase deleteCustomerUseCase;
+    private final FindCustomerByCpfCnpjLike findCustomerByCpfCnpjLike;
+    private final FindCustomerByCpfCnpj findCustomerByCpfCnpj;
 
     @Operation(
         summary = "Cria um novo cliente",
@@ -48,7 +53,7 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso.") })
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> create(@RequestBody CreateCustomerRequestDTO requestDTO) {
+    public ResponseEntity<CustomerResponseDTO> create(@RequestBody @Valid CreateCustomerRequestDTO requestDTO) {
     	return ResponseEntity.status(HttpStatus.CREATED).body(createCustomerUseCase.execute(requestDTO));
     }
 
@@ -58,7 +63,7 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso.") })
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> update(@PathVariable UUID id, @RequestBody UpdateCustomerRequestDTO requestDTO) {
+    public ResponseEntity<CustomerResponseDTO> update(@PathVariable UUID id, @RequestBody @Valid UpdateCustomerRequestDTO requestDTO) {
         CustomerResponseDTO updatedCustomer = updateCustomerUseCase.execute(id, requestDTO);
         return ResponseEntity.ok(updatedCustomer);
     }
@@ -79,7 +84,7 @@ public class CustomerController {
         description = "Endpoint para buscar clientes por uma lista de IDs.")
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso.") })
-    @GetMapping
+    @GetMapping("/findById")
     public ResponseEntity<List<CustomerResponseDTO>> findById(@RequestParam List<UUID> ids) {
         List<CustomerResponseDTO> customer = findCustomersByIdsUseCase.execute(ids);
         return ResponseEntity.ok(customer);
@@ -94,5 +99,27 @@ public class CustomerController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteCustomerUseCase.execute(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Operation(
+        summary = "Busca um cliente pelo CPF parcial.",
+        description = "Endpoint para buscar um cliente pelo CPF parcial.")
+    @ApiResponses(
+        value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
+    @GetMapping("/findByCpfCnpjLike/{cpfCnpj}")
+    public ResponseEntity<List<CustomerResponseDTO>> findByCpfLike(@PathVariable String cpfCnpj) {
+        List<CustomerResponseDTO> customers = findCustomerByCpfCnpjLike.execute(cpfCnpj);
+        return ResponseEntity.ok(customers);
+    }
+
+    @Operation(
+        summary = "Busca um cliente pelo CPF.",
+        description = "Endpoint para buscar um cliente pelo CPF.")
+    @ApiResponses(
+        value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
+    @GetMapping("/findByCpfCnpj/{cpfCnpj}")
+    public ResponseEntity<CustomerResponseDTO> findByCpfCnpj(@PathVariable String cpfCnpj) {
+        CustomerResponseDTO customer = findCustomerByCpfCnpj.execute(cpfCnpj);
+        return ResponseEntity.ok(customer);
     }
 }
