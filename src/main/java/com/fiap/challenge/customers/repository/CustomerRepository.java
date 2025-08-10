@@ -15,14 +15,14 @@ import com.fiap.challenge.customers.entity.CustomerModel;
 public interface CustomerRepository extends JpaRepository<CustomerModel, UUID> {
 
     public boolean existsByCpfCnpj(String cpfCnpj);
-   
+
     public Optional<CustomerModel> findByCpfCnpj(String cpfCnpj);
 
     public Optional<CustomerModel> findByCpfCnpjAndIdNot(String cpfCnpj, UUID id);
 
-    @Query("SELECT c FROM Customer c WHERE c.cpfCnpj LIKE %:cpfCnpj% " +
+    @Query(value = "SELECT c FROM Customer c WHERE c.cpfCnpj LIKE %:cpfCnpj% " +
             "ORDER BY " +
             "  CASE WHEN c.cpfCnpj LIKE :cpfCnpj% THEN 0 ELSE 1 END, " +
-            "  c.cpfCnpj ASC")
+            "  c.cpfCnpj ASC", nativeQuery = true)
      public List<CustomerModel> findByCpfCnpjContainingWithCustomSort(@Param("cpfCnpj") String cpfCnpj);
 }

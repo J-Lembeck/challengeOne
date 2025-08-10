@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fiap.challenge.customers.entity.CustomerModel;
-import com.fiap.challenge.parts.entity.WorkOrderPart;
 import com.fiap.challenge.users.entity.UserModel;
 import com.fiap.challenge.vehicles.entity.VehicleModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
@@ -62,7 +61,10 @@ public class WorkOrderModel {
     private UserModel assignedMechanic;
 
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<WorkOrderItem> items;
+    List<WorkOrderPartModel> workOrderPartModels;
+
+    @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    List<WorkOrderServiceModel> workOrderServices;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -83,12 +85,21 @@ public class WorkOrderModel {
     private OffsetDateTime updatedAt;
 
     public void recalculateTotal() {
-        if (items == null || items.isEmpty()) {
-            this.totalAmount = BigDecimal.ZERO;
-        } else {
-            this.totalAmount = items.stream()
-                    .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+        BigDecimal totalParts = BigDecimal.ZERO;
+        BigDecimal totalServices = BigDecimal.ZERO;
+
+        if (workOrderPartModels != null && !workOrderPartModels.isEmpty()) {
+            totalParts = workOrderPartModels.stream()
+                    .map(part -> part.getUnitPrice().multiply(BigDecimal.valueOf(part.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
         }
+
+        if (workOrderServices != null && !workOrderServices.isEmpty()) {
+            totalServices = workOrderServices.stream()
+                    .map(WorkOrderServiceModel::getAppliedPrice)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+
+        this.totalAmount = totalParts.add(totalServices);
     }
 }

@@ -14,6 +14,7 @@ import com.fiap.challenge.vehicles.entity.VehicleModel;
 import com.fiap.challenge.vehicles.repository.VehicleRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +24,7 @@ public class UpdateVehicleUseCaseImpl implements UpdateVehicleUseCase {
     private final CustomerRepository customerRepository;
 
     @Override
+    @Transactional
     public VehicleResponseDTO execute(UUID vehicleId, InputVehicleDTO dto) {
         var vehicleToUpdate = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new VehicleNotFoundException(vehicleId));

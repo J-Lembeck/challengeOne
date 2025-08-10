@@ -11,5 +11,6 @@ public record WorkOrderResponseDTO(
         UUID createdById,
         UUID assignedMechanicId,
         BigDecimal totalAmount,
-        List<WorkOrderItemDTO> items
+        List<WorkOrderPartDTO> parts,
+        List<WorkOrderServiceDTO> services
 ) {}
