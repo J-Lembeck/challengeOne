@@ -135,9 +135,7 @@ public class WorkOrderController {
     ) {
         WorkOrderFilterDTO filter = new WorkOrderFilterDTO();
 
-        System.out.println("aqui");
         if (status != null) filter.setStatus(WorkOrderStatus.fromString(status));
-        System.out.println("aquiagr");
 
         List<WorkOrderResumeDTO> response = findWorkOrdersByFilterUseCase.execute(filter);
 

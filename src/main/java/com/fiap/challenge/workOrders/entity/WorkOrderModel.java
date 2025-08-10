@@ -89,23 +89,15 @@ public class WorkOrderModel {
         BigDecimal totalServices = BigDecimal.ZERO;
 
         if (workOrderPartModels != null && !workOrderPartModels.isEmpty()) {
-            System.out.println("aqui");
-            System.out.println(workOrderPartModels.get(0).getUnitPrice());
             totalParts = workOrderPartModels.stream()
                     .map(part -> part.getUnitPrice().multiply(BigDecimal.valueOf(part.getQuantity())))
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            System.out.println("aqui 1");
-            System.out.println(totalParts);
         }
 
         if (workOrderServices != null && !workOrderServices.isEmpty()) {
-            System.out.println("aqui 2");
-            System.out.println(workOrderServices.get(0).getAppliedPrice());
             totalServices = workOrderServices.stream()
                     .map(WorkOrderServiceModel::getAppliedPrice)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
-            System.out.println("aqui 1");
-            System.out.println(totalServices);
         }
 
         this.totalAmount = totalParts.add(totalServices);
