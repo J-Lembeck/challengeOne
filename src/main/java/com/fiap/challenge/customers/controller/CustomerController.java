@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -52,7 +53,7 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso.") })
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> create(@RequestBody CreateCustomerRequestDTO requestDTO) {
+    public ResponseEntity<CustomerResponseDTO> create(@RequestBody @Valid CreateCustomerRequestDTO requestDTO) {
     	return ResponseEntity.status(HttpStatus.CREATED).body(createCustomerUseCase.execute(requestDTO));
     }
 
@@ -62,7 +63,7 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso.") })
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> update(@PathVariable UUID id, @RequestBody UpdateCustomerRequestDTO requestDTO) {
+    public ResponseEntity<CustomerResponseDTO> update(@PathVariable UUID id, @RequestBody @Valid UpdateCustomerRequestDTO requestDTO) {
         CustomerResponseDTO updatedCustomer = updateCustomerUseCase.execute(id, requestDTO);
         return ResponseEntity.ok(updatedCustomer);
     }
