@@ -29,6 +29,7 @@ public class UpdatePartUseCaseImpl implements UpdatePartUseCase {
         partToUpdate.setDescription(partRequest.description());
         partToUpdate.setPrice(partRequest.price());
         partToUpdate.setStockQuantity(partRequest.stockQuantity());
+        partToUpdate.setReservedStock(partRequest.reservedStock());
         partToUpdate.setMinimumStock(partRequest.minimumStock());
 
         PartModel updatedPart = partRepository.save(partToUpdate);
