@@ -21,7 +21,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="reserved_stock" type="INT" defaultValueNumeric="0">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="minimum_stock" type="INT" defaultValueNumeric="0">
                 <constraints nullable="false"/>

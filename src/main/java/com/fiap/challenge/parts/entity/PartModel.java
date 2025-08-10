@@ -37,7 +37,7 @@ public class PartModel {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    @Column(name = "reserved_stock", nullable = false)
+    @Column(name = "reserved_stock")
     private Integer reservedStock;
 
     @Column(name = "minimum_stock", nullable = false)
