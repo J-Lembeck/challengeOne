@@ -1,5 +1,6 @@
 package com.fiap.challenge.workOrders.useCases.create;
 
+import com.fiap.challenge.parts.useCases.update.SubtractPartsFromStockUseCase;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.repository.CustomerRepository;
@@ -27,6 +28,7 @@ public class CreateWorkOrderUseCase {
     private final CreateWorkOrderPartUseCase createWorkOrderPartUseCase;
     private final CreateWorkOrderServiceUseCase createWorkOrderServiceUseCase;
     private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private final SubtractPartsFromStockUseCase subtractPartsFromStockUseCase;
 
     @Transactional
     public WorkOrderModel execute(WorkOrderDTO dto) {
@@ -55,6 +57,10 @@ public class CreateWorkOrderUseCase {
                 .build();
 
         createWorkOrderPartUseCase.execute(workOrder, dto.parts());
+        dto.parts().forEach(part -> {
+            if(!subtractPartsFromStockUseCase.execute(part.partId(), part.quantity()))
+                throw new IllegalArgumentException("Estoque insuficiente para a peça com ID: " + part.partId());
+        });
         createWorkOrderServiceUseCase.execute(workOrder, dto.services());
 
         if (workOrder.getWorkOrderServices().isEmpty() && workOrder.getWorkOrderPartModels().isEmpty())
