@@ -74,7 +74,7 @@ public class CreateUserUseCaseImplTest {
 
         when(userRepository.save(any(UserModel.class))).thenReturn(savedUser);
 
-        UserResponseDTO response = createUserUseCase.execute(dto);
+        UserResponseDTO response = createUserUseCase.execute(dto).getData();
 
         assertNotNull(response);
         assertEquals(savedUser.getId(), response.id());

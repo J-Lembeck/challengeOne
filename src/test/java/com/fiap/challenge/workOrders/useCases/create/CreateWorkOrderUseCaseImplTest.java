@@ -9,6 +9,7 @@ import com.fiap.challenge.vehicles.entity.VehicleModel;
 import com.fiap.challenge.vehicles.repository.VehicleRepository;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderPartDTO;
+import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderServiceDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.WorkOrderPartModel;
@@ -140,12 +141,11 @@ public class CreateWorkOrderUseCaseImplTest {
                 List.of(serviceDTO)
         );
 
-        WorkOrderModel result = createWorkOrderUseCase.execute(dto);
+        WorkOrderResponseDTO result = createWorkOrderUseCase.execute(dto).getData();
 
         assertNotNull(result);
-        assertEquals(WorkOrderStatus.RECEIVED, result.getStatus());
-        assertFalse(result.getWorkOrderPartModels().isEmpty());
-        assertFalse(result.getWorkOrderServices().isEmpty());
+        assertFalse(result.parts().isEmpty());
+        assertFalse(result.services().isEmpty());
     }
 
     @Test

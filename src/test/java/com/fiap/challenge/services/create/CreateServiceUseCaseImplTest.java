@@ -61,7 +61,7 @@ public class CreateServiceUseCaseImplTest {
         when(serviceRepository.save(any(ServiceModel.class))).thenReturn(savedServiceModel);
 
         // Act
-        ServiceResponseDTO response = useCase.execute(inputDTO);
+        ServiceResponseDTO response = useCase.execute(inputDTO).getData();
 
         // Assert
         assertNotNull(response);

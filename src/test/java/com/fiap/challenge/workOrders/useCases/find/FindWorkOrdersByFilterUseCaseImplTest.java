@@ -52,7 +52,7 @@ public class FindWorkOrdersByFilterUseCaseImplTest {
         when(workOrderMapper.toWorkOrderResumeDTO(mockWorkOrder)).thenReturn(mockResumeDTO);
 
         // Act
-        List<WorkOrderResumeDTO> result = useCase.execute(filterDTO);
+        List<WorkOrderResumeDTO> result = useCase.execute(filterDTO).getData();
 
         // Assert
         assertNotNull(result);

@@ -66,7 +66,7 @@ public class UpdateServiceUseCaseImplTest {
         when(serviceRepository.save(any(ServiceModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        ServiceResponseDTO response = useCase.execute(serviceId, inputDTO);
+        ServiceResponseDTO response = useCase.execute(serviceId, inputDTO).getData();
 
         // Assert
         assertNotNull(response);

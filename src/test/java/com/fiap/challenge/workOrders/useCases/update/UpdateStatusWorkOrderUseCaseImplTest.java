@@ -52,7 +52,7 @@ class UpdateStatusWorkOrderUseCaseImplTest {
         when(workOrderRepository.save(any(WorkOrderModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        StatusWorkOrderRespondeDTO response = useCase.execute(workOrderId, "COMPLETED");
+        StatusWorkOrderRespondeDTO response = useCase.execute(workOrderId, "COMPLETED").getData();
 
         // Assert
         assertNotNull(response);

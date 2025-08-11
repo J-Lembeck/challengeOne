@@ -71,7 +71,7 @@ public class FindServicesByIdsUseCaseImplTest {
         when(serviceRepository.findAllById(ids)).thenReturn(Arrays.asList(serviceModel1, serviceModel2));
 
         // Act
-        List<ServiceResponseDTO> responses = useCase.execute(ids);
+        List<ServiceResponseDTO> responses = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(responses);

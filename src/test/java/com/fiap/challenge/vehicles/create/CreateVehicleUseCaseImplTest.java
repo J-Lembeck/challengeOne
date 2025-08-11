@@ -77,7 +77,7 @@ public class CreateVehicleUseCaseImplTest {
         when(vehicleRepository.save(any(VehicleModel.class))).thenReturn(savedVehicle);
 
         // Act
-        VehicleResponseDTO response = useCase.execute(inputDTO);
+        VehicleResponseDTO response = useCase.execute(inputDTO).getData();
 
         // Assert
         assertNotNull(response);

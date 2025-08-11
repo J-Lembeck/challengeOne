@@ -69,7 +69,7 @@ public class UpdateWorkOrderItemsUseCaseImplTest {
     @Test
     void shouldUpdateWorkOrderItemsSuccessfully() {
         // Act
-        WorkOrderResumeDTO result = useCase.execute(workOrderId, workOrderItemDTO);
+        WorkOrderResumeDTO result = useCase.execute(workOrderId, workOrderItemDTO).getData();
 
         // Assert
         verify(findWorkOrderByIdUseCase).execute(workOrderId);
