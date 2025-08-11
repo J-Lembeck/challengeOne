@@ -17,6 +17,8 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 @Service
 @RequiredArgsConstructor
 public class CreateWorkOrderUseCase {
@@ -53,6 +55,8 @@ public class CreateWorkOrderUseCase {
                 .vehicle(vehicle)
                 .createdBy(createdBy)
                 .assignedMechanic(mechanic)
+                .workOrderServices(new ArrayList<>())
+                .workOrderPartModels(new ArrayList<>())
                 .status(WorkOrderStatus.RECEIVED) // Corrigido: status válido
                 .build();
 
