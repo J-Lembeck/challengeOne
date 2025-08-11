@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CustomerInfo;
@@ -20,10 +22,12 @@ public class FindVehiclesByIdsUseCaseImpl implements FindVehiclesByIdsUseCase {
     private final VehicleRepository vehicleRepository;
 
     @Override
-    public List<VehicleResponseDTO> execute(List<UUID> ids) {
-        return vehicleRepository.findAllById(ids).stream()
+    public ResponseApi<List<VehicleResponseDTO>> execute(List<UUID> ids) {
+        ResponseApi<List<VehicleResponseDTO>> responseApi = new ResponseApi<>();
+        return responseApi.of(HttpStatus.OK, "Veículos encontrados com sucesso!",
+                vehicleRepository.findAllById(ids).stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList());
     }
 
     private VehicleResponseDTO convertToDto(VehicleModel model) {

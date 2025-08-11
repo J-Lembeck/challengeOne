@@ -4,7 +4,8 @@ import java.util.UUID;
 
 import com.fiap.challenge.parts.dto.PartResponseDTO;
 import com.fiap.challenge.parts.dto.UpdatePartRequestDTO;
+import com.fiap.challenge.shared.model.ResponseApi;
 
 public interface UpdatePartUseCase {
-    PartResponseDTO execute(UUID id, UpdatePartRequestDTO partRequest);
+    ResponseApi<PartResponseDTO> execute(UUID id, UpdatePartRequestDTO partRequest);
 }	

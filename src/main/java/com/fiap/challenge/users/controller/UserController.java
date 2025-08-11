@@ -1,9 +1,9 @@
 package com.fiap.challenge.users.controller;
 
+import com.fiap.challenge.shared.model.ResponseApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,7 +35,8 @@ public class UserController {
         responseCode = "201",
         description = "Usuário criado com sucesso.")
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@RequestBody @Valid CreateUserRequestDTO requestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(createUserUseCase.execute(requestDTO));
+    public ResponseEntity<ResponseApi<UserResponseDTO>> createUser(@RequestBody @Valid CreateUserRequestDTO requestDTO) {
+        ResponseApi<UserResponseDTO> responseApi = createUserUseCase.execute(requestDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 }

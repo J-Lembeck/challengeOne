@@ -1,8 +1,9 @@
 package com.fiap.challenge.vehicles.useCases.find.byClientCpf;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CustomerInfo;
@@ -22,15 +23,17 @@ public class FindVehiclesByCustomerDocumentUseCaseImpl implements FindVehiclesBy
     private final CustomerRepository customerRepository;
 
     @Override
-    public List<VehicleResponseDTO> execute(String cpfCnpj) {
+    public ResponseApi<List<VehicleResponseDTO>> execute(String cpfCnpj) {
+        ResponseApi<List<VehicleResponseDTO>> responseApi = new ResponseApi<>();
         if (!customerRepository.existsByCpfCnpj(cpfCnpj)) {
             throw new CustomerNotFoundException("No client found with CPF/CNPJ: " + cpfCnpj);
         }
 
-        return vehicleRepository.findByCustomerCpfCnpj(cpfCnpj)
+        return responseApi.of(HttpStatus.OK, "Vehicles found successfully!",
+                vehicleRepository.findByCustomerCpfCnpj(cpfCnpj)
                 .stream()
                 .map(this::convertToDto)
-                .collect(Collectors.toList());
+                .toList());
     }
 
     private VehicleResponseDTO convertToDto(VehicleModel model) {

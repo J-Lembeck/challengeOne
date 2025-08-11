@@ -2,6 +2,8 @@ package com.fiap.challenge.customers.useCases.delete;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,7 +22,8 @@ public class DeleteCustomerUseCaseImpl implements DeleteCustomerUseCase {
 
     @Override
     @Transactional
-    public void execute(UUID id) {
+    public ResponseApi<Void> execute(UUID id) {
+        ResponseApi<Void> responseApi = new ResponseApi<>();
         CustomerModel customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
 
@@ -29,5 +32,6 @@ public class DeleteCustomerUseCaseImpl implements DeleteCustomerUseCase {
         }
 
         customerRepository.delete(customer);
+        return responseApi.of(HttpStatus.NO_CONTENT, "Cliente deletado com sucesso");
     }
 }

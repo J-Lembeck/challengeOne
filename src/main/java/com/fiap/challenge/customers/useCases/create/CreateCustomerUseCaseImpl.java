@@ -2,6 +2,8 @@ package com.fiap.challenge.customers.useCases.create;
 
 import java.util.ArrayList;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CreateCustomerRequestDTO;
@@ -21,7 +23,8 @@ public class CreateCustomerUseCaseImpl implements CreateCustomerUseCase {
 
     @Override
     @Transactional
-    public CustomerResponseDTO execute(CreateCustomerRequestDTO request) {
+    public ResponseApi<CustomerResponseDTO> execute(CreateCustomerRequestDTO request) {
+        ResponseApi<CustomerResponseDTO> responseApi = new ResponseApi<>();
         if (customerRepository.existsByCpfCnpj(request.cpfCnpj())) {
             throw new CustomerAlreadyExistsException("Customer with this CPF/CNPJ already exists.");
         }
@@ -37,14 +40,15 @@ public class CreateCustomerUseCaseImpl implements CreateCustomerUseCase {
 
         CustomerModel savedCustomer = customerRepository.save(newCustomer);
 
-        return new CustomerResponseDTO(
-            savedCustomer.getId(),
-            savedCustomer.getName(),
-            savedCustomer.getCpfCnpj(),
-            savedCustomer.getPhone(),
-            savedCustomer.getEmail(),
-            savedCustomer.getCreatedAt(),
-            savedCustomer.getUpdatedAt()
-        );
+        return responseApi.of(HttpStatus.CREATED, "Customer created successfully",
+            new CustomerResponseDTO(
+                    savedCustomer.getId(),
+                    savedCustomer.getName(),
+                    savedCustomer.getCpfCnpj(),
+                    savedCustomer.getPhone(),
+                    savedCustomer.getEmail(),
+                    savedCustomer.getCreatedAt(),
+                    savedCustomer.getUpdatedAt()
+            ));
     }
 }

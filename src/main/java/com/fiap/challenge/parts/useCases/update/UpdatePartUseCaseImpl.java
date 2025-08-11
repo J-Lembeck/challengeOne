@@ -2,6 +2,8 @@ package com.fiap.challenge.parts.useCases.update;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.parts.dto.PartResponseDTO;
@@ -21,7 +23,8 @@ public class UpdatePartUseCaseImpl implements UpdatePartUseCase {
 
     @Override
     @Transactional
-    public PartResponseDTO execute(UUID id, UpdatePartRequestDTO partRequest) {
+    public ResponseApi<PartResponseDTO> execute(UUID id, UpdatePartRequestDTO partRequest) {
+        ResponseApi<PartResponseDTO> response = new ResponseApi<>();
         PartModel partToUpdate = partRepository.findById(id)
                 .orElseThrow(() -> new PartNotFoundException(id));
 
@@ -34,7 +37,8 @@ public class UpdatePartUseCaseImpl implements UpdatePartUseCase {
 
         PartModel updatedPart = partRepository.save(partToUpdate);
 
-        return new PartResponseDTO(
+        return response.of(HttpStatus.OK, "Peça atualizada com sucesso",
+                new PartResponseDTO(
             updatedPart.getId(),
             updatedPart.getName(),
             updatedPart.getDescription(),
@@ -44,6 +48,6 @@ public class UpdatePartUseCaseImpl implements UpdatePartUseCase {
             updatedPart.getMinimumStock(),
             updatedPart.getCreatedAt(),
             updatedPart.getUpdatedAt()
-        );
+        ));
     }
 }

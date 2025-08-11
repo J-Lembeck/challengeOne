@@ -2,6 +2,8 @@ package com.fiap.challenge.services.useCases.find;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.services.dto.ServiceResponseDTO;
@@ -17,11 +19,13 @@ public class FindServiceByIdUseCaseImpl implements FindServiceByIdUseCase {
     private final ServiceRepository serviceRepository;
 
     @Override
-    public ServiceResponseDTO execute(UUID id) {
+    public ResponseApi<ServiceResponseDTO> execute(UUID id) {
+        ResponseApi<ServiceResponseDTO> responseApi = new ResponseApi<>();
         var serviceModel = this.serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
 
-        return new ServiceResponseDTO(
+        return responseApi.of(HttpStatus.OK, "Serviço encontrado com sucesso",
+                new ServiceResponseDTO(
                 serviceModel.getId(),
                 serviceModel.getName(),
                 serviceModel.getDescription(),
@@ -29,6 +33,6 @@ public class FindServiceByIdUseCaseImpl implements FindServiceByIdUseCase {
                 serviceModel.getEstimatedTimeMin(),
                 serviceModel.getCreatedAt(),
                 serviceModel.getUpdatedAt()
-        );
+        ));
     }
 }

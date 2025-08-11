@@ -3,10 +3,10 @@ package com.fiap.challenge.vehicles.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,8 +53,9 @@ public class VehicleController {
         responseCode = "201",
         description = "Veículo criado com sucesso.")
     @PostMapping
-    public ResponseEntity<VehicleResponseDTO> create(@Valid @RequestBody InputVehicleDTO createVehicleDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(createVehicleUseCase.execute(createVehicleDTO));
+    public ResponseEntity<ResponseApi<VehicleResponseDTO>> create(@Valid @RequestBody InputVehicleDTO createVehicleDTO) {
+        ResponseApi<VehicleResponseDTO> responseApi = createVehicleUseCase.execute(createVehicleDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -64,8 +65,9 @@ public class VehicleController {
         responseCode = "200",
         description = "Veículo atualizado com sucesso.")
     @PutMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> update(@PathVariable("id") UUID vehicleId, @RequestBody @Valid InputVehicleDTO updateVehicleDTO) {
-        return ResponseEntity.ok(updateVehicleUseCase.execute(vehicleId, updateVehicleDTO));
+    public ResponseEntity<ResponseApi<VehicleResponseDTO>> update(@PathVariable("id") UUID vehicleId, @RequestBody @Valid InputVehicleDTO updateVehicleDTO) {
+        ResponseApi<VehicleResponseDTO> responseApi = updateVehicleUseCase.execute(vehicleId, updateVehicleDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -75,8 +77,9 @@ public class VehicleController {
         responseCode = "200",
         description = "Veículo encontrado com sucesso.")
     @GetMapping("/{id}")
-    public ResponseEntity<VehicleResponseDTO> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(findVehicleByIdUseCase.execute(id));
+    public ResponseEntity<ResponseApi<VehicleResponseDTO>> findById(@PathVariable UUID id) {
+        ResponseApi<VehicleResponseDTO> responseApi = findVehicleByIdUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -86,8 +89,9 @@ public class VehicleController {
         responseCode = "200",
         description = "Veículos encontrados com sucesso.")
     @GetMapping
-    public ResponseEntity<List<VehicleResponseDTO>> findByIds(@RequestParam("ids") List<UUID> ids) {
-        return ResponseEntity.ok(findVehiclesByIdsUseCase.execute(ids));
+    public ResponseEntity<ResponseApi<List<VehicleResponseDTO>>> findByIds(@RequestParam("ids") List<UUID> ids) {
+        ResponseApi<List<VehicleResponseDTO>> responseApi = findVehiclesByIdsUseCase.execute(ids);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -97,8 +101,9 @@ public class VehicleController {
         responseCode = "200",
         description = "Veículo encontrado com sucesso.")
     @GetMapping("/by-plate")
-    public ResponseEntity<VehicleResponseDTO> findByPlate(@RequestParam("plate") String plate) {
-        return ResponseEntity.ok(findVehicleByPlateUseCase.execute(plate));
+    public ResponseEntity<ResponseApi<VehicleResponseDTO>> findByPlate(@RequestParam("plate") String plate) {
+        ResponseApi<VehicleResponseDTO> responseApi = findVehicleByPlateUseCase.execute(plate);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -108,8 +113,9 @@ public class VehicleController {
         responseCode = "200",
         description = "Veículos encontrados com sucesso.")
     @GetMapping("/by-customer-document")
-    public ResponseEntity<List<VehicleResponseDTO>> findByCustomerDocument(@RequestParam("cpfCnpj") String cpfCnpj) {
-        return ResponseEntity.ok(findVehiclesByCustomerDocumentUseCase.execute(cpfCnpj));
+    public ResponseEntity<ResponseApi<List<VehicleResponseDTO>>> findByCustomerDocument(@RequestParam("cpfCnpj") String cpfCnpj) {
+        ResponseApi<List<VehicleResponseDTO>> responseApi = findVehiclesByCustomerDocumentUseCase.execute(cpfCnpj);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -119,8 +125,8 @@ public class VehicleController {
         responseCode = "204",
         description = "Veículo deletado com sucesso.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        deleteVehicleUseCase.execute(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseApi<Void>> delete(@PathVariable UUID id) {
+        ResponseApi<Void> responseApi = deleteVehicleUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 }

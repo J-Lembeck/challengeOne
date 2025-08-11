@@ -1,7 +1,9 @@
 package com.fiap.challenge.parts.useCases.delete;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+
 import java.util.UUID;
 
 public interface DeletePartUseCase {
-    void execute(UUID id);
+    ResponseApi<Void> execute(UUID id);
 }
