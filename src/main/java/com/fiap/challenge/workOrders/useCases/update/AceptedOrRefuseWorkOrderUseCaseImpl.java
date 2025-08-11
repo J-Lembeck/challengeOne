@@ -1,6 +1,7 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
 import com.fiap.challenge.parts.useCases.update.ReturnPartsToStockUseCase;
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
@@ -8,6 +9,7 @@ import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderStatusCommand;
 import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,8 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
 
     @Transactional
     @Override
-    public StatusWorkOrderRespondeDTO execute(UUID workOrderId, boolean accepted) {
+    public ResponseApi<StatusWorkOrderRespondeDTO> execute(UUID workOrderId, boolean accepted) {
+        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = new ResponseApi<>();
         var workOrder = workOrderRepository.findById(workOrderId)
                 .orElseThrow(() -> new IllegalArgumentException("Work order not found with id: " + workOrderId));
 
@@ -41,9 +44,9 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
 
         updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), workOrderModel.getStatus()));
 
-        return new StatusWorkOrderRespondeDTO(
+        return responseApi.of(HttpStatus.OK, "Work order status updated successfully!",
+                new StatusWorkOrderRespondeDTO(
             workOrderModel.getId(),
-            workOrderModel.getStatus()
-        );
+            workOrderModel.getStatus()));
     }
 }

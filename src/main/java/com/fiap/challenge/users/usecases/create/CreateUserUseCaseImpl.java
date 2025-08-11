@@ -1,5 +1,7 @@
 package com.fiap.challenge.users.usecases.create;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,8 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDTO execute(CreateUserRequestDTO requestDTO) {
+    public ResponseApi<UserResponseDTO> execute(CreateUserRequestDTO requestDTO) {
+        ResponseApi<UserResponseDTO> responseApi = new ResponseApi<>();
         userRepository.findByEmail(requestDTO.email()).ifPresent(user -> {
             throw new UserAlreadyExistsException("O e-mail " + requestDTO.email() + " já está em uso.");
         });
@@ -34,6 +37,6 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
 
         UserModel savedUser = userRepository.save(newUser);
 
-        return new UserResponseDTO(savedUser);
+        return responseApi.of(HttpStatus.CREATED, "Usuário criado com sucesso!", new UserResponseDTO(savedUser));
     }
 }

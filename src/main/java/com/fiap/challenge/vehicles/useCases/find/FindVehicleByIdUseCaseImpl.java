@@ -2,6 +2,8 @@ package com.fiap.challenge.vehicles.useCases.find;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CustomerInfo;
@@ -21,10 +23,13 @@ public class FindVehicleByIdUseCaseImpl implements FindVehicleByIdUseCase {
 
     @Override
     @Transactional
-    public VehicleResponseDTO execute(UUID id) {
-        return vehicleRepository.findById(id)
+    public ResponseApi<VehicleResponseDTO> execute(UUID id) {
+        ResponseApi<VehicleResponseDTO> responseApi = new ResponseApi<>();
+
+        return responseApi.of(HttpStatus.OK,"Veículo encontrado com sucesso!",
+                vehicleRepository.findById(id)
                 .map(this::convertToDto)
-                .orElseThrow(() -> new VehicleNotFoundException(id));
+                .orElseThrow(() -> new VehicleNotFoundException(id)));
     }
 
     private VehicleResponseDTO convertToDto(VehicleModel model) {

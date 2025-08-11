@@ -1,5 +1,7 @@
 package com.fiap.challenge.vehicles.useCases.create;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CustomerInfo;
@@ -20,7 +22,8 @@ public class CreateVehicleUseCaseImpl implements CreateVehicleUseCase {
     private final CustomerRepository customerRepository;
 
     @Override
-    public VehicleResponseDTO execute(InputVehicleDTO dto) {
+    public ResponseApi<VehicleResponseDTO> execute(InputVehicleDTO dto) {
+        ResponseApi<VehicleResponseDTO> responseApi = new ResponseApi<>();
         var customer = customerRepository.findById(dto.customerId())
                 .orElseThrow(() -> new CustomerNotFoundException(dto.customerId()));
 
@@ -34,7 +37,7 @@ public class CreateVehicleUseCaseImpl implements CreateVehicleUseCase {
 
         var savedVehicle = vehicleRepository.save(vehicle);
 
-        return convertToDto(savedVehicle);
+        return responseApi.of(HttpStatus.CREATED, "Veículo criado com sucesso!", convertToDto(savedVehicle));
     }
 
     private VehicleResponseDTO convertToDto(VehicleModel model) {

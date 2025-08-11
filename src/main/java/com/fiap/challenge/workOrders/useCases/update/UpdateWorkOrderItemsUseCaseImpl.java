@@ -1,5 +1,6 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderResumeDTO;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
@@ -8,6 +9,7 @@ import com.fiap.challenge.workOrders.useCases.create.CreateWorkOrderPartUseCase;
 import com.fiap.challenge.workOrders.useCases.create.CreateWorkOrderServiceUseCase;
 import com.fiap.challenge.workOrders.useCases.find.FindWorkOrderByIdUseCase;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,8 @@ public class UpdateWorkOrderItemsUseCaseImpl implements  UpdateWorkOrderItemsUse
 
     @Override
     @Transactional
-    public WorkOrderResumeDTO execute(UUID id, WorkOrderItemDTO workOrderItemDTO) {
+    public ResponseApi<WorkOrderResumeDTO> execute(UUID id, WorkOrderItemDTO workOrderItemDTO) {
+        ResponseApi<WorkOrderResumeDTO> responseApi = new ResponseApi<>();
 
         var workOrder = findWorkOrderByIdUseCase.execute(id);
 
@@ -38,6 +41,6 @@ public class UpdateWorkOrderItemsUseCaseImpl implements  UpdateWorkOrderItemsUse
 
         updateWorkOrderUseCase.execute(workOrder);
 
-        return workOrderMapper.toWorkOrderResumeDTO(workOrder);
+        return responseApi.of(HttpStatus.OK, "Ordem de serviço atualizada com sucesso!", workOrderMapper.toWorkOrderResumeDTO(workOrder));
     }
 }

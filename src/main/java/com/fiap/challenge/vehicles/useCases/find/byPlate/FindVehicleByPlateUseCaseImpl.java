@@ -1,5 +1,7 @@
 package com.fiap.challenge.vehicles.useCases.find.byPlate;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CustomerInfo;
@@ -17,10 +19,12 @@ public class FindVehicleByPlateUseCaseImpl implements FindVehicleByPlateUseCase 
     private final VehicleRepository vehicleRepository;
 
     @Override
-    public VehicleResponseDTO execute(String plate) {
-        return vehicleRepository.findByLicensePlateIgnoreCase(plate)
+    public ResponseApi<VehicleResponseDTO> execute(String plate) {
+        ResponseApi<VehicleResponseDTO> responseApi = new ResponseApi<>();
+        return responseApi.of(HttpStatus.OK, "Vehicle found successfully!",
+                vehicleRepository.findByLicensePlateIgnoreCase(plate)
                 .map(this::convertToDto)
-                .orElseThrow(() -> new VehicleNotFoundException("Vehicle with plate " + plate + " not found."));
+                .orElseThrow(() -> new VehicleNotFoundException("Vehicle with plate " + plate + " not found.")));
     }
 
     private VehicleResponseDTO convertToDto(VehicleModel model) {

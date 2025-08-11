@@ -1,6 +1,9 @@
 package com.fiap.challenge.workOrders.useCases.create;
 
 import com.fiap.challenge.parts.useCases.update.SubtractPartsFromStockUseCase;
+import com.fiap.challenge.shared.model.ResponseApi;
+import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.repository.CustomerRepository;
@@ -33,7 +36,8 @@ public class CreateWorkOrderUseCase {
     private final SubtractPartsFromStockUseCase subtractPartsFromStockUseCase;
 
     @Transactional
-    public WorkOrderModel execute(WorkOrderDTO dto) {
+    public ResponseApi<WorkOrderResponseDTO> execute(WorkOrderDTO dto) {
+        ResponseApi<WorkOrderResponseDTO> responseApi = new ResponseApi<>();
 
         var customer = customerRepository.findById(dto.customerId())
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
@@ -75,6 +79,17 @@ public class CreateWorkOrderUseCase {
         workOrder = workOrderRepository.save(workOrder);
 
         updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), workOrder.getStatus()));
-        return workOrder;
+
+        WorkOrderResponseDTO workOrderResponseDTO = new WorkOrderResponseDTO(
+                workOrder.getId(),
+                workOrder.getCustomer().getId(),
+                workOrder.getVehicle().getId(),
+                workOrder.getCreatedBy().getId(),
+                workOrder.getAssignedMechanic() != null ? workOrder.getAssignedMechanic().getId() : null,
+                workOrder.getTotalAmount(),
+                dto.parts(),
+                dto.services()
+        );
+        return responseApi.of(HttpStatus.CREATED, "Ordem de serviço criada com sucesso!", workOrderResponseDTO);
     }
 }
