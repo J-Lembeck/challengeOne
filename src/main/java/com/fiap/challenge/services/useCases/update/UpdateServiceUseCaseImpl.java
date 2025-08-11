@@ -2,6 +2,8 @@ package com.fiap.challenge.services.useCases.update;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.services.dto.InputServiceDTO;
@@ -18,7 +20,8 @@ public class UpdateServiceUseCaseImpl implements UpdateServiceUseCase {
     private final ServiceRepository serviceRepository;
 
     @Override
-    public ServiceResponseDTO execute(UUID id, InputServiceDTO updateServiceDTO) {
+    public ResponseApi<ServiceResponseDTO> execute(UUID id, InputServiceDTO updateServiceDTO) {
+        ResponseApi<ServiceResponseDTO> responseApi = new ResponseApi<>();
         var serviceModel = this.serviceRepository.findById(id)
                 .orElseThrow(() -> new ServiceNotFoundException(id));
 
@@ -29,7 +32,8 @@ public class UpdateServiceUseCaseImpl implements UpdateServiceUseCase {
 
         var updatedService = this.serviceRepository.save(serviceModel);
 
-        return new ServiceResponseDTO(
+        return responseApi.of(HttpStatus.OK, "Serviço atualizado com sucesso",
+                new ServiceResponseDTO(
                 updatedService.getId(),
                 updatedService.getName(),
                 updatedService.getDescription(),
@@ -37,6 +41,6 @@ public class UpdateServiceUseCaseImpl implements UpdateServiceUseCase {
                 updatedService.getEstimatedTimeMin(),
                 updatedService.getCreatedAt(),
                 updatedService.getUpdatedAt()
-        );
+        ));
     }
 }

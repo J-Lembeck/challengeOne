@@ -22,7 +22,7 @@ public class ReturnPartsToStockUseCaseImpl implements ReturnPartsToStockUseCase 
     @Override
     public boolean execute(UUID partId, int quantity) {
         var status = false;
-        var part = findPartByIdUseCase.execute(partId);
+        var part = findPartByIdUseCase.execute(partId).getData();
         if (Objects.isNull(part)) throw new EntityNotFoundException("Part not found with ID: " + partId);
         if (part.reservedStock() >= quantity) {
             updatePartUseCase.execute(partId, addStockAndSubtractReservedStock(part, quantity));

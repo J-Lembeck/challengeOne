@@ -1,13 +1,14 @@
 package com.fiap.challenge.workOrders.useCases.find;
 
 import com.fiap.challenge.shared.exception.workOrder.WorkOrderNotFoundException;
-import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.mapper.WorkOrderPartMapper;
 import com.fiap.challenge.workOrders.mapper.WorkOrderServiceMapper;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +30,8 @@ public class FindWorkOrderByIdUseCaseImpl implements FindWorkOrderByIdUseCase {
 
     @Override
     @Transactional
-    public WorkOrderResponseDTO executeToDTO(UUID id) {
+    public ResponseApi<WorkOrderResponseDTO> executeToDTO(UUID id) {
+        ResponseApi<WorkOrderResponseDTO> responseApi = new ResponseApi<>();
         var workOrderModel = this.execute(id);
         var workOrderPartsDTO = workOrderModel.getWorkOrderPartModels().stream()
                 .map(workOrderPartMapper::toWorkOrderPartDTO).toList();
@@ -37,7 +39,8 @@ public class FindWorkOrderByIdUseCaseImpl implements FindWorkOrderByIdUseCase {
         var workOrderServicesDTO = workOrderModel.getWorkOrderServices().stream()
                 .map(workOrderServiceMapper::toWorkOrderServiceDTO).toList();
 
-        return new WorkOrderResponseDTO(
+        return responseApi.of(HttpStatus.OK, "Ordem de serviço encontrada com sucesso!",
+                new WorkOrderResponseDTO(
                 workOrderModel.getId(),
                 workOrderModel.getCustomer().getId(),
                 workOrderModel.getVehicle().getId(),
@@ -46,7 +49,7 @@ public class FindWorkOrderByIdUseCaseImpl implements FindWorkOrderByIdUseCase {
                 workOrderModel.getTotalAmount(),
                 workOrderPartsDTO,
                 workOrderServicesDTO
-        );
+        ));
     }
 
 

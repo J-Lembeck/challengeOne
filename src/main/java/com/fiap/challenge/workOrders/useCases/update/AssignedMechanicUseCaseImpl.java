@@ -1,6 +1,7 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
 import com.fiap.challenge.shared.exception.workOrder.WorkOrderNotAvailableException;
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.users.entity.UserModel;
 import com.fiap.challenge.users.usecases.find.FindUserByIdUseCase;
 import com.fiap.challenge.workOrders.dto.AssignedMechanicResponseDTO;
@@ -8,6 +9,7 @@ import com.fiap.challenge.workOrders.dto.InputAssignMechanicDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 import com.fiap.challenge.workOrders.useCases.find.FindWorkOrderByIdUseCase;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -26,7 +28,8 @@ public class AssignedMechanicUseCaseImpl implements AssignedMechanicUseCase{
     }
 
     @Override
-    public AssignedMechanicResponseDTO execute(UUID workOrderId, InputAssignMechanicDTO inputAssignMechanicDTO) {
+    public ResponseApi<AssignedMechanicResponseDTO> execute(UUID workOrderId, InputAssignMechanicDTO inputAssignMechanicDTO) {
+        ResponseApi<AssignedMechanicResponseDTO> responseApi = new ResponseApi<>();
         WorkOrderModel workOrderModel = findWorkOrderByIdUseCase.execute(workOrderId);
 
         if (workOrderModel.getStatus() != WorkOrderStatus.RECEIVED) {
@@ -39,6 +42,7 @@ public class AssignedMechanicUseCaseImpl implements AssignedMechanicUseCase{
         workOrderModel.setStatus(WorkOrderStatus.IN_DIAGNOSIS);
         updateWorkOrderUseCase.execute(workOrderModel);
 
-        return new AssignedMechanicResponseDTO(true);
+        return responseApi.of(HttpStatus.OK, "Mecânico atribuído com sucesso!",
+                new AssignedMechanicResponseDTO(true));
     }
 }

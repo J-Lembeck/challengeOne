@@ -3,6 +3,8 @@ package com.fiap.challenge.workOrders.history.useCases.get;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.entity.CustomerModel;
@@ -25,19 +27,22 @@ public class GetWorkOrderHistoryByCpfUseCaseImpl implements GetWorkOrderHistoryB
     private final WorkOrderRepository workOrderRepository;
     private final WorkOrderHistoryRepository workOrderHistoryRepository;
 
-    public List<WorkOrderWithHistoryResponseDTO> execute(String cpfCnpj) {
+    public ResponseApi<List<WorkOrderWithHistoryResponseDTO>> execute(String cpfCnpj) {
+        ResponseApi<List<WorkOrderWithHistoryResponseDTO>> responseApi = new ResponseApi<>();
         CustomerModel customer = customerRepository.findByCpfCnpj(cpfCnpj)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com o CPF: " + cpfCnpj));
 
         List<WorkOrderModel> workOrders = workOrderRepository.findByCustomerOrderByCreatedAtDesc(customer);
 
         if (workOrders.isEmpty()) {
-            return new ArrayList<>();
+            return responseApi.of(HttpStatus.NOT_FOUND, "Nenhuma ordem de serviço encontrada para o CPF: " + cpfCnpj,
+                    new ArrayList<>());
         }
 
-        return workOrders.stream()
+        return responseApi.of(HttpStatus.OK, "Ordens de serviço encontradas com sucesso!",
+                workOrders.stream()
                 .map(this::createWorkOrderResponseDTO)
-                .toList();
+                .toList());
     }
 
     private WorkOrderWithHistoryResponseDTO createWorkOrderResponseDTO(WorkOrderModel workOrder) {

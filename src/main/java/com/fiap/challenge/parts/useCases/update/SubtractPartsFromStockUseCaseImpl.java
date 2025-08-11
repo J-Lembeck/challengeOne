@@ -21,7 +21,7 @@ public class SubtractPartsFromStockUseCaseImpl implements SubtractPartsFromStock
 
     @Override
     public boolean execute(UUID partId, int quantity) {
-        var part = findPartByIdUseCase.execute(partId);
+        var part = findPartByIdUseCase.execute(partId).getData();
         if(Objects.isNull(part)) throw new EntityNotFoundException("Part not found with ID: " + partId);
         if (part.stockQuantity() >= quantity) {
             updatePartUseCase.execute(partId, subtractStockAndAddResevedStock(part, quantity));

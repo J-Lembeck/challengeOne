@@ -2,6 +2,8 @@ package com.fiap.challenge.vehicles.useCases.delete;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.shared.exception.vehicle.VehicleNotFoundException;
@@ -16,11 +18,13 @@ public class DeleteVehicleUseCaseImpl implements DeleteVehicleUseCase {
     private final VehicleRepository vehicleRepository;
 
     @Override
-    public void execute(UUID id) {
+    public ResponseApi<Void> execute(UUID id) {
+        ResponseApi<Void> responseApi = new ResponseApi<>();
         if (!vehicleRepository.existsById(id)) {
             throw new VehicleNotFoundException(id);
         }
 
         vehicleRepository.deleteById(id);
+        return responseApi.of(HttpStatus.NO_CONTENT, "Veículo deletado com sucesso!");
     }
 }

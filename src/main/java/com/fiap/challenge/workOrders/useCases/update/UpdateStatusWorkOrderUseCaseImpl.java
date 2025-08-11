@@ -2,6 +2,8 @@ package com.fiap.challenge.workOrders.useCases.update;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
@@ -21,7 +23,8 @@ public class UpdateStatusWorkOrderUseCaseImpl implements UpdateStatusWorkOrderUs
     private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
 
     @Override
-    public StatusWorkOrderRespondeDTO execute(UUID id, String status) {
+    public ResponseApi<StatusWorkOrderRespondeDTO> execute(UUID id, String status) {
+        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = new ResponseApi<>();
         var workOrder = workOrderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Work order not found with id: " + id));
 
@@ -35,6 +38,7 @@ public class UpdateStatusWorkOrderUseCaseImpl implements UpdateStatusWorkOrderUs
 
         updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), updatedWorkOrder.getStatus()));
 
-        return new StatusWorkOrderRespondeDTO(updatedWorkOrder.getId(), updatedWorkOrder.getStatus());
+        return responseApi.of(HttpStatus.OK, "Work order status updated successfully!",
+                new StatusWorkOrderRespondeDTO(updatedWorkOrder.getId(), updatedWorkOrder.getStatus()));
     }
 }

@@ -2,6 +2,8 @@ package com.fiap.challenge.customers.useCases.update;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +24,8 @@ public class UpdateCustomerUseCaseImpl implements UpdateCustomerUseCase {
 
     @Override
     @Transactional
-    public CustomerResponseDTO execute(UUID id, UpdateCustomerRequestDTO request) {
+    public ResponseApi<CustomerResponseDTO> execute(UUID id, UpdateCustomerRequestDTO request) {
+        ResponseApi<CustomerResponseDTO> responseApi = new ResponseApi<>();
         CustomerModel customerToUpdate = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException(id));
 
@@ -40,7 +43,8 @@ public class UpdateCustomerUseCaseImpl implements UpdateCustomerUseCase {
 
         CustomerModel updatedCustomer = customerRepository.save(customerToUpdate);
 
-        return new CustomerResponseDTO(
+        return responseApi.of(HttpStatus.CREATED, "Customer updated successfully",
+                new CustomerResponseDTO(
             updatedCustomer.getId(),
             updatedCustomer.getName(),
             updatedCustomer.getCpfCnpj(),
@@ -48,6 +52,6 @@ public class UpdateCustomerUseCaseImpl implements UpdateCustomerUseCase {
             updatedCustomer.getEmail(),
             updatedCustomer.getCreatedAt(),
             updatedCustomer.getUpdatedAt()
-        );
+        ));
     }
 }

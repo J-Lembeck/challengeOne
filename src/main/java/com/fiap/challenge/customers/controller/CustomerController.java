@@ -3,7 +3,7 @@ package com.fiap.challenge.customers.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
+import com.fiap.challenge.shared.model.ResponseApi;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,8 +53,9 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso.") })
     @PostMapping
-    public ResponseEntity<CustomerResponseDTO> create(@RequestBody @Valid CreateCustomerRequestDTO requestDTO) {
-    	return ResponseEntity.status(HttpStatus.CREATED).body(createCustomerUseCase.execute(requestDTO));
+    public ResponseEntity<ResponseApi<CustomerResponseDTO>> create(@RequestBody @Valid CreateCustomerRequestDTO requestDTO) {
+        ResponseApi<CustomerResponseDTO> responseApi = createCustomerUseCase.execute(requestDTO);
+    	return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -63,9 +64,9 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso.") })
     @PutMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> update(@PathVariable UUID id, @RequestBody @Valid UpdateCustomerRequestDTO requestDTO) {
-        CustomerResponseDTO updatedCustomer = updateCustomerUseCase.execute(id, requestDTO);
-        return ResponseEntity.ok(updatedCustomer);
+    public ResponseEntity<ResponseApi<CustomerResponseDTO>> update(@PathVariable UUID id, @RequestBody @Valid UpdateCustomerRequestDTO requestDTO) {
+        ResponseApi<CustomerResponseDTO> responseApi = updateCustomerUseCase.execute(id, requestDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -74,9 +75,9 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> findById(@PathVariable UUID id) {
-        CustomerResponseDTO customer = findCustomerByIdUseCase.execute(id);
-        return ResponseEntity.ok(customer);
+    public ResponseEntity<ResponseApi<CustomerResponseDTO>> findById(@PathVariable UUID id) {
+        ResponseApi<CustomerResponseDTO> responseApi = findCustomerByIdUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -85,9 +86,9 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Clientes encontrados com sucesso.") })
     @GetMapping("/findById")
-    public ResponseEntity<List<CustomerResponseDTO>> findById(@RequestParam List<UUID> ids) {
-        List<CustomerResponseDTO> customer = findCustomersByIdsUseCase.execute(ids);
-        return ResponseEntity.ok(customer);
+    public ResponseEntity<ResponseApi<List<CustomerResponseDTO>>> findById(@RequestParam List<UUID> ids) {
+        ResponseApi<List<CustomerResponseDTO>> responseApi = findCustomersByIdsUseCase.execute(ids);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -96,9 +97,9 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "204", description = "Cliente deletado com sucesso.") })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        deleteCustomerUseCase.execute(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseApi<Void>> delete(@PathVariable UUID id) {
+        ResponseApi<Void> responseApi = deleteCustomerUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -107,9 +108,9 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
     @GetMapping("/findByCpfCnpjLike/{cpfCnpj}")
-    public ResponseEntity<List<CustomerResponseDTO>> findByCpfLike(@PathVariable String cpfCnpj) {
-        List<CustomerResponseDTO> customers = findCustomerByCpfCnpjLike.execute(cpfCnpj);
-        return ResponseEntity.ok(customers);
+    public ResponseEntity<ResponseApi<List<CustomerResponseDTO>>> findByCpfLike(@PathVariable String cpfCnpj) {
+        ResponseApi<List<CustomerResponseDTO>> responseApi = findCustomerByCpfCnpjLike.execute(cpfCnpj);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -118,8 +119,8 @@ public class CustomerController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
     @GetMapping("/findByCpfCnpj/{cpfCnpj}")
-    public ResponseEntity<CustomerResponseDTO> findByCpfCnpj(@PathVariable String cpfCnpj) {
-        CustomerResponseDTO customer = findCustomerByCpfCnpj.execute(cpfCnpj);
-        return ResponseEntity.ok(customer);
+    public ResponseEntity<ResponseApi<CustomerResponseDTO>> findByCpfCnpj(@PathVariable String cpfCnpj) {
+        ResponseApi<CustomerResponseDTO> responseApi = findCustomerByCpfCnpj.execute(cpfCnpj);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 }

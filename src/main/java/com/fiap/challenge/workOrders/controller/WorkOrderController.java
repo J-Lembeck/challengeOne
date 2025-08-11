@@ -3,9 +3,9 @@ package com.fiap.challenge.workOrders.controller;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.*;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,7 +21,6 @@ import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderResponseDTO;
-import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 import com.fiap.challenge.workOrders.useCases.create.CreateWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.find.FindWorkOrderByIdUseCase;
@@ -37,7 +36,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,8 +61,9 @@ public class WorkOrderController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Status alterado com sucesso.") })
     @PatchMapping("/{id}/status")
-    public ResponseEntity<StatusWorkOrderRespondeDTO> updateStatus(@PathVariable UUID id, @RequestBody String status) {
-        return ResponseEntity.ok(updateStatusWorkOrderUseCase.execute(id, status));
+    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> updateStatus(@PathVariable UUID id, @RequestBody String status) {
+        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = updateStatusWorkOrderUseCase.execute(id, status);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -73,8 +72,9 @@ public class WorkOrderController {
     @ApiResponses(
         value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço aceita ou recusada com sucesso.") })
     @PatchMapping("/{id}/decision")
-    public ResponseEntity<StatusWorkOrderRespondeDTO> aceptedOrRefuse(@PathVariable UUID id, @RequestBody boolean decision) {
-        return ResponseEntity.ok(aceptedOrRefuseWorkOrderUseCase.execute(id, decision));
+    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> aceptedOrRefuse(@PathVariable UUID id, @RequestBody boolean decision) {
+        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = aceptedOrRefuseWorkOrderUseCase.execute(id, decision);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -83,8 +83,9 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Mecânico vinculado com sucesso.") })
     @PatchMapping("/{id}/assign-mechanic")
-    public ResponseEntity<AssignedMechanicResponseDTO> assignMechanic(@PathVariable UUID id, @RequestBody InputAssignMechanicDTO inputAssignMechanicDTO) {
-        return ResponseEntity.ok(assignedMechanicUseCase.execute(id, inputAssignMechanicDTO));
+    public ResponseEntity<ResponseApi<AssignedMechanicResponseDTO>> assignMechanic(@PathVariable UUID id, @RequestBody InputAssignMechanicDTO inputAssignMechanicDTO) {
+        ResponseApi<AssignedMechanicResponseDTO> responseApi = assignedMechanicUseCase.execute(id, inputAssignMechanicDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -93,21 +94,10 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "201", description = "Ordem de serviço criada com sucesso.") })
   @PostMapping
-    public ResponseEntity<WorkOrderResponseDTO> createWorkOrder(@RequestBody WorkOrderDTO dto) {
-        WorkOrderModel created = createWorkOrderUseCase.execute(dto);
+    public ResponseEntity<ResponseApi<WorkOrderResponseDTO>> createWorkOrder(@RequestBody WorkOrderDTO dto) {
+        ResponseApi<WorkOrderResponseDTO> responseApi = createWorkOrderUseCase.execute(dto);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
 
-        WorkOrderResponseDTO response = new WorkOrderResponseDTO(
-                created.getId(),
-                created.getCustomer().getId(),
-                created.getVehicle().getId(),
-                created.getCreatedBy().getId(),
-                created.getAssignedMechanic() != null ? created.getAssignedMechanic().getId() : null,
-                created.getTotalAmount(),
-                dto.parts(),
-                dto.services()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
@@ -116,10 +106,10 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço encontrada com sucesso.") })
     @GetMapping("/{id}")
-    public ResponseEntity<WorkOrderResponseDTO> getWorkOrderById(@PathVariable UUID id) {
-        var workOrderDTO = findWorkOrderByIdUseCase.executeToDTO(id);
+    public ResponseEntity<ResponseApi<WorkOrderResponseDTO>> getWorkOrderById(@PathVariable UUID id) {
+        ResponseApi<WorkOrderResponseDTO> responseApi = findWorkOrderByIdUseCase.executeToDTO(id);
 
-        return ResponseEntity.ok(workOrderDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -128,7 +118,7 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Ordens de Serviço retornadas com sucesso.") })
     @GetMapping("/list")
-    public ResponseEntity<List<WorkOrderResumeDTO>> getWorkOrders(
+    public ResponseEntity<ResponseApi<List<WorkOrderResumeDTO>>> getWorkOrders(
             @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "DESC") String sortDirection
@@ -137,9 +127,9 @@ public class WorkOrderController {
 
         if (status != null) filter.setStatus(WorkOrderStatus.fromString(status));
 
-        List<WorkOrderResumeDTO> response = findWorkOrdersByFilterUseCase.execute(filter);
+        ResponseApi<List<WorkOrderResumeDTO>> responseApi = findWorkOrdersByFilterUseCase.execute(filter);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @Operation(
@@ -148,23 +138,14 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Itens adicionados com sucesso.") })
     @PatchMapping("/{id}/update-items")
-    public ResponseEntity<WorkOrderResumeDTO> updateItems(
-            @PathVariable UUID id,
-            @RequestBody WorkOrderItemDTO workOrderItemDTO
-    ) {
-
-        WorkOrderResumeDTO response = updateWorkOrderItemsUseCase.execute(id, workOrderItemDTO);
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResponseApi<WorkOrderResumeDTO>> updateItems(@PathVariable UUID id, @RequestBody WorkOrderItemDTO workOrderItemDTO) {
+        ResponseApi<WorkOrderResumeDTO> responseApi = updateWorkOrderItemsUseCase.execute(id, workOrderItemDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
     @GetMapping("/cpf/{cpf}/latest-work-order-history")
-    public ResponseEntity<List<WorkOrderWithHistoryResponseDTO>> getHistoryByCpf(@PathVariable String cpf) {
-        try {
-        	List<WorkOrderWithHistoryResponseDTO> history = getWorkOrderHistoryByCpfUseCase.execute(cpf);
-            return ResponseEntity.ok(history);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<ResponseApi<List<WorkOrderWithHistoryResponseDTO>>> getHistoryByCpf(@PathVariable String cpf) {
+        ResponseApi<List<WorkOrderWithHistoryResponseDTO>> responseApi = getWorkOrderHistoryByCpfUseCase.execute(cpf);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 }
