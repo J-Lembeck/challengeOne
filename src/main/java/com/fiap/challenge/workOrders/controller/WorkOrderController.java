@@ -143,6 +143,11 @@ public class WorkOrderController {
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+            summary = "Busca o histórico de ordens de serviço por CPF",
+            description = "Endpoint para buscar o histórico de ordens de serviço pelo CPF do cliente")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Histórico de ordens de serviço encontrado com sucesso.") })
     @GetMapping("/cpf/{cpf}/latest-work-order-history")
     public ResponseEntity<ResponseApi<List<WorkOrderWithHistoryResponseDTO>>> getHistoryByCpf(@PathVariable String cpf) {
         ResponseApi<List<WorkOrderWithHistoryResponseDTO>> responseApi = getWorkOrderHistoryByCpfUseCase.execute(cpf);
