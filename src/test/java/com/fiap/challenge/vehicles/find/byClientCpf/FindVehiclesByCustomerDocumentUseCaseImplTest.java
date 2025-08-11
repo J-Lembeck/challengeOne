@@ -71,7 +71,7 @@ public class FindVehiclesByCustomerDocumentUseCaseImplTest {
         when(vehicleRepository.findByCustomerCpfCnpj(cpfCnpj)).thenReturn(List.of(vehicle));
 
         // Act
-        List<VehicleResponseDTO> result = useCase.execute(cpfCnpj);
+        List<VehicleResponseDTO> result = useCase.execute(cpfCnpj).getData();
 
         // Assert
         assertNotNull(result);

@@ -57,7 +57,7 @@ public class FindServiceByIdUseCaseImplTest {
         when(serviceRepository.findById(serviceId)).thenReturn(Optional.of(existingServiceModel));
 
         // Act
-        ServiceResponseDTO response = useCase.execute(serviceId);
+        ServiceResponseDTO response = useCase.execute(serviceId).getData();
 
         // Assert
         assertNotNull(response);

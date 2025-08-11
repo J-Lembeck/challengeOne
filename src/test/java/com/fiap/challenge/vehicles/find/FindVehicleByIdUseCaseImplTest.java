@@ -65,7 +65,7 @@ public class FindVehicleByIdUseCaseImplTest {
         when(vehicleRepository.findById(vehicleId)).thenReturn(Optional.of(vehicle));
 
         // Act
-        VehicleResponseDTO response = useCase.execute(vehicleId);
+        VehicleResponseDTO response = useCase.execute(vehicleId).getData();
 
         // Assert
         assertNotNull(response);

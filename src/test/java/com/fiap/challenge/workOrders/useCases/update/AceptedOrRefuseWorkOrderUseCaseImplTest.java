@@ -69,7 +69,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
         when(workOrderRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        StatusWorkOrderRespondeDTO result = useCase.execute(workOrderId, true);
+        StatusWorkOrderRespondeDTO result = useCase.execute(workOrderId, true).getData();
 
         // Assert
         assertEquals(workOrderId, result.id());
@@ -89,7 +89,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
         when(workOrderRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Act
-        StatusWorkOrderRespondeDTO result = useCase.execute(workOrderId, false);
+        StatusWorkOrderRespondeDTO result = useCase.execute(workOrderId, false).getData();
 
         // Assert
         assertEquals(workOrderId, result.id());

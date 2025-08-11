@@ -66,7 +66,7 @@ public class FindVehicleByPlateUseCaseImplTest {
         when(vehicleRepository.findByLicensePlateIgnoreCase(plate)).thenReturn(Optional.of(vehicle));
 
         // Act
-        VehicleResponseDTO result = useCase.execute(plate);
+        VehicleResponseDTO result = useCase.execute(plate).getData();
 
         // Assert
         assertNotNull(result);

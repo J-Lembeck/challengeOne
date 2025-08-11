@@ -88,7 +88,7 @@ public class GetWorkOrderHistoryByCpfUseCaseImplTest {
         when(customerRepository.findByCpfCnpj(cpfCnpj)).thenReturn(Optional.of(customer));
         when(workOrderRepository.findByCustomerOrderByCreatedAtDesc(customer)).thenReturn(Collections.emptyList());
 
-        List<WorkOrderWithHistoryResponseDTO> result = useCase.execute(cpfCnpj);
+        List<WorkOrderWithHistoryResponseDTO> result = useCase.execute(cpfCnpj).getData();
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -104,7 +104,7 @@ public class GetWorkOrderHistoryByCpfUseCaseImplTest {
         when(workOrderRepository.findByCustomerOrderByCreatedAtDesc(customer)).thenReturn(List.of(workOrder));
         when(workOrderHistoryRepository.findByWorkOrderOrderByCreatedAtAsc(workOrder)).thenReturn(List.of(historyEntry));
 
-        List<WorkOrderWithHistoryResponseDTO> result = useCase.execute(cpfCnpj);
+        List<WorkOrderWithHistoryResponseDTO> result = useCase.execute(cpfCnpj).getData();
 
         assertNotNull(result);
         assertEquals(1, result.size());

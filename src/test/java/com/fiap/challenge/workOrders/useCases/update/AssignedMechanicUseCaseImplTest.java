@@ -61,7 +61,7 @@ public class AssignedMechanicUseCaseImplTest {
         var input = new InputAssignMechanicDTO(mechanicId);
 
         // Act
-        AssignedMechanicResponseDTO response = assignedMechanicUseCase.execute(workOrderId, input);
+        AssignedMechanicResponseDTO response = assignedMechanicUseCase.execute(workOrderId, input).getData();
 
         // Assert
         assertTrue(response.success());

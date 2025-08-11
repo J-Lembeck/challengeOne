@@ -92,7 +92,7 @@ public class FindWorkOrderByIdUseCaseImplTest {
         when(workOrderModel.getTotalAmount()).thenReturn(null);
         when(workOrderModel.getId()).thenReturn(workOrderId);
 
-        var dto = findWorkOrderByIdUseCase.executeToDTO(workOrderId);
+        var dto = findWorkOrderByIdUseCase.executeToDTO(workOrderId).getData();
 
         assertNotNull(dto);
         assertEquals(workOrderId, dto.id());

@@ -81,7 +81,7 @@ public class FindVehiclesByIdsUseCaseImplTest {
         when(vehicleRepository.findAllById(ids)).thenReturn(Arrays.asList(vehicle1, vehicle2));
 
         // Act
-        List<VehicleResponseDTO> result = useCase.execute(ids);
+        List<VehicleResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(result);
@@ -105,7 +105,7 @@ public class FindVehiclesByIdsUseCaseImplTest {
         when(vehicleRepository.findAllById(ids)).thenReturn(Collections.emptyList());
 
         // Act
-        List<VehicleResponseDTO> result = useCase.execute(ids);
+        List<VehicleResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(result);
