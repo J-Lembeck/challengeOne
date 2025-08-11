@@ -44,7 +44,6 @@ class CreatePartUseCaseImplTest {
         when(partsRepository.save(any(PartModel.class))).thenAnswer(inv -> {
             PartModel m = inv.getArgument(0);
             m.setId(generatedId);
-            if (m.getReservedStock() == null) m.setReservedStock(0);
             m.setCreatedAt(now);
             m.setUpdatedAt(now);
             return m;
@@ -71,7 +70,8 @@ class CreatePartUseCaseImplTest {
                         "Filtro OEM para motor 1.6".equals(m.getDescription()) &&
                         new BigDecimal("39.90").compareTo(m.getPrice()) == 0 &&
                         Integer.valueOf(25).equals(m.getStockQuantity()) &&
-                        Integer.valueOf(5).equals(m.getMinimumStock())
+                        Integer.valueOf(5).equals(m.getMinimumStock()) &&
+                        Integer.valueOf(0).equals(m.getReservedStock()) // <- agora validamos aqui
         ));
     }
 }
