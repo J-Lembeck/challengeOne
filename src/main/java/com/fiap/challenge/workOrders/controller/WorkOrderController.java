@@ -79,6 +79,18 @@ public class WorkOrderController {
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @PatchMapping("/{id}/delivered")
+    @Operation(
+            summary = "Marca uma ordem de serviço como entregue",
+            description = "Endpoint para marcar uma ordem de serviço como entregue pelo ID")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço marcada como entregue com sucesso.") })
+    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> markAsDelivered(@PathVariable UUID id) {
+        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = updateStatusWorkOrderUseCase.execute(id, "DELIVERED");
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
+    }
+
+
     @Operation(
             summary = "Finaliza uma ordem de serviço",
             description = "Endpoint para finalizar uma ordem de serviço pelo ID")
@@ -167,6 +179,11 @@ public class WorkOrderController {
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+            summary = "Calcula o tempo médio de conclusão das ordens de serviço",
+            description = "Endpoint para calcular o tempo médio de conclusão das ordens de serviço")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Tempo médio calculado com sucesso.") })
     @GetMapping("/calculate-avarage-time")
     public String calculateAvarageTime() {
         ResponseApi<List<WorkOrderAvarageTime>> responseApi = findAvarageTimeWorkOrderUseCase.executeList();
