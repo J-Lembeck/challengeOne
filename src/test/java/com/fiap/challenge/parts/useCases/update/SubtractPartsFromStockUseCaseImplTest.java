@@ -1,124 +1,74 @@
 package com.fiap.challenge.parts.useCases.update;
 
-import com.fiap.challenge.parts.dto.PartResponseDTO;
-import com.fiap.challenge.parts.dto.UpdatePartRequestDTO;
-import com.fiap.challenge.parts.useCases.find.FindPartByIdUseCase;
-import jakarta.persistence.EntityNotFoundException;
+import com.fiap.challenge.customers.dto.CustomerResponseDTO;
+import com.fiap.challenge.customers.entity.CustomerModel;
+import com.fiap.challenge.customers.repository.CustomerRepository;
+import com.fiap.challenge.customers.useCases.find.FindCustomerByIdUseCaseImpl;
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
-import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class SubtractPartsFromStockUseCaseImplTest {
+class FindCustomerByIdUseCaseImplTest {
 
     @Mock
-    private FindPartByIdUseCase findPartByIdUseCase;
-
-    @Mock
-    private UpdatePartUseCase updatePartUseCase;
+    private CustomerRepository customerRepository;
 
     @InjectMocks
-    private SubtractPartsFromStockUseCaseImpl useCase;
+    private FindCustomerByIdUseCaseImpl useCase;
 
-    @Test
-    void shouldReturnTrueAndUpdateWhenStockIsSufficient() {
-        // Arrange
-        UUID partId = UUID.randomUUID();
-        int quantity = 4;
+    private UUID customerId;
+    private CustomerModel mockCustomer;
 
-        var now = OffsetDateTime.now();
-        PartResponseDTO part = new PartResponseDTO(
-                partId,
-                "Pastilha de Freio",
-                "Jogos dianteiros",
-                new BigDecimal("199.90"),
-                /* stockQuantity */ 10,
-                /* reservedStock */ 3,
-                /* minimumStock */ 2,
-                now, now
-        );
-        when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
+    @BeforeEach
+    void setUp() {
 
-        // Act
-        boolean result = useCase.execute(partId, quantity);
-
-        // Assert
-        assertTrue(result);
-
-        // stock diminui, reserved aumenta
-        verify(updatePartUseCase).execute(eq(partId), argThat(matchesUpdate(
-                "Pastilha de Freio",
-                "Jogos dianteiros",
-                new BigDecimal("199.90"),
-                /* reserved esperado */ 3 + quantity,
-                /* stock esperado */ 10 - quantity,
-                /* min */ 2
-        )));
+        customerId = UUID.randomUUID();
+        mockCustomer = new CustomerModel();
+        mockCustomer.setId(customerId);
+        mockCustomer.setName("John Doe");
+        mockCustomer.setCpfCnpj("12345678901");
+        mockCustomer.setPhone("999999999");
+        mockCustomer.setEmail("john@example.com");
+        mockCustomer.setCreatedAt(OffsetDateTime.now().withNano(0));
+        mockCustomer.setUpdatedAt(OffsetDateTime.now());
     }
 
     @Test
-    void shouldReturnFalseAndNotUpdateWhenStockIsInsufficient() {
-        // Arrange
-        UUID partId = UUID.randomUUID();
-        int quantity = 6;
+    void shouldReturnCustomerWhenFound() {
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(mockCustomer));
 
-        PartResponseDTO part = new PartResponseDTO(
-                partId,
-                "Filtro de Ar",
-                "Elemento filtrante",
-                new BigDecimal("29.90"),
-                /* stockQuantity */ 5,
-                /* reservedStock */ 1,
-                /* minimumStock */ 1,
-                OffsetDateTime.now(), OffsetDateTime.now()
-        );
-        when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
+        ResponseApi<CustomerResponseDTO> response = useCase.execute(customerId);
 
-        // Act
-        boolean result = useCase.execute(partId, quantity);
-
-        // Assert
-        assertFalse(result);
-        verify(updatePartUseCase, never()).execute(any(), any());
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getMessage()).isEqualTo("Customer found successfully.");
+        assertThat(response.getData())
+                .extracting(CustomerResponseDTO::id)
+                .isEqualTo(customerId);
     }
 
     @Test
-    void shouldThrowWhenFindReturnsNull() {
-        // Arrange
-        UUID partId = UUID.randomUUID();
-        when(findPartByIdUseCase.execute(partId)).thenReturn(null);
+    void shouldReturnNotFoundWhenCustomerDoesNotExist() {
+        when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
 
-        // Act + Assert
-        assertThrows(EntityNotFoundException.class, () -> useCase.execute(partId, 1));
-        verify(updatePartUseCase, never()).execute(any(), any());
-    }
+        ResponseApi<CustomerResponseDTO> response = useCase.execute(customerId);
 
-    // helper matcher
-    private ArgumentMatcher<UpdatePartRequestDTO> matchesUpdate(
-            String name,
-            String description,
-            BigDecimal price,
-            int expectedReserved,
-            int expectedStock,
-            int minStock
-    ) {
-        return dto ->
-                dto != null &&
-                        name.equals(dto.name()) &&
-                        description.equals(dto.description()) &&
-                        price.compareTo(dto.price()) == 0 &&
-                        dto.reservedStock() == expectedReserved &&
-                        dto.stockQuantity() == expectedStock &&
-                        dto.minimumStock() == minStock;
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).contains("Customer not found with ID");
+        assertThat(response.getData()).isNull();
     }
 }

@@ -3,19 +3,22 @@ package com.fiap.challenge.customers.useCases.find;
 import com.fiap.challenge.customers.dto.CustomerResponseDTO;
 import com.fiap.challenge.customers.entity.CustomerModel;
 import com.fiap.challenge.customers.repository.CustomerRepository;
-import com.fiap.challenge.shared.exception.customer.CustomerNotFoundException;
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.time.OffsetDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FindCustomerByIdUseCaseImplTest {
@@ -26,48 +29,44 @@ class FindCustomerByIdUseCaseImplTest {
     @InjectMocks
     private FindCustomerByIdUseCaseImpl useCase;
 
-    @Test
-    void shouldReturnCustomerResponseWhenFound() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        OffsetDateTime now = OffsetDateTime.now();
+    private UUID customerId;
+    private CustomerModel customer;
 
-        CustomerModel model = new CustomerModel();
-        model.setId(id);
-        model.setName("Maria Silva");
-        model.setCpfCnpj("12345678901");
-        model.setPhone("11999998888");
-        model.setEmail("maria@exemplo.com");
-        model.setCreatedAt(now);
-        model.setUpdatedAt(now);
+    @BeforeEach
+    void setUp() {
+        customerId = UUID.randomUUID();
 
-        when(customerRepository.findById(id)).thenReturn(Optional.of(model));
-
-        // Act
-        CustomerResponseDTO response = useCase.execute(id).getData();
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(id, response.id());
-        assertEquals("Maria Silva", response.name());
-        assertEquals("12345678901", response.cpfCnpj());
-        assertEquals("11999998888", response.phone());
-        assertEquals("maria@exemplo.com", response.email());
-        assertEquals(now, response.createdAt());
-        assertEquals(now, response.updatedAt());
-
-        verify(customerRepository, times(1)).findById(id);
+        customer = new CustomerModel();
+        customer.setId(customerId);
+        customer.setName("John Doe");
+        customer.setCpfCnpj("12345678901");
+        customer.setPhone("999999999");
+        customer.setEmail("john@example.com");
+        customer.setCreatedAt(OffsetDateTime.now().minusDays(5));
+        customer.setUpdatedAt(OffsetDateTime.now());
     }
 
     @Test
-    void shouldThrowWhenCustomerNotFound() {
-        // Arrange
-        UUID id = UUID.randomUUID();
-        when(customerRepository.findById(id)).thenReturn(Optional.empty());
+    void shouldReturnCustomerWhenIdExists() {
+        when(customerRepository.findById(customerId)).thenReturn(Optional.of(customer));
 
-        // Act + Assert
-        assertThrows(CustomerNotFoundException.class, () -> useCase.execute(id));
+        ResponseApi<CustomerResponseDTO> response = useCase.execute(customerId);
 
-        verify(customerRepository, times(1)).findById(id);
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getMessage()).isEqualTo("Customer found successfully.");
+        assertThat(response.getData()).isNotNull();
+        assertThat(response.getData().id()).isEqualTo(customerId);
+        assertThat(response.getData().name()).isEqualTo("John Doe");
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenIdDoesNotExist() {
+        when(customerRepository.findById(customerId)).thenReturn(Optional.empty());
+
+        ResponseApi<CustomerResponseDTO> response = useCase.execute(customerId);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("Customer not found with ID: " + customerId);
+        assertThat(response.getData()).isNull();
     }
 }

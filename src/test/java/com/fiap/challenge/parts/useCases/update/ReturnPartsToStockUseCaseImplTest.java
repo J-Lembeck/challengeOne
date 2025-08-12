@@ -3,16 +3,17 @@ package com.fiap.challenge.parts.useCases.update;
 import com.fiap.challenge.parts.dto.PartResponseDTO;
 import com.fiap.challenge.parts.dto.UpdatePartRequestDTO;
 import com.fiap.challenge.parts.useCases.find.FindPartByIdUseCase;
+import com.fiap.challenge.shared.model.ResponseApi;
 import jakarta.persistence.EntityNotFoundException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,95 +31,83 @@ class ReturnPartsToStockUseCaseImplTest {
     @InjectMocks
     private ReturnPartsToStockUseCaseImpl useCase;
 
-    @Test
-    void shouldReturnTrueAndUpdateWhenReservedStockIsSufficient() {
-        // Arrange
-        UUID partId = UUID.randomUUID();
-        int quantity = 3;
+    private UUID partId;
+    private PartResponseDTO part;
 
-        var now = OffsetDateTime.now();
-        PartResponseDTO part = new PartResponseDTO(
+    @BeforeEach
+    void setUp() {
+        partId = UUID.randomUUID();
+        part = new PartResponseDTO(
                 partId,
                 "Filtro de Óleo",
                 "Filtro OEM",
                 new BigDecimal("39.90"),
-                /* stockQuantity */ 10,
-                /* reservedStock */ 5,
-                /* minimumStock */ 2,
-                now, now
+                10, // stockQuantity
+                5,  // reservedStock
+                2,  // minimumStock
+                null,
+                null
         );
-        when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
+    }
 
-        // Act
-        boolean result = useCase.execute(partId, quantity);
+    @Test
+    void shouldThrowWhenPartNotFound() {
+        when(findPartByIdUseCase.execute(partId))
+                .thenReturn(new ResponseApi<PartResponseDTO>().of(null, null, null));
 
-        // Assert
+        EntityNotFoundException ex = assertThrows(EntityNotFoundException.class,
+                () -> useCase.execute(partId, 3));
+
+        assertTrue(ex.getMessage().contains("Part not found with ID: " + partId));
+        verifyNoInteractions(updatePartUseCase);
+    }
+
+    @Test
+    void shouldReturnTrueAndUpdateWhenReservedStockIsEnough() {
+        when(findPartByIdUseCase.execute(partId))
+                .thenReturn(new ResponseApi<PartResponseDTO>().of(null, null, part));
+
+        boolean result = useCase.execute(partId, 3);
+
         assertTrue(result);
 
-        // Verifica que o update foi chamado com os valores ajustados
-        verify(updatePartUseCase).execute(eq(partId), argThat(matchesUpdate(
+        // Captura os argumentos passados para o update
+        ArgumentCaptor<UpdatePartRequestDTO> captor = ArgumentCaptor.forClass(UpdatePartRequestDTO.class);
+        verify(updatePartUseCase).execute(eq(partId), captor.capture());
+
+        UpdatePartRequestDTO updated = captor.getValue();
+        assertEquals(part.stockQuantity() + 3, updated.stockQuantity());
+        assertEquals(part.reservedStock() - 3, updated.reservedStock());
+        assertEquals(part.name(), updated.name());
+        assertEquals(part.description(), updated.description());
+        assertEquals(part.price(), updated.price());
+        assertEquals(part.minimumStock(), updated.minimumStock());
+    }
+
+    @Test
+    void shouldReturnFalseWhenReservedStockIsNotEnough() {
+        part = new PartResponseDTO(
+                partId,
                 "Filtro de Óleo",
                 "Filtro OEM",
                 new BigDecimal("39.90"),
-                /* reservedStock esperado */ 5 - quantity,
-                /* stockQuantity esperado */ 10 + quantity,
-                /* minimumStock */ 2
-        )));
-    }
-
-    @Test
-    void shouldReturnFalseAndNotUpdateWhenReservedStockIsInsufficient() {
-        // Arrange
-        UUID partId = UUID.randomUUID();
-        int quantity = 4;
-
-        PartResponseDTO part = new PartResponseDTO(
-                partId,
-                "Filtro de Ar",
-                "Elemento filtrante",
-                new BigDecimal("29.90"),
-                /* stockQuantity */ 7,
-                /* reservedStock */ 2,
-                /* minimumStock */ 1,
-                OffsetDateTime.now(), OffsetDateTime.now()
+                10,
+                2, // reservedStock menor que quantity
+                2,
+                null,
+                null
         );
+<<<<<<< HEAD
         when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
+=======
+>>>>>>> 38a01d900ac3705079c920871511a3724801cb3a
 
-        // Act
-        boolean result = useCase.execute(partId, quantity);
+        when(findPartByIdUseCase.execute(partId))
+                .thenReturn(new ResponseApi<PartResponseDTO>().of(null, null, part));
 
-        // Assert
+        boolean result = useCase.execute(partId, 3);
+
         assertFalse(result);
-        verify(updatePartUseCase, never()).execute(any(), any());
-    }
-
-    @Test
-    void shouldThrowEntityNotFoundWhenFindReturnsNull() {
-        // Arrange
-        UUID partId = UUID.randomUUID();
-        when(findPartByIdUseCase.execute(partId)).thenReturn(null);
-
-        // Act + Assert
-        assertThrows(EntityNotFoundException.class, () -> useCase.execute(partId, 1));
-        verify(updatePartUseCase, never()).execute(any(), any());
-    }
-
-    // ------- helper matcher -------
-    private ArgumentMatcher<UpdatePartRequestDTO> matchesUpdate(
-            String name,
-            String description,
-            BigDecimal price,
-            int expectedReserved,
-            int expectedStock,
-            int minStock
-    ) {
-        return dto ->
-                dto != null &&
-                        name.equals(dto.name()) &&
-                        description.equals(dto.description()) &&
-                        price.compareTo(dto.price()) == 0 &&
-                        dto.reservedStock() == expectedReserved &&
-                        dto.stockQuantity() == expectedStock &&
-                        dto.minimumStock() == minStock;
+        verifyNoInteractions(updatePartUseCase);
     }
 }
