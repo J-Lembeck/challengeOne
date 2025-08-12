@@ -15,7 +15,7 @@ import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.WorkOrderPartModel;
 import com.fiap.challenge.workOrders.entity.WorkOrderServiceModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
-import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +64,7 @@ public class CreateWorkOrderUseCaseImplTest {
     private CreateWorkOrderServiceUseCase createWorkOrderServiceUseCase;
 
     @Mock
-    private UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private UpdateWorkOrderHistoryUseCase updateWorkOrderStatusUseCase;
 
     @Mock
     private SubtractPartsFromStockUseCase subtractPartsFromStockUseCase;

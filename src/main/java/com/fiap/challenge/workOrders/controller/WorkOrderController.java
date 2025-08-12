@@ -119,11 +119,10 @@ public class WorkOrderController {
             description = "Endpoint para criar uma ordem de serviço")
     @ApiResponses(
             value = { @ApiResponse(responseCode = "201", description = "Ordem de serviço criada com sucesso.") })
-  @PostMapping
+  	@PostMapping
     public ResponseEntity<ResponseApi<WorkOrderResponseDTO>> createWorkOrder(@RequestBody WorkOrderDTO dto) {
         ResponseApi<WorkOrderResponseDTO> responseApi = createWorkOrderUseCase.execute(dto);
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-
     }
 
     @Operation(

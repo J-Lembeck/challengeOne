@@ -12,8 +12,8 @@ import com.fiap.challenge.users.repository.UserRepository;
 import com.fiap.challenge.workOrders.dto.WorkOrderDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
-import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderStatusCommand;
-import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
+import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderHistoryCommand;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -32,7 +32,7 @@ public class CreateWorkOrderUseCase {
     private final UserRepository userRepository;
     private final CreateWorkOrderPartUseCase createWorkOrderPartUseCase;
     private final CreateWorkOrderServiceUseCase createWorkOrderServiceUseCase;
-    private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private final UpdateWorkOrderHistoryUseCase updateWorkOrderStatusUseCase;
     private final SubtractPartsFromStockUseCase subtractPartsFromStockUseCase;
 
     @Transactional
@@ -78,7 +78,7 @@ public class CreateWorkOrderUseCase {
 
         workOrder = workOrderRepository.save(workOrder);
 
-        updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), workOrder.getStatus()));
+        updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderHistoryCommand(workOrder.getId()));
 
         WorkOrderResponseDTO workOrderResponseDTO = new WorkOrderResponseDTO(
                 workOrder.getId(),
