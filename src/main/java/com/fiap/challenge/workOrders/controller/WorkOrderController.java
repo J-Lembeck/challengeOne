@@ -1,11 +1,15 @@
 package com.fiap.challenge.workOrders.controller;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
 
 import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.*;
 
+import com.fiap.challenge.workOrders.entity.WorkOrderAvarageTime;
+import com.fiap.challenge.workOrders.useCases.find.FindAvarageTimeWorkOrderUseCase;
+import com.fiap.challenge.workOrders.useCases.update.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,12 +29,8 @@ import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 import com.fiap.challenge.workOrders.useCases.create.CreateWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.find.FindWorkOrderByIdUseCase;
 import com.fiap.challenge.workOrders.useCases.find.FindWorkOrdersByFilterUseCase;
-import com.fiap.challenge.workOrders.useCases.update.UpdateWorkOrderItemsUseCase;
 import com.fiap.challenge.workOrders.history.dto.WorkOrderWithHistoryResponseDTO;
 import com.fiap.challenge.workOrders.history.useCases.get.GetWorkOrderHistoryByCpfUseCase;
-import com.fiap.challenge.workOrders.useCases.update.AceptedOrRefuseWorkOrderUseCase;
-import com.fiap.challenge.workOrders.useCases.update.AssignedMechanicUseCase;
-import com.fiap.challenge.workOrders.useCases.update.UpdateStatusWorkOrderUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -54,6 +54,8 @@ public class WorkOrderController {
     private final FindWorkOrderByIdUseCase findWorkOrderByIdUseCase;
     private final UpdateWorkOrderItemsUseCase updateWorkOrderItemsUseCase;
     private final GetWorkOrderHistoryByCpfUseCase getWorkOrderHistoryByCpfUseCase;
+    private final FinalizeWorkOrderUseCase finalizeWorkOrderUseCase;
+    private final FindAvarageTimeWorkOrderUseCase findAvarageTimeWorkOrderUseCase;
 
     @Operation(
         summary = "Altera o status de uma ordem de serviço",
@@ -74,6 +76,29 @@ public class WorkOrderController {
     @PatchMapping("/{id}/decision")
     public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> aceptedOrRefuse(@PathVariable UUID id, @RequestBody boolean decision) {
         ResponseApi<StatusWorkOrderRespondeDTO> responseApi = aceptedOrRefuseWorkOrderUseCase.execute(id, decision);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
+    }
+
+    @PatchMapping("/{id}/delivered")
+    @Operation(
+            summary = "Marca uma ordem de serviço como entregue",
+            description = "Endpoint para marcar uma ordem de serviço como entregue pelo ID")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço marcada como entregue com sucesso.") })
+    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> markAsDelivered(@PathVariable UUID id) {
+        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = updateStatusWorkOrderUseCase.execute(id, "DELIVERED");
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
+    }
+
+
+    @Operation(
+            summary = "Finaliza uma ordem de serviço",
+            description = "Endpoint para finalizar uma ordem de serviço pelo ID")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço finalizada com sucesso.") })
+    @PatchMapping("/{id}/finalize")
+    public ResponseEntity<ResponseApi<Void>> finalizeWorkOrder(@PathVariable UUID id) {
+        ResponseApi<Void> responseApi = finalizeWorkOrderUseCase.execute(id);
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
@@ -152,5 +177,24 @@ public class WorkOrderController {
     public ResponseEntity<ResponseApi<List<WorkOrderWithHistoryResponseDTO>>> getHistoryByCpf(@PathVariable String cpf) {
         ResponseApi<List<WorkOrderWithHistoryResponseDTO>> responseApi = getWorkOrderHistoryByCpfUseCase.execute(cpf);
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
+    }
+
+    @Operation(
+            summary = "Calcula o tempo médio de conclusão das ordens de serviço",
+            description = "Endpoint para calcular o tempo médio de conclusão das ordens de serviço")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Tempo médio calculado com sucesso.") })
+    @GetMapping("/calculate-avarage-time")
+    public String calculateAvarageTime() {
+        ResponseApi<List<WorkOrderAvarageTime>> responseApi = findAvarageTimeWorkOrderUseCase.executeList();
+        List<WorkOrderAvarageTime> allAvarageTimes  = responseApi.getData();
+        Duration avarageTimeMessage = allAvarageTimes.stream()
+                .map(WorkOrderAvarageTime::avarageTime)
+                .reduce(Duration.ZERO, Duration::plus)
+                .dividedBy(allAvarageTimes.size());
+
+        return String.format("%02d:%02d",
+                avarageTimeMessage.toHoursPart(),
+                avarageTimeMessage.toMinutesPart());
     }
 }

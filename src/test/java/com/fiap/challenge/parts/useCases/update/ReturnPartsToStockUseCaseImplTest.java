@@ -97,6 +97,10 @@ class ReturnPartsToStockUseCaseImplTest {
                 null,
                 null
         );
+<<<<<<< HEAD
+        when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
+=======
+>>>>>>> 38a01d900ac3705079c920871511a3724801cb3a
 
         when(findPartByIdUseCase.execute(partId))
                 .thenReturn(new ResponseApi<PartResponseDTO>().of(null, null, part));
