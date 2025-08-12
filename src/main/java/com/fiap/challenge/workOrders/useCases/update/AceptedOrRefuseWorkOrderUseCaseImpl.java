@@ -22,6 +22,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
     private final WorkOrderRepository workOrderRepository;
     private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
     private final ReturnPartsToStockUseCase returnPartsToStockUseCase;
+    private final AvarageTimeWorkOrderUseCase avarageTimeWorkOrderUseCase;
 
     @Transactional
     @Override
@@ -41,6 +42,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
             workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
         }
         WorkOrderModel workOrderModel= workOrderRepository.save(workOrder);
+        avarageTimeWorkOrderUseCase.executeInit(workOrderModel.getId());
 
         updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), workOrderModel.getStatus()));
 
