@@ -47,13 +47,35 @@ A API oferece as seguintes funcionalidades principais:
 
 A forma mais simples de executar o projeto é utilizando Docker.
 
-3.  **Acesso à API:**
+1.  **Pré-requisitos:**
+    * Docker
+    * Docker Compose
+
+2.  **Clone o Repositório e Navegue até a Pasta**
+    ```bash
+    git clone https://github.com/J-Lembeck/challengeOne
+    cd challengeOne
+    ```
+
+3.  **Inicie os Containers**
+    Na raiz do projeto, execute o comando:
+    ```bash
+    docker-compose up --build -d
+    ```
+
+4.  **Acesso à API:**
     A API estará disponível em `http://localhost:8080/api`.
 
-4.  **Usuário Administrador Padrão:**
+5.  **Usuário Administrador Padrão:**
     Um usuário administrador é criado por padrão pelo Liquibase para facilitar os primeiros testes:
     * **Email:** `administrador@adm.com.br`
     * **Senha:** `123`
+
+6.  **Parar a Aplicação**
+    Para parar e remover os containers, utilize o comando:
+    ```bash
+    docker-compose down
+    ```
 
 ---
 
