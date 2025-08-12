@@ -36,7 +36,7 @@
         </insert>
 
         <insert tableName="customers">
-            <column name="id" value="70g9316e-c7d8-6908-299e-366c8434b4c6"/>
+            <column name="id" value="70f9316e-c7d8-4908-829e-366c8434b4c6"/>
             <column name="name" value="José Santos"/>
             <column name="cpf_cnpj" value="98765432100"/>
             <column name="phone" value="11977776666"/>
@@ -46,7 +46,7 @@
         </insert>
 
         <insert tableName="customers">
-            <column name="id" value="80h0417f-d8e9-7019-3aaf-477d9545c5d7"/>
+            <column name="id" value="80a0417f-d8e9-7019-3aaf-477d9545c5d7"/>
             <column name="name" value="Ana Oliveira"/>
             <column name="cpf_cnpj" value="23456789012"/>
             <column name="phone" value="11966665555"/>
