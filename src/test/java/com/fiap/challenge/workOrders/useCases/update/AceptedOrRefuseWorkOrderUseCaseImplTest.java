@@ -35,6 +35,8 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
     @Mock
     private UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
 
+    @Mock private AvarageTimeWorkOrderUseCase avarageTimeWorkOrderUseCase;
+
     @Mock
     private ReturnPartsToStockUseCase returnPartsToStockUseCase;
 
@@ -66,7 +68,8 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
     void shouldSetStatusInProgressWhenAccepted() {
         // Arrange
         when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.of(workOrder));
-        when(workOrderRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(workOrderRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
+        doNothing().when(avarageTimeWorkOrderUseCase).executeInit(eq(workOrderId));
 
         // Act
         StatusWorkOrderRespondeDTO result = useCase.execute(workOrderId, true).getData();
