@@ -52,7 +52,7 @@ A API oferece as seguintes funcionalidades principais:
 
 #### 2. Clone o Repositório
 ```bash
-git clone [<URL-do-seu-repositorio>](https://github.com/J-Lembeck/challengeOne)
+git clone https://github.com/J-Lembeck/challengeOne
 cd challengeOne
 ```
 
