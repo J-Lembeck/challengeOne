@@ -50,7 +50,7 @@ class CreatePartUseCaseImplTest {
         });
 
         // Act
-        PartResponseDTO resp = useCase.execute(req);
+        PartResponseDTO resp = useCase.execute(req).getData();
 
         // Assert — DTO retornado
         assertNotNull(resp);

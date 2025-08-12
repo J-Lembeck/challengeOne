@@ -55,7 +55,7 @@ class FindCustomerByCpfCnpjLikeImplTest {
                 .thenReturn(List.of(m1, m2)); // ordem esperada
 
         // Act
-        List<CustomerResponseDTO> result = useCase.execute(fragment);
+        List<CustomerResponseDTO> result = useCase.execute(fragment).getData();
 
         // Assert
         assertNotNull(result);
@@ -91,7 +91,7 @@ class FindCustomerByCpfCnpjLikeImplTest {
                 .thenReturn(List.of());
 
         // Act
-        List<CustomerResponseDTO> result = useCase.execute(fragment);
+        List<CustomerResponseDTO> result = useCase.execute(fragment).getData();
 
         // Assert
         assertNotNull(result);

@@ -62,7 +62,7 @@ class FindPartsByIdsUseCaseImplTest {
         when(partsRepository.findAllById(ids)).thenReturn(List.of(p2, p1));
 
         // Act
-        List<PartResponseDTO> result = useCase.execute(ids);
+        List<PartResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(result);
@@ -84,7 +84,7 @@ class FindPartsByIdsUseCaseImplTest {
         when(partsRepository.findAllById(ids)).thenReturn(List.of());
 
         // Act
-        List<PartResponseDTO> result = useCase.execute(ids);
+        List<PartResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(result);
@@ -115,7 +115,7 @@ class FindPartsByIdsUseCaseImplTest {
         when(partsRepository.findAllById(ids)).thenReturn(List.of(found));
 
         // Act
-        List<PartResponseDTO> result = useCase.execute(ids);
+        List<PartResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertEquals(1, result.size());

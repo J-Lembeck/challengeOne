@@ -69,7 +69,7 @@ class UpdateCustomerUseCaseImplTest {
         });
 
         // Act
-        CustomerResponseDTO resp = useCase.execute(id, req);
+        CustomerResponseDTO resp = useCase.execute(id, req).getData();
 
         // Assert
         assertNotNull(resp);
@@ -116,7 +116,7 @@ class UpdateCustomerUseCaseImplTest {
         when(customerRepository.save(any(CustomerModel.class))).thenAnswer(inv -> inv.getArgument(0));
 
         // Act
-        CustomerResponseDTO resp = useCase.execute(id, req);
+        CustomerResponseDTO resp = useCase.execute(id, req).getData();
 
         // Assert
         assertNotNull(resp);

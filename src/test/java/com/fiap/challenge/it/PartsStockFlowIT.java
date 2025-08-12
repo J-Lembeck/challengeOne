@@ -47,14 +47,14 @@ class PartsStockFlowIT {
         PartResponseDTO created = createPart.execute(new CreatePartRequestDTO(
                 "Filtro de Óleo", "Filtro OEM", new BigDecimal("39.90"),
                 10, 2
-        ));
+        )).getData();
         UUID partId = created.id();
 
         // 2) reserva 3 (stock=7, reserved=3)
         boolean reserved = subtractStock.execute(partId, 3);
         Assertions.assertTrue(reserved);
 
-        PartResponseDTO afterReserve = findPart.execute(partId);
+        PartResponseDTO afterReserve = findPart.execute(partId).getData();
         Assertions.assertEquals(7, afterReserve.stockQuantity());
         Assertions.assertEquals(3, afterReserve.reservedStock());
 
@@ -62,7 +62,7 @@ class PartsStockFlowIT {
         boolean returned = returnStock.execute(partId, 2);
         Assertions.assertTrue(returned);
 
-        PartResponseDTO afterReturn = findPart.execute(partId);
+        PartResponseDTO afterReturn = findPart.execute(partId).getData();
         Assertions.assertEquals(9, afterReturn.stockQuantity());
         Assertions.assertEquals(1, afterReturn.reservedStock());
     }

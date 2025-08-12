@@ -47,7 +47,7 @@ class FindPartByIdUseCaseImplTest {
         when(partsRepository.findById(id)).thenReturn(Optional.of(model));
 
         // Act
-        PartResponseDTO resp = useCase.execute(id);
+        PartResponseDTO resp = useCase.execute(id).getData();
 
         // Assert
         assertNotNull(resp);

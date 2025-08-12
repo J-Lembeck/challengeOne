@@ -45,7 +45,7 @@ class FindCustomerByCpfCnpjImplTest {
         when(customerRepository.findByCpfCnpj(cpfCnpj)).thenReturn(Optional.of(model));
 
         // Act
-        CustomerResponseDTO response = useCase.execute(cpfCnpj);
+        CustomerResponseDTO response = useCase.execute(cpfCnpj).getData();
 
         // Assert
         assertNotNull(response);
