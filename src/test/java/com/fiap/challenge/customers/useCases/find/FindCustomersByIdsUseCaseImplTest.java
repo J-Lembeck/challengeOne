@@ -57,7 +57,7 @@ class FindCustomersByIdsUseCaseImplTest {
         when(customerRepository.findAllById(ids)).thenReturn(List.of(c2, c1));
 
         // Act
-        List<CustomerResponseDTO> result = useCase.execute(ids);
+        List<CustomerResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(result);
@@ -79,7 +79,7 @@ class FindCustomersByIdsUseCaseImplTest {
         when(customerRepository.findAllById(ids)).thenReturn(List.of());
 
         // Act
-        List<CustomerResponseDTO> result = useCase.execute(ids);
+        List<CustomerResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertNotNull(result);
@@ -108,7 +108,7 @@ class FindCustomersByIdsUseCaseImplTest {
         when(customerRepository.findAllById(ids)).thenReturn(List.of(onlyFound));
 
         // Act
-        List<CustomerResponseDTO> result = useCase.execute(ids);
+        List<CustomerResponseDTO> result = useCase.execute(ids).getData();
 
         // Assert
         assertEquals(1, result.size());

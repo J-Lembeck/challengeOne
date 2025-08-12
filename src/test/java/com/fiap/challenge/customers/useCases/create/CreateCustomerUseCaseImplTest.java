@@ -58,7 +58,7 @@ class CreateCustomerUseCaseImplTest {
             return m;
         });
 
-        CustomerResponseDTO response = useCase.execute(request);
+        CustomerResponseDTO response = useCase.execute(request).getData();
 
         assertNotNull(response);
         assertEquals(generatedId, response.id());

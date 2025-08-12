@@ -44,7 +44,7 @@ class FindCustomerByIdUseCaseImplTest {
         when(customerRepository.findById(id)).thenReturn(Optional.of(model));
 
         // Act
-        CustomerResponseDTO response = useCase.execute(id);
+        CustomerResponseDTO response = useCase.execute(id).getData();
 
         // Assert
         assertNotNull(response);

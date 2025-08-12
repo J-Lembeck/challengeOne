@@ -47,7 +47,7 @@ class SubtractPartsFromStockUseCaseImplTest {
                 /* minimumStock */ 2,
                 now, now
         );
-        when(findPartByIdUseCase.execute(partId)).thenReturn(part);
+        when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
 
         // Act
         boolean result = useCase.execute(partId, quantity);
@@ -82,7 +82,7 @@ class SubtractPartsFromStockUseCaseImplTest {
                 /* minimumStock */ 1,
                 OffsetDateTime.now(), OffsetDateTime.now()
         );
-        when(findPartByIdUseCase.execute(partId)).thenReturn(part);
+        when(findPartByIdUseCase.execute(partId).getData()).thenReturn(part);
 
         // Act
         boolean result = useCase.execute(partId, quantity);

@@ -85,7 +85,7 @@ class UpdatePartUseCaseImplTest {
         });
 
         // Act
-        PartResponseDTO resp = useCase.execute(id, req);
+        PartResponseDTO resp = useCase.execute(id, req).getData();
 
         // Assert DTO
         assertNotNull(resp);
