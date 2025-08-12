@@ -85,7 +85,7 @@ docker-compose down
 
 A API possui uma documentação interativa gerada com Swagger (OpenAPI). Após iniciar a aplicação, pode aceder à interface do Swagger no seguinte URL:
 
-**[http://localhost:8080/api/documentation](http://localhost:8080/api/swagger-ui/index.html)**
+**[http://localhost:8080/api/swagger-ui/index.html](http://localhost:8080/api/swagger-ui/index.html)**
 
 ---
 
@@ -127,6 +127,3 @@ Todos os endpoints, exceto `/auth/login` e os de consulta pública, requerem um 
 * `PATCH /{id}/finalize`: Finaliza uma OS (muda o status para `COMPLETED`).
 * `PATCH /{id}/delivered`: Marca uma OS como entregue ao cliente.
 * `GET /calculate-avarage-time`: Retorna o tempo médio de conclusão das Ordens de Serviço.
-
-## Caminho para acessar Documentação da API
-http://localhost:8080/api/swagger-ui/index.html
