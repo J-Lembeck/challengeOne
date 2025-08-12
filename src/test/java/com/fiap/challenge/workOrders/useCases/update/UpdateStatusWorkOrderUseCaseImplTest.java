@@ -8,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
-import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderStatusCommand;
-import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
+import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderHistoryCommand;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -26,7 +26,7 @@ class UpdateStatusWorkOrderUseCaseImplTest {
     private WorkOrderRepository workOrderRepository;
 
     @Mock
-    private UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private UpdateWorkOrderHistoryUseCase updateWorkOrderStatusUseCase;
 
     @InjectMocks
     private UpdateStatusWorkOrderUseCaseImpl useCase;
@@ -61,7 +61,7 @@ class UpdateStatusWorkOrderUseCaseImplTest {
 
         verify(workOrderRepository).findById(workOrderId);
         verify(workOrderRepository).save(existingWorkOrder);
-        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderStatusCommand.class));
+        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderHistoryCommand.class));
     }
 
     @Test

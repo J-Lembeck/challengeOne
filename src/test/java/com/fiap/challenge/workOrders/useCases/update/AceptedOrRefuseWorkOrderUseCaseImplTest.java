@@ -9,8 +9,8 @@ import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.WorkOrderPartModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
-import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderStatusCommand;
-import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
+import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderHistoryCommand;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import com.fiap.challenge.parts.useCases.update.ReturnPartsToStockUseCase;
 import com.fiap.challenge.workOrders.useCases.update.AvarageTimeWorkOrderUseCase;
@@ -34,7 +34,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
     private WorkOrderRepository workOrderRepository;
 
     @Mock
-    private UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private UpdateWorkOrderHistoryUseCase updateWorkOrderStatusUseCase;
 
     @Mock
     private ReturnPartsToStockUseCase returnPartsToStockUseCase;
@@ -77,7 +77,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
         assertEquals(WorkOrderStatus.IN_PROGRESS, workOrder.getStatus());
 
         verify(returnPartsToStockUseCase, never()).execute(any(), anyInt());
-        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderStatusCommand.class));
+        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderHistoryCommand.class));
         verify(avarageTimeWorkOrderUseCase).executeInit(workOrderId); // Verifica chamada do executeInit
         verify(workOrderRepository).save(workOrder);
     }
@@ -94,7 +94,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImplTest {
         assertEquals(WorkOrderStatus.REFUSED, workOrder.getStatus());
 
         verify(returnPartsToStockUseCase).execute(eq(workOrder.getWorkOrderPartModels().get(0).getPart().getId()), eq(5));
-        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderStatusCommand.class));
+        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderHistoryCommand.class));
         verify(avarageTimeWorkOrderUseCase).executeInit(workOrderId); // Verifica chamada do executeInit
         verify(workOrderRepository).save(workOrder);
     }

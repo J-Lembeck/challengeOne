@@ -7,5 +7,5 @@ import com.fiap.challenge.workOrders.history.dto.WorkOrderWithHistoryResponseDTO
 
 public interface GetWorkOrderHistoryByCpfUseCase {
 
-	ResponseApi<List<WorkOrderWithHistoryResponseDTO>> execute(String cpf);
+	public ResponseApi<List<WorkOrderWithHistoryResponseDTO>> execute(String cpf);
 }
