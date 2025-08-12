@@ -24,6 +24,36 @@
             <column name="created_at" valueComputed="now()"/>
             <column name="updated_at" valueComputed="now()"/>
         </insert>
+
+        <insert tableName="customers">
+            <column name="id" value="60f8215d-b6c7-5897-198d-255b7323a3b5"/>
+            <column name="name" value="Maria Silva"/>
+            <column name="cpf_cnpj" value="12345678901"/>
+            <column name="phone" value="11988887777"/>
+            <column name="email" value="maria.silva@email.com"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="customers">
+            <column name="id" value="70g9316e-c7d8-6908-299e-366c8434b4c6"/>
+            <column name="name" value="José Santos"/>
+            <column name="cpf_cnpj" value="98765432100"/>
+            <column name="phone" value="11977776666"/>
+            <column name="email" value="jose.santos@email.com"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="customers">
+            <column name="id" value="80h0417f-d8e9-7019-3aaf-477d9545c5d7"/>
+            <column name="name" value="Ana Oliveira"/>
+            <column name="cpf_cnpj" value="23456789012"/>
+            <column name="phone" value="11966665555"/>
+            <column name="email" value="ana.oliveira@email.com"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>
