@@ -19,5 +19,6 @@
     <include file="parts/inserts/insert-parts.xml" relativeToChangelogFile="true"/>
     <include file="services/inserts/insert-services.xml" relativeToChangelogFile="true"/>
     <include file="vehicles/inserts/insert-vehicles.xml" relativeToChangelogFile="true"/>
+    <include file="work-orders/avarege-time-create-work-order-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>
