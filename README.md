@@ -45,37 +45,39 @@ A API oferece as seguintes funcionalidades principais:
 
 ## 🚀 Como Executar o Projeto com Docker
 
-A forma mais simples de executar o projeto é utilizando Docker.
+#### 1. Pré-requisitos
 
-1.  **Pré-requisitos:**
-    * Docker
-    * Docker Compose
+* **Docker**
+* **Docker Compose**
 
-2.  **Clone o Repositório e Navegue até a Pasta**
-    ```bash
-    git clone https://github.com/J-Lembeck/challengeOne
-    cd challengeOne
-    ```
+#### 2. Clone o Repositório
+```bash
+git clone [<URL-do-seu-repositorio>](https://github.com/J-Lembeck/challengeOne)
+cd challengeOne
+```
 
-3.  **Inicie os Containers**
-    Na raiz do projeto, execute o comando:
-    ```bash
-    docker-compose up --build -d
-    ```
+#### 3. Inicie a Aplicação
+Com o terminal aberto na raiz do projeto (onde se encontra o arquivo `docker-compose.yml`), execute o comando abaixo:
+```bash
+docker-compose up --build -d
+```
 
-4.  **Acesso à API:**
-    A API estará disponível em `http://localhost:8080/api`.
+#### 4. Acesso à API
+A aplicação estará disponível em `http://localhost:8080/api`.
 
-5.  **Usuário Administrador Padrão:**
-    Um usuário administrador é criado por padrão pelo Liquibase para facilitar os primeiros testes:
-    * **Email:** `administrador@adm.com.br`
-    * **Senha:** `123`
+#### 5. Usuário Administrador Padrão
+Um usuário administrador é criado por padrão pelo Liquibase para facilitar os primeiros testes:
+* **Email:** `administrador@adm.com.br`
+* **Senha:** `123`
 
-6.  **Parar a Aplicação**
-    Para parar e remover os containers, utilize o comando:
-    ```bash
-    docker-compose down
-    ```
+#### 6. Acesse a Documentação Interativa (Swagger)
+Para explorar e testar todos os endpoints, acesse a documentação do Swagger UI no seu navegador:
+**[http://localhost:8080/api/documentation](http://localhost:8080/api/documentation)**
+
+#### 7. Como Parar a Aplicação
+```bash
+docker-compose down
+```
 
 ---
 
