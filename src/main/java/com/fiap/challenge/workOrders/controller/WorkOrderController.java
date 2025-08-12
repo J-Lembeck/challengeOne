@@ -10,6 +10,7 @@ import com.fiap.challenge.workOrders.dto.*;
 import com.fiap.challenge.workOrders.entity.WorkOrderAvarageTime;
 import com.fiap.challenge.workOrders.useCases.find.FindAvarageTimeWorkOrderUseCase;
 import com.fiap.challenge.workOrders.useCases.update.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -184,16 +185,20 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Tempo médio calculado com sucesso.") })
     @GetMapping("/calculate-avarage-time")
-    public String calculateAvarageTime() {
+    public ResponseEntity<String> calculateAvarageTime() {
         ResponseApi<List<WorkOrderAvarageTime>> responseApi = findAvarageTimeWorkOrderUseCase.executeList();
+        HttpStatus status = HttpStatus.valueOf(responseApi.getStatus().name());
+        if (responseApi.getStatus().is4xxClientError()) return ResponseEntity.status(status).body(responseApi.getMessage());
         List<WorkOrderAvarageTime> allAvarageTimes  = responseApi.getData();
         Duration avarageTimeMessage = allAvarageTimes.stream()
                 .map(WorkOrderAvarageTime::avarageTime)
                 .reduce(Duration.ZERO, Duration::plus)
                 .dividedBy(allAvarageTimes.size());
 
-        return String.format("%02d:%02d",
+        return ResponseEntity.ok(
+                String.format("%02d:%02d",
                 avarageTimeMessage.toHoursPart(),
-                avarageTimeMessage.toMinutesPart());
+                avarageTimeMessage.toMinutesPart())
+                );
     }
 }
