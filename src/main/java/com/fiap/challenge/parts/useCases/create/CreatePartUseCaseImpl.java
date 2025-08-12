@@ -28,6 +28,7 @@ public class CreatePartUseCaseImpl implements CreatePartUseCase{
                 .price(partRequest.price())
                 .stockQuantity(partRequest.stockQuantity())
                 .minimumStock(partRequest.minimumStock())
+                .reservedStock(0)
                 .build();
 
         PartModel savedPart = this.partRepository.save(newPart);
