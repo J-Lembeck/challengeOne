@@ -2,6 +2,8 @@ package com.fiap.challenge.vehicles.useCases.update;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.customers.dto.CustomerInfo;
@@ -14,6 +16,7 @@ import com.fiap.challenge.vehicles.entity.VehicleModel;
 import com.fiap.challenge.vehicles.repository.VehicleRepository;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +26,9 @@ public class UpdateVehicleUseCaseImpl implements UpdateVehicleUseCase {
     private final CustomerRepository customerRepository;
 
     @Override
-    public VehicleResponseDTO execute(UUID vehicleId, InputVehicleDTO dto) {
+    @Transactional
+    public ResponseApi<VehicleResponseDTO> execute(UUID vehicleId, InputVehicleDTO dto) {
+        ResponseApi<VehicleResponseDTO> responseApi = new ResponseApi<>();
         var vehicleToUpdate = vehicleRepository.findById(vehicleId)
                 .orElseThrow(() -> new VehicleNotFoundException(vehicleId));
 
@@ -38,7 +43,7 @@ public class UpdateVehicleUseCaseImpl implements UpdateVehicleUseCase {
 
         var savedVehicle = vehicleRepository.save(vehicleToUpdate);
 
-        return convertToDto(savedVehicle);
+        return responseApi.of(HttpStatus.OK,"Veículo atualizado com sucesso!", convertToDto(savedVehicle));
     }
 
     private VehicleResponseDTO convertToDto(VehicleModel model) {

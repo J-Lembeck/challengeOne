@@ -15,6 +15,36 @@
             <column name="created_at" valueComputed="now()"/>
             <column name="updated_at" valueComputed="now()"/>
         </insert>
+
+        <insert tableName="users">
+            <column name="id" value="50e6215d-b5c6-4896-987c-144a6312a2b1"/>
+            <column name="name" value="Master"/>
+            <column name="email" value="master@oficina.com.br"/>
+            <column name="password_hash" value="$2a$10$pUsf1lDFh/5V9ty0pJlM0uvmSlzvbfEAsTYGFtouP9m46a4kLvDQa"/>
+            <column name="role" value="MASTER"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="60e6215d-b5c6-4896-987c-144a6312a2b2"/>
+            <column name="name" value="Mecânico"/>
+            <column name="email" value="mecanico@oficina.com.br"/>
+            <column name="password_hash" value="$2a$10$pUsf1lDFh/5V9ty0pJlM0uvmSlzvbfEAsTYGFtouP9m46a4kLvDQa"/>
+            <column name="role" value="MECHANIC"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" value="70e6215d-b5c6-4896-987c-144a6312a2b3"/>
+            <column name="name" value="Atendente"/>
+            <column name="email" value="atendente@oficina.com.br"/>
+            <column name="password_hash" value="$2a$10$pUsf1lDFh/5V9ty0pJlM0uvmSlzvbfEAsTYGFtouP9m46a4kLvDQa"/>
+            <column name="role" value="ATTENDANT"/>
+            <column name="created_at" valueComputed="now()"/>
+            <column name="updated_at" valueComputed="now()"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

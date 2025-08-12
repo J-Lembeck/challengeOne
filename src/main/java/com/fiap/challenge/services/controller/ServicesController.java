@@ -3,7 +3,10 @@ package com.fiap.challenge.services.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
+import com.fiap.challenge.shared.model.ResponseApi;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/services")
 @RequiredArgsConstructor
+@Tag(name = "Serviços", description = "Controlador para Serviços.")
 public class ServicesController {
 
 	private final CreateServiceUseCase createServiceUseCase;
@@ -36,30 +40,54 @@ public class ServicesController {
 	private final FindServicesByIdsUseCase findServicesByIdsUseCase;
 	private final DeleteServiceUseCase deleteServiceUseCase;
 
+    @Operation(
+        summary = "Cria um novo serviço",
+        description = "Endpoint para criar um novo serviço.")
+    @ApiResponse(responseCode = "201", description = "Serviço criado com sucesso.")
     @PostMapping
-    public ResponseEntity<ServiceResponseDTO> create(@RequestBody InputServiceDTO createServiceDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(createServiceUseCase.execute(createServiceDTO));
+    public ResponseEntity<ResponseApi<ServiceResponseDTO>> create(@RequestBody InputServiceDTO createServiceDTO) {
+        ResponseApi<ServiceResponseDTO> responseApi = createServiceUseCase.execute(createServiceDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Atualiza um serviço existente",
+        description = "Endpoint para atualizar um serviço pelo ID.")
+    @ApiResponse(responseCode = "200", description = "Serviço atualizado com sucesso.")
     @PutMapping("/{id}")
-    public ResponseEntity<ServiceResponseDTO> update(@PathVariable UUID id, @RequestBody InputServiceDTO updateServiceDTO) {
-        return ResponseEntity.ok(updateServiceUseCase.execute(id, updateServiceDTO));
+    public ResponseEntity<ResponseApi<ServiceResponseDTO>> update(@PathVariable UUID id, @RequestBody InputServiceDTO updateServiceDTO) {
+        ResponseApi<ServiceResponseDTO> responseApi = updateServiceUseCase.execute(id, updateServiceDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Busca um serviço pelo ID",
+        description = "Endpoint para buscar um serviço pelo ID.")
+    @ApiResponse(responseCode = "200", description = "Serviço encontrado com sucesso.")
     @GetMapping("/{id}")
-    public ResponseEntity<ServiceResponseDTO> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(findServiceByIdUseCase.execute(id));
+    public ResponseEntity<ResponseApi<ServiceResponseDTO>> findById(@PathVariable UUID id) {
+        ResponseApi<ServiceResponseDTO> responseApi = findServiceByIdUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Busca serviços por uma lista de IDs",
+        description = "Endpoint para buscar serviços por uma lista de IDs.")
+    @ApiResponse(responseCode = "200", description = "Serviços encontrados com sucesso.")
     @GetMapping
-    public ResponseEntity<List<ServiceResponseDTO>> findByIds(@RequestParam("ids") List<UUID> ids) {
-        return ResponseEntity.ok(findServicesByIdsUseCase.execute(ids));
+    public ResponseEntity<ResponseApi<List<ServiceResponseDTO>>> findByIds(@RequestParam("ids") List<UUID> ids) {
+        ResponseApi<List<ServiceResponseDTO>> responseApi = findServicesByIdsUseCase.execute(ids);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Deleta um serviço pelo ID",
+        description = "Endpoint para deletar um serviço pelo ID.")
+    @ApiResponse(responseCode = "204", description = "Serviço deletado com sucesso.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        deleteServiceUseCase.execute(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ResponseApi<Void>> delete(@PathVariable UUID id) {
+        ResponseApi<Void> responseApi = deleteServiceUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
 }

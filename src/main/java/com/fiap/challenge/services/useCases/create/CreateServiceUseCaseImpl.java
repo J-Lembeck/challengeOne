@@ -1,5 +1,7 @@
 package com.fiap.challenge.services.useCases.create;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.fiap.challenge.services.dto.InputServiceDTO;
@@ -16,7 +18,8 @@ public class CreateServiceUseCaseImpl implements CreateServiceUseCase {
     private final ServiceRepository serviceRepository;
 
     @Override
-    public ServiceResponseDTO execute(InputServiceDTO createServiceDTO) {
+    public ResponseApi<ServiceResponseDTO> execute(InputServiceDTO createServiceDTO) {
+        ResponseApi<ServiceResponseDTO> responseApi = new ResponseApi<>();
         var serviceModel = ServiceModel.builder()
                 .name(createServiceDTO.name())
                 .description(createServiceDTO.description())
@@ -26,7 +29,8 @@ public class CreateServiceUseCaseImpl implements CreateServiceUseCase {
 
         var savedService = this.serviceRepository.save(serviceModel);
 
-        return new ServiceResponseDTO(
+        return responseApi.of(HttpStatus.CREATED, "Serviço criado com sucesso",
+                new ServiceResponseDTO(
                 savedService.getId(),
                 savedService.getName(),
                 savedService.getDescription(),
@@ -34,6 +38,6 @@ public class CreateServiceUseCaseImpl implements CreateServiceUseCase {
                 savedService.getEstimatedTimeMin(),
                 savedService.getCreatedAt(),
                 savedService.getUpdatedAt()
-        );
+        ));
     }
 }

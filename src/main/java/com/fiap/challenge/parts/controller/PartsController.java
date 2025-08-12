@@ -3,7 +3,10 @@ package com.fiap.challenge.parts.controller;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
+import com.fiap.challenge.shared.model.ResponseApi;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/parts")
+@Tag(name = "Peças", description = "Controlador para Peças.")
 public class PartsController {
 
 	private final CreatePartUseCase createPartUseCase;
@@ -37,32 +41,53 @@ public class PartsController {
 	private final FindPartsByIdsUseCase findPartsByIdsUseCase;
 	private final DeletePartUseCase deletePartUseCase;
 
+    @Operation(
+        summary = "Cria uma nova peça",
+        description = "Endpoint para criar uma nova peça.")
+    @ApiResponse(responseCode = "201", description = "Peça criada com sucesso.")
 	@PostMapping
-	public ResponseEntity<PartResponseDTO> createPart(@RequestBody CreatePartRequestDTO cratePart) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(createPartUseCase.execute(cratePart));
+	public ResponseEntity<ResponseApi<PartResponseDTO>> createPart(@RequestBody CreatePartRequestDTO cratePart) {
+        ResponseApi<PartResponseDTO> responseApi = createPartUseCase.execute(cratePart);
+		return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
 	}
 
+    @Operation(
+        summary = "Atualiza uma peça existente",
+        description = "Endpoint para atualizar uma peça pelo ID.")
+    @ApiResponse(responseCode = "200", description = "Peça atualizada com sucesso.")
 	@PutMapping("/{id}")
-    public ResponseEntity<PartResponseDTO> updatePart(@PathVariable UUID id,@RequestBody UpdatePartRequestDTO requestDTO) {
-        PartResponseDTO updatedPart = updatePartUseCase.execute(id, requestDTO);
-        return ResponseEntity.ok(updatedPart);
+    public ResponseEntity<ResponseApi<PartResponseDTO>> updatePart(@PathVariable UUID id,@RequestBody UpdatePartRequestDTO requestDTO) {
+        ResponseApi<PartResponseDTO> responseApi = updatePartUseCase.execute(id, requestDTO);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Busca uma peça pelo ID",
+        description = "Endpoint para buscar uma peça pelo ID.")
+    @ApiResponse(responseCode = "200", description = "Peça encontrada com sucesso.")
 	@GetMapping("/{id}")
-    public ResponseEntity<PartResponseDTO> findPartById(@PathVariable UUID id) {
-        PartResponseDTO part = findPartByIdUseCase.execute(id);
-        return ResponseEntity.ok(part);
+    public ResponseEntity<ResponseApi<PartResponseDTO>> findPartById(@PathVariable UUID id) {
+        ResponseApi <PartResponseDTO> responseApi = findPartByIdUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Busca várias peças pelos IDs",
+        description = "Endpoint para buscar várias peças pelos IDs.")
+    @ApiResponse(responseCode = "200", description = "Peças encontradas com sucesso.")
     @GetMapping
-    public ResponseEntity<List<PartResponseDTO>> findPartsByIds(@RequestParam List<UUID> ids) {
-        List<PartResponseDTO> parts = findPartsByIdsUseCase.execute(ids);
-        return ResponseEntity.ok(parts);
+    public ResponseEntity<ResponseApi<List<PartResponseDTO>>> findPartsByIds(@RequestParam List<UUID> ids) {
+        ResponseApi<List<PartResponseDTO>> responseApi = findPartsByIdsUseCase.execute(ids);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
+    @Operation(
+        summary = "Deleta uma peça pelo ID",
+        description = "Endpoint para deletar uma peça pelo ID.")
+    @ApiResponse(responseCode = "200", description = "Peça deletada com sucesso.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable UUID id) {
-        deletePartUseCase.execute(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ResponseApi<Void>> delete(@PathVariable UUID id) {
+        ResponseApi<Void> responseApi = deletePartUseCase.execute(id);
+        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 }

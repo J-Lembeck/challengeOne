@@ -2,13 +2,15 @@ package com.fiap.challenge.parts.useCases.delete;
 
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import com.fiap.challenge.workOrders.repository.WorkOrderPartRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fiap.challenge.parts.repository.PartsRepository;
 import com.fiap.challenge.shared.exception.part.PartDeletionException;
 import com.fiap.challenge.shared.exception.part.PartNotFoundException;
-import com.fiap.challenge.workOrders.repoisitory.WorkOrderPartRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +23,8 @@ public class DeletePartUseCaseImpl implements DeletePartUseCase {
 
     @Override
     @Transactional
-    public void execute(UUID id) {
+    public ResponseApi<Void> execute(UUID id) {
+        ResponseApi<Void> responseApi = new ResponseApi<>();
         if (!partsRepository.existsById(id)) {
             throw new PartNotFoundException(id);
         }
@@ -31,5 +34,8 @@ public class DeletePartUseCaseImpl implements DeletePartUseCase {
         }
 
         partsRepository.deleteById(id);
+
+        return responseApi.of(HttpStatus.NO_CONTENT,
+                "Peça deletada com sucesso");
     }
 }

@@ -3,6 +3,8 @@ package com.fiap.challenge.customers.useCases.find;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.challenge.shared.model.ResponseApi;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,10 @@ public class FindCustomersByIdsUseCaseImpl implements FindCustomersByIdsUseCase 
 
     @Override
     @Transactional(readOnly = true)
-    public List<CustomerResponseDTO> execute(List<UUID> ids) {
-        return customerRepository.findAllById(ids).stream()
+    public ResponseApi<List<CustomerResponseDTO>> execute(List<UUID> ids) {
+        ResponseApi<List<CustomerResponseDTO>> responseApi = new ResponseApi<>();
+        return responseApi.of(HttpStatus.OK, "Clientes encontrados com sucesso",
+                customerRepository.findAllById(ids).stream()
                 .map(customer -> new CustomerResponseDTO(
                         customer.getId(),
                         customer.getName(),
@@ -29,6 +33,6 @@ public class FindCustomersByIdsUseCaseImpl implements FindCustomersByIdsUseCase 
                         customer.getEmail(),
                         customer.getCreatedAt(),
                         customer.getUpdatedAt()
-                )).toList();
+                )).toList());
     }
 }
