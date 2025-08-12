@@ -4,11 +4,13 @@ import com.fiap.challenge.parts.dto.PartResponseDTO;
 import com.fiap.challenge.parts.entity.PartModel;
 import com.fiap.challenge.parts.repository.PartsRepository;
 import com.fiap.challenge.shared.exception.part.PartNotFoundException;
+import com.fiap.challenge.shared.model.ResponseApi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -65,13 +67,16 @@ class FindPartByIdUseCaseImplTest {
     }
 
     @Test
-    void shouldThrowWhenPartNotFound() {
-        // Arrange
+    void shouldReturnNotFoundWhenPartNotFound() {
         UUID id = UUID.randomUUID();
         when(partsRepository.findById(id)).thenReturn(Optional.empty());
 
-        // Act + Assert
-        assertThrows(PartNotFoundException.class, () -> useCase.execute(id));
+        ResponseApi<PartResponseDTO> response = useCase.execute(id);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatus());
+        assertEquals("Part not found with ID: " + id, response.getMessage());
+        assertNull(response.getData());
+
         verify(partsRepository, times(1)).findById(id);
     }
 }

@@ -1,5 +1,6 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
+import com.fiap.challenge.parts.useCases.update.SubtractPartsFromStockUseCase;
 import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.WorkOrderItemDTO;
 import com.fiap.challenge.workOrders.dto.WorkOrderResumeDTO;
@@ -25,6 +26,7 @@ public class UpdateWorkOrderItemsUseCaseImpl implements  UpdateWorkOrderItemsUse
     private final CreateWorkOrderServiceUseCase createWorkOrderServiceUseCase;
     private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
     private final WorkOrderMapper workOrderMapper;
+    private final SubtractPartsFromStockUseCase subtractPartsFromStockUseCase;
 
     @Override
     @Transactional
@@ -35,6 +37,11 @@ public class UpdateWorkOrderItemsUseCaseImpl implements  UpdateWorkOrderItemsUse
 
         createWorkOrderPartUseCase.execute(workOrder, workOrderItemDTO.parts());
         createWorkOrderServiceUseCase.execute(workOrder,workOrderItemDTO.services());
+
+        workOrderItemDTO.parts().forEach(part -> {
+            if(!subtractPartsFromStockUseCase.execute(part.partId(), part.quantity()))
+                throw new IllegalArgumentException("Estoque insuficiente para a peça com ID: " + part.partId());
+        });
 
         workOrder.recalculateTotal(); // Agora a soma é responsabilidade da entidade
         updateStatusWorkOrderUseCase.execute(workOrder.getId(), WorkOrderStatus.AWAITING_APPROVAL.name());
