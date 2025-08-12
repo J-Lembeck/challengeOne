@@ -32,7 +32,6 @@ public class WorkOrderAvarageTime {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
-    @CreationTimestamp
     public void initTime(){
         this.startTime = LocalDateTime.now().withNano(0);
     }
