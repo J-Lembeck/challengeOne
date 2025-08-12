@@ -30,6 +30,8 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/work-orders/cpf/**").permitAll() 
+                .requestMatchers(HttpMethod.PATCH, "/work-orders/*/decision").permitAll()
                 .requestMatchers("/documentation/**",
                                     "swagger-ui/**",
                                     "swagger-ui.html").permitAll()
