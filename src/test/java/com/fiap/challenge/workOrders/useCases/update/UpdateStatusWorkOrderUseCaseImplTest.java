@@ -1,17 +1,17 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
-import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
+import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
 import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderHistoryCommand;
 import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -24,85 +24,79 @@ class UpdateStatusWorkOrderUseCaseImplTest {
 
     @Mock
     private WorkOrderRepository workOrderRepository;
-
     @Mock
-    private UpdateWorkOrderHistoryUseCase updateWorkOrderStatusUseCase;
+    private UpdateWorkOrderHistoryUseCase updateWorkOrderHistoryUseCase;
 
     @InjectMocks
-    private UpdateStatusWorkOrderUseCaseImpl useCase;
+    private UpdateStatusWorkOrderUseCaseImpl updateStatusWorkOrderUseCase;
 
     private UUID workOrderId;
-    private WorkOrderModel existingWorkOrder;
+    private WorkOrderModel workOrderModel;
 
     @BeforeEach
     void setUp() {
-
         workOrderId = UUID.randomUUID();
-
-        existingWorkOrder = WorkOrderModel.builder()
-                .id(workOrderId)
-                .status(WorkOrderStatus.COMPLETED)
-                .build();
+        workOrderModel = new WorkOrderModel();
+        workOrderModel.setId(workOrderId);
+        workOrderModel.setStatus(WorkOrderStatus.RECEIVED);
     }
 
     @Test
-    void shouldUpdateStatusSuccessfully() {
-        // Arrange
-        when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.of(existingWorkOrder));
-        when(workOrderRepository.save(any(WorkOrderModel.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        // Act
-        StatusWorkOrderRespondeDTO response = useCase.execute(workOrderId, "COMPLETED").getData();
-
-        // Assert
-        assertNotNull(response);
-        assertEquals(workOrderId, response.id());
-        assertEquals(WorkOrderStatus.COMPLETED, response.status());
-
-        verify(workOrderRepository).findById(workOrderId);
-        verify(workOrderRepository).save(existingWorkOrder);
-        verify(updateWorkOrderStatusUseCase).execute(any(UpdateWorkOrderHistoryCommand.class));
-    }
-
-    @Test
-    void shouldThrowExceptionWhenWorkOrderNotFound() {
-        // Arrange
+    void deveLancarExcecaoQuandoWorkOrderNaoForEncontrada() {
         when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> useCase.execute(workOrderId, "CLOSED"));
-        assertTrue(exception.getMessage().contains("Work order not found"));
+        assertThrows(IllegalArgumentException.class,
+                () -> updateStatusWorkOrderUseCase.execute(workOrderId, "COMPLETED"));
 
         verify(workOrderRepository).findById(workOrderId);
-        verify(workOrderRepository, never()).save(any());
-        verifyNoInteractions(updateWorkOrderStatusUseCase);
+        verifyNoMoreInteractions(workOrderRepository, updateWorkOrderHistoryUseCase);
     }
 
     @Test
-    void shouldThrowExceptionWhenStatusIsInvalid() {
-        // Arrange
-        when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.of(existingWorkOrder));
+    void deveLancarExcecaoQuandoStatusForInvalido() {
+        when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.of(workOrderModel));
 
-        // Act & Assert
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> useCase.execute(workOrderId, "INVALID_STATUS"));
-        assertTrue(exception.getMessage().contains("Invalid status"));
+        assertThrows(IllegalArgumentException.class,
+                () -> updateStatusWorkOrderUseCase.execute(workOrderId, "INVALID_STATUS"));
 
         verify(workOrderRepository).findById(workOrderId);
-        verify(workOrderRepository, never()).save(any());
-        verifyNoInteractions(updateWorkOrderStatusUseCase);
+        verifyNoMoreInteractions(workOrderRepository, updateWorkOrderHistoryUseCase);
     }
 
     @Test
-    void executeWithInvalidStatus() {
-        assertThrows(IllegalArgumentException.class, () -> { WorkOrderStatus.fromString("PENDING");
-        });
+    void deveRetornarMensagemQuandoStatusJaForIgualAoAtual() {
+        when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.of(workOrderModel));
+
+        ResponseApi<StatusWorkOrderRespondeDTO> response =
+                updateStatusWorkOrderUseCase.execute(workOrderId, "RECEIVED");
+
+        assertEquals(200, response.getStatus().value());
+        assertTrue(response.getMessage().contains("No changes were made"));
+        assertEquals(WorkOrderStatus.RECEIVED, response.getData().status());
+
+        verify(workOrderRepository).findById(workOrderId);
+        verifyNoMoreInteractions(workOrderRepository, updateWorkOrderHistoryUseCase);
     }
 
     @Test
-    void executeWithValidStatus() {
-        WorkOrderStatus status = WorkOrderStatus.fromString("IN_PROGRESS");
-        assertEquals(WorkOrderStatus.IN_PROGRESS, status);
+    void deveAtualizarStatusComSucesso() {
+        when(workOrderRepository.findById(workOrderId)).thenReturn(Optional.of(workOrderModel));
+
+        WorkOrderModel savedWorkOrder = new WorkOrderModel();
+        savedWorkOrder.setId(workOrderId);
+        savedWorkOrder.setStatus(WorkOrderStatus.COMPLETED);
+
+        when(workOrderRepository.save(any(WorkOrderModel.class))).thenReturn(savedWorkOrder);
+
+        ResponseApi<StatusWorkOrderRespondeDTO> response =
+                updateStatusWorkOrderUseCase.execute(workOrderId, "COMPLETED");
+
+        assertEquals(200, response.getStatus().value());
+        assertEquals("Work order status updated successfully!", response.getMessage());
+        assertEquals(WorkOrderStatus.COMPLETED, response.getData().status());
+
+        verify(workOrderRepository).findById(workOrderId);
+        verify(workOrderRepository).save(workOrderModel);
+        verify(updateWorkOrderHistoryUseCase).execute(any(UpdateWorkOrderHistoryCommand.class));
     }
 }

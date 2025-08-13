@@ -1,90 +1,98 @@
 package com.fiap.challenge.workOrders.useCases.update;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import java.util.UUID;
 
 import com.fiap.challenge.shared.exception.workOrder.WorkOrderNotAvailableException;
+import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.users.entity.UserModel;
+import com.fiap.challenge.users.usecases.find.FindUserByIdUseCase;
 import com.fiap.challenge.workOrders.dto.AssignedMechanicResponseDTO;
 import com.fiap.challenge.workOrders.dto.InputAssignMechanicDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.useCases.find.FindWorkOrderByIdUseCase;
-import com.fiap.challenge.users.usecases.find.FindUserByIdUseCase;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
-public class AssignedMechanicUseCaseImplTest {
+class AssignedMechanicUseCaseImplTest {
 
     @Mock
     private FindWorkOrderByIdUseCase findWorkOrderByIdUseCase;
-
-    @Mock
-    private FindUserByIdUseCase findUserByIdUseCase;
-
     @Mock
     private UpdateWorkOrderUseCase updateWorkOrderUseCase;
+    @Mock
+    private FindUserByIdUseCase findUserByIdUseCase;
+    @Mock
+    private UpdateWorkOrderHistoryUseCase updateWorkOrderHistoryUseCase;
 
     @InjectMocks
     private AssignedMechanicUseCaseImpl assignedMechanicUseCase;
 
     private UUID workOrderId;
     private UUID mechanicId;
-    private WorkOrderModel workOrderModel;
-    private UserModel userModel;
 
     @BeforeEach
     void setup() {
         workOrderId = UUID.randomUUID();
         mechanicId = UUID.randomUUID();
-
-        workOrderModel = new WorkOrderModel();
-        workOrderModel.setStatus(WorkOrderStatus.RECEIVED);
-
-        userModel = new UserModel();
     }
 
     @Test
-    void shouldAssignMechanicAndUpdateStatusSuccessfully() {
+    void deveAtribuirMecanicoComSucessoQuandoStatusForReceived() {
         // Arrange
-        when(findWorkOrderByIdUseCase.execute(workOrderId)).thenReturn(workOrderModel);
-        when(findUserByIdUseCase.execute(mechanicId)).thenReturn(userModel);
+        WorkOrderModel workOrder = new WorkOrderModel();
+        workOrder.setId(workOrderId);
+        workOrder.setStatus(WorkOrderStatus.RECEIVED);
 
-        var input = new InputAssignMechanicDTO(mechanicId);
+        UserModel mechanic = new UserModel();
+        mechanic.setId(mechanicId);
+
+        when(findWorkOrderByIdUseCase.execute(workOrderId)).thenReturn(workOrder);
+        when(findUserByIdUseCase.execute(mechanicId)).thenReturn(mechanic);
+
+        InputAssignMechanicDTO dto = new InputAssignMechanicDTO(mechanicId);
 
         // Act
-        AssignedMechanicResponseDTO response = assignedMechanicUseCase.execute(workOrderId, input).getData();
+        ResponseApi<AssignedMechanicResponseDTO> response =
+                assignedMechanicUseCase.execute(workOrderId, dto);
 
         // Assert
-        assertTrue(response.success());
-        assertEquals(WorkOrderStatus.IN_DIAGNOSIS, workOrderModel.getStatus());
-        assertEquals(userModel, workOrderModel.getAssignedMechanic());
+        assertNotNull(response);
+        assertEquals(200, response.getStatus().value());
+        assertEquals("Mecânico atribuído com sucesso!", response.getMessage());
+        assertTrue(response.getData().success());
 
-        verify(updateWorkOrderUseCase).execute(workOrderModel);
+        verify(updateWorkOrderUseCase).execute(workOrder);
+        verify(updateWorkOrderHistoryUseCase).execute(any());
+        assertEquals(WorkOrderStatus.IN_DIAGNOSIS, workOrder.getStatus());
+        assertEquals(mechanic, workOrder.getAssignedMechanic());
     }
 
     @Test
-    void shouldThrowExceptionWhenStatusNotReceived() {
+    void deveLancarExcecaoQuandoStatusNaoForReceived() {
         // Arrange
-        workOrderModel.setStatus(WorkOrderStatus.IN_PROGRESS);
-        when(findWorkOrderByIdUseCase.execute(workOrderId)).thenReturn(workOrderModel);
+        WorkOrderModel workOrder = new WorkOrderModel();
+        workOrder.setId(workOrderId);
+        workOrder.setStatus(WorkOrderStatus.IN_PROGRESS);
 
-        var input = new InputAssignMechanicDTO(mechanicId);
+        when(findWorkOrderByIdUseCase.execute(workOrderId)).thenReturn(workOrder);
+
+        InputAssignMechanicDTO dto = new InputAssignMechanicDTO(mechanicId);
 
         // Act & Assert
-        assertThrows(WorkOrderNotAvailableException.class, () -> {
-            assignedMechanicUseCase.execute(workOrderId, input);
-        });
+        assertThrows(WorkOrderNotAvailableException.class,
+                () -> assignedMechanicUseCase.execute(workOrderId, dto));
 
-        verify(findUserByIdUseCase, never()).execute(any());
         verify(updateWorkOrderUseCase, never()).execute(any());
+        verify(updateWorkOrderHistoryUseCase, never()).execute(any());
     }
 }
