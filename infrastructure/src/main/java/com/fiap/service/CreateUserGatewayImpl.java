@@ -1,27 +1,28 @@
 package com.fiap.service;
 
-import com.fiap.application.gateway.CreateCustomerGateway;
-import com.fiap.core.domain.Customer;
-import com.fiap.mapper.CustomerMapper;
-import com.fiap.repository.CustomerEntityRepository;
+import com.fiap.application.gateway.CreateUserGateway;
+import com.fiap.core.domain.User;
+import com.fiap.mapper.UserMapper;
+import com.fiap.repository.UserEntityRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateUserGatewayImpl implements CreateCustomerGateway {
-    final CustomerEntityRepository customerEntityRepository;
-    final CustomerMapper customerMapper;
+public class CreateUserGatewayImpl implements CreateUserGateway {
 
-    public CreateUserGatewayImpl(CustomerEntityRepository customerEntityRepository, CustomerMapper customerMapper) {
-        this.customerEntityRepository = customerEntityRepository;
-        this.customerMapper = customerMapper;
+    final UserEntityRepository userEntityRepository;
+    final UserMapper userMapper;
+
+    public CreateUserGatewayImpl(UserEntityRepository userEntityRepository, UserMapper userMapper) {
+        this.userEntityRepository = userEntityRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public Boolean create(Customer customer) {
+    public Boolean create(User user) {
         try {
             System.out.println("vai salvar");
-            System.out.println("uuid valor:" +  customer.getId());
-            customerEntityRepository.save(customerMapper.toEntity(customer));
+            System.out.println("uuid valor:" +  user.getId());
+            userEntityRepository.save(userMapper.toEntity(user));
             return true;
         } catch (Exception e) {
             System.out.println("caiu no erro");
