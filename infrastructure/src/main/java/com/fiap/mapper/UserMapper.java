@@ -3,6 +3,7 @@ package com.fiap.mapper;
 import com.fiap.core.domain.User;
 import com.fiap.core.exception.EmailException;
 import com.fiap.dto.request.CreateUserRequest;
+import com.fiap.dto.response.UserResponse;
 import com.fiap.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,31 @@ public class UserMapper {
                 request.name(),
                 request.email(),
                 request.password()
+        );
+    }
+
+    public User toDomain(UserEntity entity) {
+        User user = null;
+        try{
+            user  = new User(
+                    entity.getId(),
+                    entity.getName(),
+                    entity.getEmail(),
+                    entity.getPasswordHash(),
+                    entity.getCreatedAt(),
+                    entity.getUpdatedAt()
+            );
+        } catch (RuntimeException | EmailException e) {
+            new EmailException("Error mapping UserEntity to User", "COD21");
+        }
+        return user;
+    }
+
+    public UserResponse toResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
         );
     }
 }
