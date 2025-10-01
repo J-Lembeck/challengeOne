@@ -1,4 +1,4 @@
-package com.fiap.entity;
+package com.fiap.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

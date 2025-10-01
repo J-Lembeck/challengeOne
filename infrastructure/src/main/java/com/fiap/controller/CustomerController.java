@@ -26,7 +26,7 @@ public class CustomerController {
 
     @PostMapping("/createCustomer")
     public BaseResponse<String> createUser(@RequestBody CreateCustomerRequest request) throws DocumentNumberException, EmailException, InternalServerErrorException {
-        createCustomerUseCase.execute(customerMapper.toCustomer(request));
-        return BaseResponse.<String>builder().success(true).message("Usuário criado com sucesso").build();
+        createCustomerUseCase.execute(customerMapper.toDomain(request));
+        return BaseResponse.<String>builder().success(true).message("Cliente criado com sucesso").build();
     }
 }
