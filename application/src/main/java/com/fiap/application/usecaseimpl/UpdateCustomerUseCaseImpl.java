@@ -5,20 +5,22 @@ import com.fiap.core.domain.Customer;
 import com.fiap.core.exception.DocumentNumberException;
 import com.fiap.core.exception.EmailException;
 import com.fiap.core.exception.InternalServerErrorException;
+import com.fiap.core.exception.NotFoundException;
 import com.fiap.core.exception.enums.ErrorCodeEnum;
 import com.fiap.usecase.CreateCustomerUseCase;
 import com.fiap.usecase.DocumentNumberAvailableUseCase;
 import com.fiap.usecase.EmailAvailableUseCase;
+import com.fiap.usecase.UpdateCustomerUseCase;
 
 import java.util.Objects;
 
-public class CreateCustomerUseCaseImpl implements CreateCustomerUseCase {
+public class UpdateCustomerUseCaseImpl implements UpdateCustomerUseCase {
 
     private final DocumentNumberAvailableUseCase documentNumberAvailableUseCase;
     private final EmailAvailableUseCase emailAvailableUseCase;
     private final CustomerGateway customerGateway;
 
-    public CreateCustomerUseCaseImpl(DocumentNumberAvailableUseCase documentNumberAvailableUseCase, EmailAvailableUseCase emailAvailableUseCase,
+    public UpdateCustomerUseCaseImpl(DocumentNumberAvailableUseCase documentNumberAvailableUseCase, EmailAvailableUseCase emailAvailableUseCase,
                                      CustomerGateway customerGateway) {
         this.documentNumberAvailableUseCase = documentNumberAvailableUseCase;
         this.emailAvailableUseCase = emailAvailableUseCase;
@@ -26,20 +28,25 @@ public class CreateCustomerUseCaseImpl implements CreateCustomerUseCase {
     }
 
     @Override
-    public Customer execute(Customer customer) throws DocumentNumberException, EmailException, InternalServerErrorException {
-        if (!documentNumberAvailableUseCase.documentNumberAvailable(customer.getDocumentNumber().getValue())) {
+    public Customer execute(Customer customer) throws DocumentNumberException, NotFoundException, EmailException, InternalServerErrorException {
+        Customer oldCustomer = customerGateway.findById(customer.getId())
+                .orElseThrow(() -> new NotFoundException(ErrorCodeEnum.CUST0001.getMessage(), ErrorCodeEnum.CUST0001.getCode()));
+
+        if (!oldCustomer.getDocumentNumber().equals(customer.getDocumentNumber()) &&
+                !documentNumberAvailableUseCase.documentNumberAvailable(customer.getDocumentNumber().getValue())) {
             throw new DocumentNumberException(ErrorCodeEnum.CAD0002.getMessage(), ErrorCodeEnum.CAD0002.getCode());
         }
 
-        if (!emailAvailableUseCase.emailAvailable(customer.getEmail())) {
+        if (!oldCustomer.getEmail().equals(customer.getEmail()) &&
+                !emailAvailableUseCase.emailAvailable(customer.getEmail())) {
             throw new EmailException(ErrorCodeEnum.CAD0003.getMessage(), ErrorCodeEnum.CAD0003.getCode());
         }
 
-        Customer customerCreated = customerGateway.create(customer);
-        if (Objects.isNull(customerCreated)) {
+        Customer customerUpdated = customerGateway.update(customer);
+        if (Objects.isNull(customerUpdated)) {
             throw new InternalServerErrorException(ErrorCodeEnum.CAD0004.getMessage(), ErrorCodeEnum.CAD0004.getCode());
         }
 
-        return customerCreated;
+        return customerUpdated;
     }
 }

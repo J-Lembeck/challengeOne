@@ -4,8 +4,12 @@ import com.fiap.core.domain.Customer;
 import com.fiap.core.domain.DocumentNumber;
 import com.fiap.core.exception.DocumentNumberException;
 import com.fiap.dto.request.CreateCustomerRequest;
-import com.fiap.entity.CustomerEntity;
+import com.fiap.dto.request.UpdateCustomerRequest;
+import com.fiap.dto.response.CustomerResponse;
+import com.fiap.persistence.entity.CustomerEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class CustomerMapper {
@@ -22,12 +26,38 @@ public class CustomerMapper {
         );
     }
 
-    public Customer toCustomer(CreateCustomerRequest request) throws DocumentNumberException {
+    public Customer toDomain(CustomerEntity customerEntity) throws DocumentNumberException {
+        return new Customer(
+                customerEntity.getId(),
+                customerEntity.getName(),
+                DocumentNumber.fromPersistence(customerEntity.getDocumentNumber()),
+                customerEntity.getPhone(),
+                customerEntity.getEmail(),
+                customerEntity.getCreatedAt(),
+                customerEntity.getUpdatedAt()
+        );
+    }
+
+    public Customer toDomain(CreateCustomerRequest request) throws DocumentNumberException {
         return new Customer(
                 request.name(),
-                new DocumentNumber(request.documentNumber()),
+                DocumentNumber.of(request.documentNumber()),
                 request.phone(),
                 request.email()
         );
+    }
+
+    public Customer toDomainUpdate(UpdateCustomerRequest request) throws DocumentNumberException {
+        return new Customer(
+                request.id(),
+                request.name(),
+                DocumentNumber.of(request.documentNumber()),
+                request.phone(),
+                request.email()
+        );
+    }
+
+    public CustomerResponse toResponse(Customer customer) {
+        return new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getDocumentNumber());
     }
 }

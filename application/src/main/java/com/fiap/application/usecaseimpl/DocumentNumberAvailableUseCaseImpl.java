@@ -5,7 +5,7 @@ import com.fiap.usecase.DocumentNumberAvailableUseCase;
 
 public class DocumentNumberAvailableUseCaseImpl implements DocumentNumberAvailableUseCase {
 
-    public DocumentNumberAvailableGateway documentNumberAvailableGateway;
+    private final DocumentNumberAvailableGateway documentNumberAvailableGateway;
 
     public DocumentNumberAvailableUseCaseImpl(DocumentNumberAvailableGateway documentNumberAvailableGateway) {
         this.documentNumberAvailableGateway = documentNumberAvailableGateway;

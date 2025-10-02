@@ -5,7 +5,7 @@ import com.fiap.usecase.EmailAvailableUseCase;
 
 public class EmailAvailableUseCaseImpl implements EmailAvailableUseCase {
 
-    final EmailAvailableGateway emailAvailableGateway;
+    private final EmailAvailableGateway emailAvailableGateway;
 
     public EmailAvailableUseCaseImpl(EmailAvailableGateway emailAvailableGateway) {
         this.emailAvailableGateway = emailAvailableGateway;
