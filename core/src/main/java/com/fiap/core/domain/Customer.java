@@ -23,6 +23,15 @@ public class Customer {
         this.updatedAt = updatedAt;
     }
 
+    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email) {
+        this.id = id;
+        this.name = name;
+        this.documentNumber = documentNumber;
+        this.phone = phone;
+        this.email = email;
+        this.updatedAt = LocalDateTime.now();
+    }
+
     public Customer(String name, DocumentNumber documentNumber, String phone, String email) {
         this.id = UUID.randomUUID();
         this.name = name;

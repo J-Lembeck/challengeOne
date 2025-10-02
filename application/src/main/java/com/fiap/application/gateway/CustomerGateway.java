@@ -7,7 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface CustomerGateway {
-    Boolean create(Customer customer);
+    Customer create(Customer customer) throws DocumentNumberException;
+    Customer update(Customer customer) throws DocumentNumberException;
     Optional<Customer> findById(UUID customerId) throws DocumentNumberException;
     void delete(Customer customer);
 }

@@ -22,13 +22,15 @@ public class CustomerRepositoryGateway implements CustomerGateway {
     }
 
     @Override
-    public Boolean create(Customer customer) {
-        try {
-            customerEntityRepository.save(customerMapper.toEntity(customer));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public Customer create(Customer customer) throws DocumentNumberException {
+        CustomerEntity customerEntity = customerEntityRepository.save(customerMapper.toEntity(customer));
+        return customerMapper.toDomain(customerEntity);
+    }
+
+    @Override
+    public Customer update(Customer customer) throws DocumentNumberException {
+        CustomerEntity customerEntity = customerEntityRepository.save(customerMapper.toEntity(customer));
+        return customerMapper.toDomain(customerEntity);
     }
 
     @Override
