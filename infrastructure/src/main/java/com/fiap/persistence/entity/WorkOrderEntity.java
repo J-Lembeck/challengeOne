@@ -1,4 +1,4 @@
-package com.fiap.entity;
+package com.fiap.persistence.entity;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fiap.core.domain.enums.WorkOrderStatus;
+import com.fiap.persistence.entity.CustomerEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

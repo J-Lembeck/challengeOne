@@ -7,13 +7,28 @@ public class DocumentNumber {
 
     private final String value;
 
+    private DocumentNumber(String documentNumber) {
+        this.value = documentNumber;
+    }
+
     /**
      * Cria um DocumentNumber validando CPF ou CNPJ.
      * @param documentNumber CPF ou CNPJ (pode conter . - /)
      * @throws DocumentNumberException se inválido
      */
-    public DocumentNumber(String documentNumber) throws DocumentNumberException {
-        this.value = validateAndClean(documentNumber);
+    public static DocumentNumber of(String documentNumber) throws DocumentNumberException {
+        String documentCleaned = validateAndClean(documentNumber);
+
+        return new DocumentNumber(documentCleaned);
+    }
+
+    /**
+     * Cria um DocumentNumber sem validar.
+     * @param documentNumber CPF ou CNPJ (pode conter . - /)
+     * @throws DocumentNumberException se inválido
+     */
+    public static DocumentNumber fromPersistence(String documentNumber) throws DocumentNumberException {
+        return new DocumentNumber(documentNumber);
     }
 
     /**
@@ -26,7 +41,7 @@ public class DocumentNumber {
     /**
      * Valida e limpa o documento
      */
-    private String validateAndClean(String documentNumber) throws DocumentNumberException {
+    private static String validateAndClean(String documentNumber) throws DocumentNumberException {
         if (documentNumber == null || documentNumber.isBlank()) {
             throw new DocumentNumberException(ErrorCodeEnum.CAD0001.getMessage(), ErrorCodeEnum.CAD0001.getCode());
         }
@@ -49,7 +64,7 @@ public class DocumentNumber {
         return cleaned;
     }
 
-    private boolean isCpfValid(String cpf) {
+    private static boolean isCpfValid(String cpf) {
         if (cpf.chars().distinct().count() == 1) return false;
 
         int d1 = calculateDigit(cpf, new int[]{10,9,8,7,6,5,4,3,2});
@@ -58,7 +73,7 @@ public class DocumentNumber {
         return (cpf.charAt(9) - '0' == d1) && (cpf.charAt(10) - '0' == d2);
     }
 
-    private boolean isCnpjValid(String cnpj) {
+    private static boolean isCnpjValid(String cnpj) {
         if (cnpj.chars().distinct().count() == 1) return false;
 
         int d1 = calculateDigit(cnpj, new int[]{5,4,3,2,9,8,7,6,5,4,3,2});
@@ -70,7 +85,7 @@ public class DocumentNumber {
     /**
      * Calcula o dígito verificador com base nos pesos fornecidos
      */
-    private int calculateDigit(String number, int[] weights) {
+    private static int calculateDigit(String number, int[] weights) {
         int sum = 0;
         for (int i = 0; i < weights.length; i++) {
             sum += (number.charAt(i) - '0') * weights[i];

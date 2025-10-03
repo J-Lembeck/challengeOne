@@ -5,7 +5,9 @@ public enum ErrorCodeEnum {
     CAD0001("Documento Inválido", "CAD-0001"),
     CAD0002("Documento já cadastrado!", "CAD-0002"),
     CAD0003("Email já cadastrado!", "CAD-0003"),
-    CAD0004("Erro na criação do cliente", "CAD-0004")
+    CAD0004("Erro na criação do cliente", "CAD-0004"),
+
+    CUST0001("Cliente não encontrado", "CUST-0001")
     ;
 
     private String message;
