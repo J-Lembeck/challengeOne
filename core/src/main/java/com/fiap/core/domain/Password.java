@@ -17,11 +17,11 @@ public class Password {
 
     public void isValidPassword(String password) {
         if (password == null) {
-            throw new PasswordException(ErrorCodeEnum.CAD0005.getMessage(), ErrorCodeEnum.CAD0005.getCode());
+            throw new PasswordException(ErrorCodeEnum.USE0001.getMessage(), ErrorCodeEnum.USE0001.getCode());
         }
 
         if (password.length() < 8) {
-            throw new PasswordException(ErrorCodeEnum.CAD0006.getMessage(), ErrorCodeEnum.CAD0006.getCode());
+            throw new PasswordException(ErrorCodeEnum.USE0002.getMessage(), ErrorCodeEnum.USE0002.getCode());
         }
 
         boolean hasUpper = false;
@@ -38,18 +38,18 @@ public class Password {
 
         if (!hasUpper) {
       throw new PasswordException(
-          ErrorCodeEnum.CAD0007.getMessage(), ErrorCodeEnum.CAD0007.getCode());
+          ErrorCodeEnum.USE0003.getMessage(), ErrorCodeEnum.USE0003.getCode());
         }
         if (!hasLower) {
       throw new PasswordException(
-          ErrorCodeEnum.CAD0008.getMessage(), ErrorCodeEnum.CAD0008.getCode());
+          ErrorCodeEnum.USE0004.getMessage(), ErrorCodeEnum.USE0004.getCode());
         }
         if (!hasDigit) {
       throw new PasswordException(
-          ErrorCodeEnum.CAD0009.getMessage(), ErrorCodeEnum.CAD0009.getCode());
+          ErrorCodeEnum.USE0005.getMessage(), ErrorCodeEnum.USE0005.getCode());
         }
         if (!hasSpecial) {
-            throw new PasswordException(ErrorCodeEnum.CAD0010.getMessage(), ErrorCodeEnum.CAD0010.getCode());
+            throw new PasswordException(ErrorCodeEnum.USE0006.getMessage(), ErrorCodeEnum.USE0006.getCode());
         }
     }
 
