@@ -25,9 +25,8 @@ public class DocumentNumber {
     /**
      * Cria um DocumentNumber sem validar.
      * @param documentNumber CPF ou CNPJ (pode conter . - /)
-     * @throws DocumentNumberException se inválido
      */
-    public static DocumentNumber fromPersistence(String documentNumber) throws DocumentNumberException {
+    public static DocumentNumber fromPersistence(String documentNumber) {
         return new DocumentNumber(documentNumber);
     }
 

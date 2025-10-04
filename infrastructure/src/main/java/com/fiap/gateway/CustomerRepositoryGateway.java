@@ -22,29 +22,29 @@ public class CustomerRepositoryGateway implements CustomerGateway {
     }
 
     @Override
-    public Customer create(Customer customer) throws DocumentNumberException {
+    public Customer create(Customer customer) {
         CustomerEntity customerEntity = customerEntityRepository.save(customerMapper.toEntity(customer));
         return customerMapper.toDomain(customerEntity);
     }
 
     @Override
-    public Customer update(Customer customer) throws DocumentNumberException {
+    public Customer update(Customer customer) {
         CustomerEntity customerEntity = customerEntityRepository.save(customerMapper.toEntity(customer));
         return customerMapper.toDomain(customerEntity);
     }
 
     @Override
-    public Optional<Customer> findById(UUID customerId) throws DocumentNumberException {
+    public Optional<Customer> findById(UUID customerId) {
         Optional<CustomerEntity> customerEntity = customerEntityRepository.findById(customerId);
 
-        return customerEntity.isPresent() ? Optional.of(customerMapper.toDomain(customerEntity.get())) : Optional.empty();
+        return customerEntity.map(customerMapper::toDomain);
     }
 
     @Override
-    public Optional<Customer> findByDocumentNumber(String documentNumber) throws DocumentNumberException {
+    public Optional<Customer> findByDocumentNumber(String documentNumber) {
         Optional<CustomerEntity> customerEntity = customerEntityRepository.findByDocumentNumber(documentNumber);
 
-        return customerEntity.isPresent() ? Optional.of(customerMapper.toDomain(customerEntity.get())) : Optional.empty();
+        return customerEntity.map(customerMapper::toDomain);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class CustomerMapper {
         );
     }
 
-    public Customer toDomain(CustomerEntity customerEntity) throws DocumentNumberException {
+    public Customer toDomain(CustomerEntity customerEntity) {
         return new Customer(
                 customerEntity.getId(),
                 customerEntity.getName(),
