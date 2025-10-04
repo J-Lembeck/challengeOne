@@ -1,10 +1,10 @@
 package com.fiap.config;
 
-import com.fiap.application.gateway.CustomerGateway;
-import com.fiap.application.gateway.DocumentNumberAvailableGateway;
-import com.fiap.application.gateway.EmailAvailableGateway;
-import com.fiap.application.usecaseimpl.*;
-import com.fiap.usecase.*;
+import com.fiap.application.gateway.customer.CustomerGateway;
+import com.fiap.application.gateway.customer.DocumentNumberAvailableGateway;
+import com.fiap.application.gateway.customer.EmailAvailableGateway;
+import com.fiap.application.usecaseimpl.customer.*;
+import com.fiap.usecase.customer.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
