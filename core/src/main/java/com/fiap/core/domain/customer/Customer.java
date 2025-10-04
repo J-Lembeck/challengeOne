@@ -1,18 +1,9 @@
 package com.fiap.core.domain.customer;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Customer {
     private UUID id;
     private String name;
@@ -21,6 +12,89 @@ public class Customer {
     private String email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.documentNumber = documentNumber;
+        this.phone = phone;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email) {
+        this.id = id;
+        this.name = name;
+        this.documentNumber = documentNumber;
+        this.phone = phone;
+        this.email = email;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public Customer(String name, DocumentNumber documentNumber, String phone, String email) {
+        this.id = UUID.randomUUID();
+        this.name = name;
+        this.documentNumber = documentNumber;
+        this.phone = phone;
+        this.email = email;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Customer() {
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public DocumentNumber getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public void setDocumentNumber(DocumentNumber documentNumber) {
+        this.documentNumber = documentNumber;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     @Override
     public final boolean equals(Object o) {
