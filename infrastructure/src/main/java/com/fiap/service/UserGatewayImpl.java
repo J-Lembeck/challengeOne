@@ -1,18 +1,18 @@
 package com.fiap.service;
 
-import com.fiap.application.gateway.CreateUserGateway;
+import com.fiap.application.gateway.UserGateway;
 import com.fiap.core.domain.User;
 import com.fiap.mapper.UserMapper;
 import com.fiap.repository.UserEntityRepository;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateUserGatewayImpl implements CreateUserGateway {
+public class UserGatewayImpl implements UserGateway {
 
     final UserEntityRepository userEntityRepository;
     final UserMapper userMapper;
 
-    public CreateUserGatewayImpl(UserEntityRepository userEntityRepository, UserMapper userMapper) {
+    public UserGatewayImpl(UserEntityRepository userEntityRepository, UserMapper userMapper) {
         this.userEntityRepository = userEntityRepository;
         this.userMapper = userMapper;
     }

@@ -4,8 +4,9 @@ import com.fiap.core.domain.Customer;
 import com.fiap.core.exception.DocumentNumberException;
 import com.fiap.core.exception.EmailException;
 import com.fiap.core.exception.InternalServerErrorException;
+import com.fiap.core.exception.NotFoundException;
 
-public interface CreateCustomerUseCase {
+public interface UpdateCustomerUseCase {
 
-    Customer execute(Customer customer) throws DocumentNumberException, EmailException, InternalServerErrorException;
+    Customer execute(Customer customer) throws DocumentNumberException, NotFoundException, EmailException, InternalServerErrorException;
 }

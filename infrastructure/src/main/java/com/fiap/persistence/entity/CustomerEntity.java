@@ -1,4 +1,4 @@
-package com.fiap.entity;
+package com.fiap.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,6 +31,14 @@ public class CustomerEntity {
 
     @Column(name = "email")
     private String email;
+
+    //TODO Criar estrutura para veiculo
+    /*@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<VehicleEntity> vehicles;*/
+
+    //TODO Criar estrutura para ordem de serviço
+    /*@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<WorkOrderEntity> workOrders;*/
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

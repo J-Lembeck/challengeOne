@@ -13,6 +13,8 @@ public enum ErrorCodeEnum {
     CAD0009("A senha deve conter pelo menos um número", "CAD-0009"),
     CAD0010("A senha deve conter pelo menos um caractere especial (!@#$%^&*()-+)", "CAD-0010"),
     CAD0011("Erro ao validar senha", "CAD-0011")
+
+    CUST0001("Cliente não encontrado", "CUST-0001")
     ;
 
     private String message;
