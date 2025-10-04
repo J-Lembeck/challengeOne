@@ -24,6 +24,13 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
+    public User(UUID id, String name, String email, String password) throws EmailException {
+        this.id = id;
+        this.name = name;
+        this.email = new Email(email);
+        this.password = password != null ? new Password(password) : null;
+        this.updatedAt = LocalDateTime.now();
+    }
     public User(String name, String email, String password) throws EmailException {
         this.name = name;
         this.email = new Email(email);
