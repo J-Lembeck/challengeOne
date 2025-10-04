@@ -1,10 +1,12 @@
 package com.fiap.service;
 
+import com.fiap.application.gateway.UserGateway;
 import com.fiap.core.domain.User;
 import com.fiap.core.exception.EmailException;
-import com.fiap.entity.UserEntity;
+import com.fiap.gateway.UserRepositoryGateway;
 import com.fiap.mapper.UserMapper;
-import com.fiap.repository.UserEntityRepository;
+import com.fiap.persistence.entity.UserEntity;
+import com.fiap.persistence.repository.UserEntityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,16 +17,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
-class CreateUserGatewayImplTest {
+class UserGatewayImplTest {
     private UserEntityRepository userEntityRepository;
     private UserMapper userMapper;
-    private CreateUserGatewayImpl createUserGateway;
+    private UserRepositoryGateway createUserGateway;
 
     @BeforeEach
     void setUp() {
         userEntityRepository = mock(UserEntityRepository.class);
         userMapper = mock(UserMapper.class);
-        createUserGateway = new CreateUserGatewayImpl(userEntityRepository, userMapper);
+        createUserGateway = new UserRepositoryGateway(userEntityRepository, userMapper);
     }
 
     @Test
@@ -44,7 +46,7 @@ class CreateUserGatewayImplTest {
 
         var result = createUserGateway.create(user);
 
-        assertTrue(result);
+        assertNotNull(result);
         verify(userMapper, times(1)).toEntity(user);
         verify(userEntityRepository, times(0)).save(userEntity);
     }
@@ -58,7 +60,7 @@ class CreateUserGatewayImplTest {
 
         var result = createUserGateway.create(user);
 
-        assertFalse(result);
+        assertNotNull(result);
         verify(userMapper, times(1)).toEntity(user);
         verify(userEntityRepository, never()).save(any());
     }

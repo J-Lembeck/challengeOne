@@ -1,6 +1,6 @@
-package com.fiap.repository;
+package com.fiap.persistence.repository;
 
-import com.fiap.entity.UserEntity;
+import com.fiap.persistence.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
