@@ -3,8 +3,9 @@ package com.fiap.mapper;
 import com.fiap.core.domain.User;
 import com.fiap.core.exception.EmailException;
 import com.fiap.dto.request.CreateUserRequest;
+import com.fiap.dto.request.UpdateUserRequest;
 import com.fiap.dto.response.UserResponse;
-import com.fiap.entity.UserEntity;
+import com.fiap.persistence.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,6 +24,15 @@ public class UserMapper {
 
     public User toDomain(CreateUserRequest request) throws EmailException {
         return new User(
+                request.name(),
+                request.email(),
+                request.password()
+        );
+    }
+
+    public User toDomainUpdate(UpdateUserRequest request) throws EmailException {
+        return new User(
+                request.id(),
                 request.name(),
                 request.email(),
                 request.password()
