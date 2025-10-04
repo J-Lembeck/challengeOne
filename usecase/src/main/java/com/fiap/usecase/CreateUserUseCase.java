@@ -1,7 +1,8 @@
 package com.fiap.usecase;
 
 import com.fiap.core.domain.User;
+import com.fiap.core.exception.InternalServerErrorException;
 
 public interface CreateUserUseCase {
-    void execute(User user);
+    User execute(User user) throws InternalServerErrorException;
 }
