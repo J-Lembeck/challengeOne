@@ -19,6 +19,7 @@ public class FindCustomerByIdUseCaseImpl implements FindCustomerByIdUseCase {
     }
 
     public Customer execute(UUID customerId) throws NotFoundException, DocumentNumberException {
+
         Optional<Customer> customer = customerGateway.findById(customerId);
 
         if (customer.isEmpty()) {

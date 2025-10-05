@@ -16,62 +16,57 @@ import java.util.UUID;
 public class CustomerMapper {
 
     public CustomerEntity toEntity(Customer customer) {
-        return CustomerEntity.builder()
-                .id(customer.getId())
-                .name(customer.getName())
-                .documentNumber(customer.getDocumentNumber().getValue())
-                .phone(customer.getPhone())
-                .email(customer.getEmail())
-                .createdAt(customer.getCreatedAt())
-                .updatedAt(customer.getUpdatedAt())
-                .vehicles(new ArrayList<>())
-                .workOrders(new ArrayList<>())
-                .build();
+        return new CustomerEntity(
+                customer.getId(),
+                customer.getName(),
+                customer.getDocumentNumber().getValue(),
+                customer.getPhone(),
+                customer.getEmail(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                customer.getCreatedAt(),
+                customer.getUpdatedAt()
+        );
     }
 
-
-    // --- CORREÇÃO AQUI ---
-    public Customer toDomain(CustomerEntity entity) {
-        try {
-            return Customer.builder()
-                    .id(entity.getId())
-                    .name(entity.getName())
-                    .documentNumber(DocumentNumber.fromPersistence(entity.getDocumentNumber()))
-                    .phone(entity.getPhone())
-                    .email(entity.getEmail())
-                    .createdAt(entity.getCreatedAt())
-                    .updatedAt(entity.getUpdatedAt())
-                    .build();
-        } catch (DocumentNumberException e) {
-            throw new IllegalStateException("Invalid document number found in the database for customer " + entity.getId(), e);
-        }
+    public Customer toDomain(CustomerEntity customerEntity) {
+        return new Customer(
+                customerEntity.getId(),
+                customerEntity.getName(),
+                DocumentNumber.fromPersistence(customerEntity.getDocumentNumber()),
+                customerEntity.getPhone(),
+                customerEntity.getEmail(),
+                customerEntity.getCreatedAt(),
+                customerEntity.getUpdatedAt()
+        );
     }
 
     public Customer toDomain(CreateCustomerRequest request) throws DocumentNumberException {
-        return Customer.builder()
-                .name(request.name())
-                .documentNumber(DocumentNumber.of(request.documentNumber()))
-                .phone(request.phone())
-                .email(request.email())
-                .build();
+        return new Customer(
+                request.name(),
+                DocumentNumber.of(request.documentNumber()),
+                request.phone(),
+                request.email()
+        );
     }
 
     public Customer toDomain(UUID id, UpdateCustomerRequest request) throws DocumentNumberException {
-        return Customer.builder()
-                .id(id)
-                .name(request.name())
-                .documentNumber(DocumentNumber.of(request.documentNumber()))
-                .phone(request.phone())
-                .email(request.email())
-                .build();
+        return new Customer(
+                id,
+                request.name(),
+                DocumentNumber.of(request.documentNumber()),
+                request.phone(),
+                request.email()
+        );
+    }
+
+    public Customer toDomain(UUID id) {
+        return new Customer(
+                id
+        );
     }
 
     public CustomerResponse toResponse(Customer customer) {
-        return new CustomerResponse(
-                customer.getId(),
-                customer.getName(),
-                customer.getEmail(),
-                customer.getDocumentNumber()
-        );
+        return new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getDocumentNumber());
     }
 }

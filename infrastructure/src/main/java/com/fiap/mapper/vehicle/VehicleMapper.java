@@ -23,7 +23,7 @@ public class VehicleMapper {
 
     public Vehicle toDomain(CreateVehicleRequest request) {
         return Vehicle.builder()
-                .customer(Customer.builder().id(request.customerId()).build())
+                .customer(customerMapper.toDomain(request.customerId()))
                 .licensePlate(request.licensePlate())
                 .brand(request.brand())
                 .model(request.model())
@@ -34,7 +34,7 @@ public class VehicleMapper {
     public Vehicle toDomain(UUID id, UpdateVehicleRequest request) {
         return Vehicle.builder()
                 .id(id)
-                .customer(Customer.builder().id(request.customerId()).build())
+                .customer(customerMapper.toDomain(request.customerId()))
                 .licensePlate(request.licensePlate())
                 .brand(request.brand())
                 .model(request.model())

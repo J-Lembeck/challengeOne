@@ -11,6 +11,8 @@ import com.fiap.dto.customer.UpdateCustomerRequest;
 import com.fiap.mapper.customer.CustomerMapper;
 import com.fiap.usecase.customer.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,35 +38,55 @@ public class CustomerController {
         this.customerMapper = customerMapper;
     }
 
-    @Operation(summary = "Cria um novo cliente")
+    @Operation(
+            summary = "Cria um novo cliente",
+            description = "Endpoint para criar um novo cliente.")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso.") })
     @PostMapping("/create")
     public ResponseEntity<CustomerResponse> createCustomer(@RequestBody CreateCustomerRequest request) throws DocumentNumberException, EmailException, InternalServerErrorException {
         Customer customer = createCustomerUseCase.execute(customerMapper.toDomain(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(customerMapper.toResponse(customer));
     }
 
-    @Operation(summary = "Atualiza um cliente existente")
+    @Operation(
+            summary = "Atualiza um cliente existente",
+            description = "Endpoint para atualizar um cliente pelo ID.")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso.") })
     @PutMapping("/{id}")
     public ResponseEntity<CustomerResponse> updateCustomer(@PathVariable UUID id, @RequestBody UpdateCustomerRequest request) throws DocumentNumberException, EmailException, NotFoundException, InternalServerErrorException {
         Customer customer = updateCustomerUseCase.execute(customerMapper.toDomain(id, request));
         return ResponseEntity.ok().body(customerMapper.toResponse(customer));
     }
 
-    @Operation(summary = "Busca um cliente pelo ID")
+    @Operation(
+            summary = "Busca um cliente pelo ID",
+            description = "Endpoint para buscar um cliente pelo ID.")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponse> findCustomerById(@PathVariable UUID id) throws DocumentNumberException, NotFoundException {
         Customer customer = findCustomerByIdUseCase.execute(id);
         return ResponseEntity.ok().body(customerMapper.toResponse(customer));
     }
 
-    @Operation(summary = "Busca um cliente pelo documento")
+    @Operation(
+            summary = "Busca um cliente pelo documento.",
+            description = "Endpoint para buscar um cliente pelo documento.")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
     @GetMapping("/document/{documentNumber}")
     public ResponseEntity<CustomerResponse> findCustomerByDocument(@PathVariable String documentNumber) throws DocumentNumberException, NotFoundException {
         Customer customer = findCustomerByDocumentUseCase.execute(documentNumber);
         return ResponseEntity.ok().body(customerMapper.toResponse(customer));
     }
 
-    @Operation(summary = "Deleta um cliente pelo ID")
+    @Operation(
+            summary = "Deleta um cliente pelo ID",
+            description = "Endpoint para deletar um cliente pelo ID.")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "204", description = "Cliente deletado com sucesso.") })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) throws DocumentNumberException, NotFoundException {
         deleteCustomerUseCase.execute(id);

@@ -1,4 +1,4 @@
-package com.fiap.dto.commom;
+package com.fiap.dto.common;
 
 import lombok.Builder;
 import lombok.Data;

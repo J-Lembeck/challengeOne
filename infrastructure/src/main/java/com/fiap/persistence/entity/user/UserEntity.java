@@ -1,17 +1,13 @@
-package com.fiap.persistence.entity;
+package com.fiap.persistence.entity.user;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.fiap.core.domain.user.UserRole;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,6 +34,10 @@ public class UserEntity {
 
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

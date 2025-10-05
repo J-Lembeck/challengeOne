@@ -1,8 +1,8 @@
 package com.fiap.persistence.entity.workOrder;
 
 import com.fiap.core.domain.workorder.WorkOrderStatus;
-import com.fiap.persistence.entity.user.UserEntity;
 import com.fiap.persistence.entity.customer.CustomerEntity;
+import com.fiap.persistence.entity.user.UserEntity;
 import com.fiap.persistence.entity.vehicle.VehicleEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
