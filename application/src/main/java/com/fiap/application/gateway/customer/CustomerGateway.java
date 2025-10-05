@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface CustomerGateway {
     Customer create(Customer customer) throws DocumentNumberException;
     Customer update(Customer customer) throws DocumentNumberException;
-    Optional<Customer> findById(UUID customerId) throws DocumentNumberException;
-    Optional<Customer> findByDocumentNumber(String documentNumber) throws DocumentNumberException;
+    Optional<Customer> findById(UUID customerId);
+    Optional<Customer> findByDocumentNumber(String documentNumber);
     void delete(Customer customer);
 }

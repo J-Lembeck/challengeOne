@@ -1,11 +1,11 @@
-package com.fiap.persistence.repository;
+package com.fiap.persistence.repository.workorder;
 
 import java.util.List;
 import java.util.UUID;
 
-import com.fiap.core.domain.enums.WorkOrderStatus;
-import com.fiap.persistence.entity.CustomerEntity;
-import com.fiap.persistence.entity.WorkOrderEntity;
+import com.fiap.core.domain.workorder.WorkOrderStatus;
+import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
+import com.fiap.persistence.entity.customer.CustomerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

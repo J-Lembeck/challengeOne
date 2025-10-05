@@ -8,5 +8,5 @@ import java.util.UUID;
 
 public interface FindCustomerByIdUseCase {
 
-    Customer execute(UUID customerId) throws NotFoundException, DocumentNumberException;
+    Customer execute(UUID customerId) throws NotFoundException;
 }

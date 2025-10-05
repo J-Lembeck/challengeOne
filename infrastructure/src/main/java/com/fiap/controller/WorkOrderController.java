@@ -1,14 +1,11 @@
 package com.fiap.controller;
 
-import com.fiap.core.exception.DocumentNumberException;
-import com.fiap.core.exception.EmailException;
-import com.fiap.core.exception.InternalServerErrorException;
 import com.fiap.core.exception.NotFoundException;
-import com.fiap.dto.request.CreateCustomerRequest;
-import com.fiap.dto.request.UpdateCustomerRequest;
-import com.fiap.dto.response.CustomerResponse;
-import com.fiap.mapper.CustomerMapper;
-import com.fiap.usecase.*;
+import com.fiap.dto.workorder.CreateWorkOrderRequest;
+import com.fiap.dto.workorder.WorkOrderResponse;
+import com.fiap.mapper.workorder.WorkOrderMapper;
+import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
+import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,74 +19,57 @@ import java.util.UUID;
 @RequestMapping("v1/workOrder")
 public class WorkOrderController {
 
-    private final CreateCustomerUseCase createCustomerUseCase;
-    private final FindCustomerByIdUseCase findCustomerByIdUseCase;
-    private final FindCustomerByDocumentUseCase findCustomerByDocumentUseCase;
-    private final UpdateCustomerUseCase updateCustomerUseCase;
-    private final DeleteCustomerUseCase deleteCustomerUseCase;
-    private final CustomerMapper customerMapper;
+    private final CreateWorkOrderUseCase createWorkOrderUseCase;
+    private final FindWorkOrderByIdUseCase findWorkOrderByIdUseCase;
+    private final WorkOrderMapper workOrderMapper;
 
-    public WorkOrderController(CreateCustomerUseCase createCustomerUseCase, FindCustomerByIdUseCase findCustomerByIdUseCase, FindCustomerByDocumentUseCase findCustomerByDocumentUseCase, UpdateCustomerUseCase updateCustomerUseCase, DeleteCustomerUseCase deleteCustomerUseCase, CustomerMapper customerMapper) {
-        this.createCustomerUseCase = createCustomerUseCase;
-        this.findCustomerByIdUseCase = findCustomerByIdUseCase;
-        this.findCustomerByDocumentUseCase = findCustomerByDocumentUseCase;
-        this.updateCustomerUseCase = updateCustomerUseCase;
-        this.deleteCustomerUseCase = deleteCustomerUseCase;
-        this.customerMapper = customerMapper;
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, WorkOrderMapper workOrderMapper) {
+        this.createWorkOrderUseCase = createWorkOrderUseCase;
+        this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
+        this.workOrderMapper = workOrderMapper;
     }
 
     @Operation(
-            summary = "Cria um novo cliente",
-            description = "Endpoint para criar um novo cliente.")
+            summary = "Cria uma nova ordem de serviço",
+            description = "Endpoint para criar uma nova ordem de serviço.")
     @ApiResponses(
-            value = { @ApiResponse(responseCode = "201", description = "Cliente criado com sucesso.") })
+            value = { @ApiResponse(responseCode = "201", description = "Ordem de serviço criada com sucesso.") })
     @PostMapping("/create")
-    public ResponseEntity<CustomerResponse> createCustomer(@RequestBody CreateCustomerRequest request) throws DocumentNumberException, EmailException, InternalServerErrorException {
-        var customer = createCustomerUseCase.execute(customerMapper.toDomain(request));
-        return ResponseEntity.status(HttpStatus.CREATED).body(customerMapper.toResponse(customer));
+    public ResponseEntity<WorkOrderResponse> createWorkOrder(@RequestBody CreateWorkOrderRequest request) throws NotFoundException {
+        var workOrder = createWorkOrderUseCase.execute(workOrderMapper.toDomain(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(workOrderMapper.toResponse(workOrder));
     }
 
-    @Operation(
+    /*@Operation(
             summary = "Atualiza um cliente existente",
-            description = "Endpoint para atualizar um cliente pelo ID.")
+            description = "Endpoint para atualizar uma ordem de serviço pelo ID.")
     @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Cliente atualizado com sucesso.") })
-    @PutMapping("/update")
-    public ResponseEntity<CustomerResponse> updateCustomer(@RequestBody UpdateCustomerRequest request) throws DocumentNumberException, EmailException, NotFoundException, InternalServerErrorException {
-        var customer = updateCustomerUseCase.execute(customerMapper.toDomainUpdate(request));
-        return ResponseEntity.ok().body(customerMapper.toResponse(customer));
-    }
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço atualizada com sucesso.") })
+    @PutMapping("/{serviceId}")
+    public ResponseEntity<WorkOrderResponse> updateWorkOrder(@PathVariable UUID serviceId) throws DocumentNumberException, EmailException, NotFoundException, InternalServerErrorException {
+        var workOrder = findWorkOrderByIdUseCase.execute(serviceId);
+        return ResponseEntity.ok().body(workOrderMapper.toResponse(workOrder));
+    }*/
 
     @Operation(
-            summary = "Busca um cliente pelo ID",
-            description = "Endpoint para buscar um cliente pelo ID.")
+            summary = "Busca uma ordem de serviço pelo ID",
+            description = "Endpoint para buscar uma ordem de serviço pelo ID.")
     @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço encontrada com sucesso.") })
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> findCustomerById(@PathVariable UUID id) throws DocumentNumberException, NotFoundException {
-        var customer = findCustomerByIdUseCase.execute(id);
-        return ResponseEntity.ok().body(customerMapper.toResponse(customer));
+    public ResponseEntity<WorkOrderResponse> findWorkOrderById(@PathVariable UUID id) throws NotFoundException {
+        var workOrder = findWorkOrderByIdUseCase.execute(id);
+        return ResponseEntity.ok().body(workOrderMapper.toResponse(workOrder));
     }
 
-    @Operation(
-            summary = "Busca um cliente pelo documento.",
-            description = "Endpoint para buscar um cliente pelo documento.")
+    /*@Operation(
+            summary = "Deleta uma ordem de serviço pelo ID",
+            description = "Endpoint para deletar uma ordem de serviço pelo ID.")
     @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
-    @GetMapping("/document/{documentNumber}")
-    public ResponseEntity<CustomerResponse> findCustomerById(@PathVariable String documentNumber) throws DocumentNumberException, NotFoundException {
-        var customer = findCustomerByDocumentUseCase.execute(documentNumber);
-        return ResponseEntity.ok().body(customerMapper.toResponse(customer));
-    }
-
-    @Operation(
-            summary = "Deleta um cliente pelo ID",
-            description = "Endpoint para deletar um cliente pelo ID.")
-    @ApiResponses(
-            value = { @ApiResponse(responseCode = "204", description = "Cliente deletado com sucesso.") })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCustomer(@PathVariable UUID id) throws DocumentNumberException, NotFoundException {
-        deleteCustomerUseCase.execute(id);
+            value = { @ApiResponse(responseCode = "204", description = "Ordem de serviço deletada com sucesso.") })
+    @DeleteMapping("/{serviceId}")
+    public ResponseEntity<Void> deleteWorkOrder(@PathVariable UUID serviceId) throws DocumentNumberException, NotFoundException {
+        deleteWorkOrderUseCase.execute(serviceId);
         return ResponseEntity.noContent().build();
-    }
+    }*/
 }

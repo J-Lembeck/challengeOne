@@ -1,21 +1,22 @@
 package com.fiap.persistence.entity.workOrder;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
 import com.fiap.core.domain.workorder.WorkOrderStatus;
 import com.fiap.persistence.entity.customer.CustomerEntity;
 import com.fiap.persistence.entity.user.UserEntity;
 import com.fiap.persistence.entity.vehicle.VehicleEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -26,7 +27,7 @@ import java.util.UUID;
 public class WorkOrderEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -47,10 +48,10 @@ public class WorkOrderEntity {
     private UserEntity assignedMechanic;
 
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<WorkOrderPartEntity> workOrderParts;
+    List<WorkOrderPartEntity> workOrderPartModels;
 
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<WorkOrderServiceEntity> workOrderServices;
+    List<WorkOrderServiceEntity> workOrderServices;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -60,13 +61,13 @@ public class WorkOrderEntity {
     private BigDecimal totalAmount;
 
     @Column(name = "finished_at")
-    private OffsetDateTime finishedAt;
+    private LocalDateTime finishedAt;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    private LocalDateTime updatedAt;
 }

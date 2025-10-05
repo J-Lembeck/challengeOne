@@ -1,14 +1,16 @@
-package com.fiap.gateway;
+package com.fiap.gateway.workorder;
 
-import com.fiap.application.gateway.WorkOrderGateway;
-import com.fiap.core.domain.WorkOrder;
-import com.fiap.mapper.WorkOrderMapper;
-import com.fiap.persistence.entity.WorkOrderEntity;
-import com.fiap.persistence.repository.WorkOrderRepository;
+import com.fiap.application.gateway.workorder.WorkOrderGateway;
+import com.fiap.core.domain.workorder.WorkOrder;
+import com.fiap.mapper.workorder.WorkOrderMapper;
+import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
+import com.fiap.persistence.repository.workorder.WorkOrderRepository;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class WorkOrderRepositoryGateway implements WorkOrderGateway {
 
     private final WorkOrderRepository workOrderRepository;
@@ -17,6 +19,12 @@ public class WorkOrderRepositoryGateway implements WorkOrderGateway {
     public WorkOrderRepositoryGateway(WorkOrderRepository workOrderRepository, WorkOrderMapper workOrderMapper) {
         this.workOrderRepository = workOrderRepository;
         this.workOrderMapper = workOrderMapper;
+    }
+
+    @Override
+    public WorkOrder create(WorkOrder workOrder) {
+        WorkOrderEntity workOrderEntity = workOrderRepository.save(workOrderMapper.toEntity(workOrder));
+        return workOrderMapper.toDomain(workOrderEntity);
     }
 
     @Override

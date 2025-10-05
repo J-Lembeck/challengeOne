@@ -16,7 +16,16 @@ public enum ErrorCodeEnum {
     USE0007("Usuário não encontrado", "USE-0007"),
     USE0008("Erro na criação do usuário", "USE-0008"),
 
-    CUST0001("Cliente não encontrado", "CUST-0001");
+    CUST0001("Cliente não encontrado", "CUST-0001"),
+
+    VEH0001("Veículo não encontrado", "VEH-0001"),
+
+    PART0001("Peça não encontrada", "PAR-0001"),
+
+    SERV0001("Serviço não encontrado", "SERV-0001"),
+
+    WORK0001("Ordem de serviço não encontrada", "WORK-0001");
+
 
     private String message;
     private String code;

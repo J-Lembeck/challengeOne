@@ -2,9 +2,10 @@ package com.fiap.gateway.customer;
 
 import com.fiap.application.gateway.customer.EmailAvailableGateway;
 import com.fiap.persistence.repository.customer.CustomerEntityRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component
 public class EmailAvailableGatewayImpl implements EmailAvailableGateway {
 
     private final CustomerEntityRepository customerEntityRepository;
