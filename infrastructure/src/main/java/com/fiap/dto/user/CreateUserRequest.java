@@ -1,4 +1,3 @@
 package com.fiap.dto.user;
 
-public class CreateUserRequest {
-}
+public record CreateUserRequest(String name, String email, String role, String password) {}

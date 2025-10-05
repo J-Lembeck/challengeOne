@@ -1,9 +1,9 @@
-package com.fiap.application.usecaseimpl;
+package com.fiap.application.usecaseimpl.user;
 
-import com.fiap.application.gateway.UserGateway;
-import com.fiap.core.domain.User;
+import com.fiap.application.gateway.user.UserGateway;
+import com.fiap.core.domain.user.User;
 import com.fiap.core.exception.NotFoundException;
-import com.fiap.usecase.FindUserByIdUseCase;
+import com.fiap.usecase.user.FindUserByIdUseCase;
 
 import java.util.Optional;
 import java.util.UUID;

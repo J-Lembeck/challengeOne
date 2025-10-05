@@ -1,12 +1,11 @@
 package com.fiap.service;
 
-import com.fiap.application.gateway.UserGateway;
-import com.fiap.core.domain.User;
+import com.fiap.core.domain.user.User;
 import com.fiap.core.exception.EmailException;
-import com.fiap.gateway.UserRepositoryGateway;
-import com.fiap.mapper.UserMapper;
-import com.fiap.persistence.entity.UserEntity;
-import com.fiap.persistence.repository.UserEntityRepository;
+import com.fiap.gateway.user.UserRepositoryGateway;
+import com.fiap.mapper.user.UserMapper;
+import com.fiap.persistence.entity.user.UserEntity;
+import com.fiap.persistence.repository.user.UserEntityRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

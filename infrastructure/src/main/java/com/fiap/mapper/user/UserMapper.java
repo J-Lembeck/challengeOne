@@ -1,10 +1,11 @@
-package com.fiap.mapper;
+package com.fiap.mapper.user;
 
 import com.fiap.core.domain.user.User;
+import com.fiap.core.domain.user.UserRole;
 import com.fiap.core.exception.EmailException;
-import com.fiap.dto.request.CreateUserRequest;
-import com.fiap.dto.request.UpdateUserRequest;
-import com.fiap.dto.response.UserResponse;
+import com.fiap.dto.user.CreateUserRequest;
+import com.fiap.dto.user.UpdateUserRequest;
+import com.fiap.dto.user.UserResponse;
 import com.fiap.persistence.entity.user.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,7 @@ public class UserMapper {
                 user.getName(),
                 user.getEmail(),
                 user.getPassword(),
+                UserRole.valueOf(user.getRole().toString()),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );
@@ -26,6 +28,7 @@ public class UserMapper {
         return new User(
                 request.name(),
                 request.email(),
+                request.role(),
                 request.password()
         );
     }
@@ -34,6 +37,7 @@ public class UserMapper {
         return new User(
                 request.id(),
                 request.name(),
+                request.role(),
                 request.email(),
                 request.password()
         );
@@ -46,6 +50,7 @@ public class UserMapper {
                     entity.getId(),
                     entity.getName(),
                     entity.getEmail(),
+                    entity.getRole().toString(),
                     entity.getPasswordHash(),
                     entity.getCreatedAt(),
                     entity.getUpdatedAt()

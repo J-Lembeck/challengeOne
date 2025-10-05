@@ -1,10 +1,10 @@
-package com.fiap.application.usecaseimpl;
+package com.fiap.application.usecaseimpl.user;
 
-import com.fiap.application.gateway.UserGateway;
-import com.fiap.core.domain.User;
+import com.fiap.application.gateway.user.UserGateway;
+import com.fiap.core.domain.user.User;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.core.exception.enums.ErrorCodeEnum;
-import com.fiap.usecase.UpdateUserUseCase;
+import com.fiap.usecase.user.UpdateUserUseCase;
 
 public class UpdateUserUseCaseImpl implements UpdateUserUseCase {
 

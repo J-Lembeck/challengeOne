@@ -1,4 +1,4 @@
-package com.fiap.persistence.repository;
+package com.fiap.persistence.repository.user;
 
 import com.fiap.persistence.entity.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

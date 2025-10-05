@@ -6,11 +6,13 @@ import com.fiap.mapper.vehicle.VehicleMapper;
 import com.fiap.persistence.entity.vehicle.VehicleEntity;
 import com.fiap.persistence.repository.vehicle.VehicleEntityRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @Component
+@Transactional
 public class VehicleRepositoryGateway implements VehicleGateway {
 
     private final VehicleEntityRepository repository;

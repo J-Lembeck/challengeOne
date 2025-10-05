@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 public class VehicleConfig {
 
     @Bean
-    public CreateVehicleUseCase createVehicleUseCase(VehicleGateway gateway, FindCustomerByIdUseCase findCustomerUseCase) {
-        return new CreateVehicleUseCaseImpl(gateway, findCustomerUseCase);
+    public CreateVehicleUseCase createVehicleUseCase(VehicleGateway gateway, CustomerGateway customerGateway) {
+        return new CreateVehicleUseCaseImpl(gateway, customerGateway);
     }
 
     @Bean
-    public UpdateVehicleUseCase updateVehicleUseCase(VehicleGateway gateway, FindVehicleByIdUseCase findVehicleUseCase, FindCustomerByIdUseCase findCustomerUseCase) {
-        return new UpdateVehicleUseCaseImpl(gateway, findVehicleUseCase, findCustomerUseCase);
+    public UpdateVehicleUseCase updateVehicleUseCase(VehicleGateway gateway, CustomerGateway customerGateway, FindVehicleByIdUseCase findVehicleUseCase) {
+        return new UpdateVehicleUseCaseImpl(gateway, customerGateway,  findVehicleUseCase);
     }
 
     @Bean

@@ -1,4 +1,4 @@
-package com.fiap.core.domain;
+package com.fiap.core.domain.user;
 
 import com.fiap.core.exception.PasswordException;
 import com.fiap.core.exception.enums.ErrorCodeEnum;

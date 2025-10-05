@@ -1,6 +1,6 @@
-package com.fiap.usecase;
+package com.fiap.usecase.user;
 
-import com.fiap.core.domain.User;
+import com.fiap.core.domain.user.User;
 import com.fiap.core.exception.NotFoundException;
 
 import java.util.Optional;

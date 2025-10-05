@@ -1,12 +1,12 @@
-package com.fiap.gateway;
+package com.fiap.gateway.user;
 
-import com.fiap.application.gateway.UserGateway;
-import com.fiap.core.domain.User;
+import com.fiap.application.gateway.user.UserGateway;
+import com.fiap.core.domain.user.User;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.core.exception.enums.ErrorCodeEnum;
-import com.fiap.mapper.UserMapper;
-import com.fiap.persistence.entity.UserEntity;
-import com.fiap.persistence.repository.UserEntityRepository;
+import com.fiap.mapper.user.UserMapper;
+import com.fiap.persistence.entity.user.UserEntity;
+import com.fiap.persistence.repository.user.UserEntityRepository;
 import org.springframework.stereotype.Service;
 
 

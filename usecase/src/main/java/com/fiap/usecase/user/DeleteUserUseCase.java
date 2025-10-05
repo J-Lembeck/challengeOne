@@ -1,4 +1,4 @@
-package com.fiap.usecase;
+package com.fiap.usecase.user;
 
 import com.fiap.core.exception.NotFoundException;
 
