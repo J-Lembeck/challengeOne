@@ -1,16 +1,21 @@
-package com.fiap.persistence.entity.user;
+package com.fiap.persistence.entity;
 
-import com.fiap.core.domain.user.UserRole;
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -21,7 +26,7 @@ import java.util.UUID;
 public class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
@@ -34,15 +39,11 @@ public class UserEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    @Column(name = "updated_at", nullable = true)
+    private LocalDateTime updatedAt;
 }

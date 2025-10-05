@@ -1,11 +1,11 @@
 package com.fiap.mapper;
 
-import com.fiap.core.domain.User;
+import com.fiap.core.domain.user.User;
 import com.fiap.core.exception.EmailException;
 import com.fiap.dto.request.CreateUserRequest;
 import com.fiap.dto.request.UpdateUserRequest;
 import com.fiap.dto.response.UserResponse;
-import com.fiap.persistence.entity.UserEntity;
+import com.fiap.persistence.entity.user.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component

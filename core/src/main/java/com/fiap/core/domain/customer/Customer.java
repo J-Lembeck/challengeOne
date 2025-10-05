@@ -41,6 +41,10 @@ public class Customer {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Customer(UUID id) {
+        this.id =id;
+    }
+
     public Customer() {
     }
 
