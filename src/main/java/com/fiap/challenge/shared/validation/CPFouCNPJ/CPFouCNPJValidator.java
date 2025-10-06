@@ -25,6 +25,12 @@ public class CPFouCNPJValidator implements ConstraintValidator<CPFouCNPJ, String
 
         String digitsOnly = value.replaceAll("\\D", "");
 
-        return cpfValidator.isValid(digitsOnly, context) || cnpjValidator.isValid(digitsOnly, context);
+        if (digitsOnly.length() == 11) {
+            return cpfValidator.isValid(digitsOnly, context);
+        } else if (digitsOnly.length() == 14) {
+            return cnpjValidator.isValid(digitsOnly, context);
+        }
+
+        return false;
     }
 }

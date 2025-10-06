@@ -16,7 +16,7 @@
                 <constraints nullable="false" foreignKeyName="fk_workorderhistory_on_workorder" references="work_orders(id)"/>
             </column>
             <column name="changed_by_id" type="UUID">
-                <constraints nullable="false" foreignKeyName="fk_workorderhistory_on_user" references="users(id)"/>
+                <constraints nullable="true" foreignKeyName="fk_workorderhistory_on_user" references="users(id)"/>
             </column>
             <column name="status" type="VARCHAR(255)">
                 <constraints nullable="false"/>

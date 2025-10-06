@@ -5,8 +5,8 @@ import com.fiap.challenge.shared.model.ResponseApi;
 import com.fiap.challenge.workOrders.dto.StatusWorkOrderRespondeDTO;
 import com.fiap.challenge.workOrders.entity.WorkOrderModel;
 import com.fiap.challenge.workOrders.entity.enums.WorkOrderStatus;
-import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderStatusCommand;
-import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderStatusUseCase;
+import com.fiap.challenge.workOrders.history.dto.UpdateWorkOrderHistoryCommand;
+import com.fiap.challenge.workOrders.history.useCases.updateStatus.UpdateWorkOrderHistoryUseCase;
 import com.fiap.challenge.workOrders.repository.WorkOrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkOrderUseCase {
 
     private final WorkOrderRepository workOrderRepository;
-    private final UpdateWorkOrderStatusUseCase updateWorkOrderStatusUseCase;
+    private final UpdateWorkOrderHistoryUseCase updateWorkOrderStatusUseCase;
     private final ReturnPartsToStockUseCase returnPartsToStockUseCase;
     private final AvarageTimeWorkOrderUseCase avarageTimeWorkOrderUseCase;
 
@@ -44,7 +44,7 @@ public class AceptedOrRefuseWorkOrderUseCaseImpl implements AceptedOrRefuseWorkO
         WorkOrderModel workOrderModel= workOrderRepository.save(workOrder);
         avarageTimeWorkOrderUseCase.executeInit(workOrderModel.getId());
 
-        updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderStatusCommand(workOrder.getId(), workOrderModel.getStatus()));
+        updateWorkOrderStatusUseCase.execute(new UpdateWorkOrderHistoryCommand(workOrder.getId()));
 
         return responseApi.of(HttpStatus.OK, "Work order status updated successfully!",
                 new StatusWorkOrderRespondeDTO(
