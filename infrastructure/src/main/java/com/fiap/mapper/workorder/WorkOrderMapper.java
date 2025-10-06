@@ -108,13 +108,15 @@ public class WorkOrderMapper {
     }
 
     public WorkOrderResponse toResponse(WorkOrder workOrder) {
-        List<WorkOrderServiceResponse> services = workOrder.getWorkOrderServices() != null && !workOrder.getWorkOrderServices().isEmpty() ? workOrder.getWorkOrderServices()
-                .stream().map(workOrderServiceMapper::toResponse)
-                .toList() : List.of();
+        List<WorkOrderServiceResponse> services =
+                workOrder.getWorkOrderServices() != null && !workOrder.getWorkOrderServices().isEmpty()
+                        ? workOrder.getWorkOrderServices().stream().map(workOrderServiceMapper::toResponse).toList()
+                        : List.of();
 
-        List<WorkOrderPartResponse> parts = workOrder.getWorkOrderParts() != null && !workOrder.getWorkOrderParts().isEmpty() ? workOrder.getWorkOrderParts()
-                .stream().map(workOrderPartMapper::toResponse)
-                .toList() : List.of();
+        List<WorkOrderPartResponse> parts =
+                workOrder.getWorkOrderParts() != null && !workOrder.getWorkOrderParts().isEmpty()
+                        ? workOrder.getWorkOrderParts().stream().map(workOrderPartMapper::toResponse).toList()
+                        : List.of();
 
         return new WorkOrderResponse(
                 workOrder.getId(),
@@ -123,7 +125,8 @@ public class WorkOrderMapper {
                 workOrder.getCreatedBy().getId(),
                 workOrder.getTotalAmount(),
                 parts,
-                services
+                services,
+                workOrder.getStatus() != null ? workOrder.getStatus().name() : null // ← aqui
         );
     }
 }

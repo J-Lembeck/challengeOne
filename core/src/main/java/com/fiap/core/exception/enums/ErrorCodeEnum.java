@@ -26,7 +26,8 @@ public enum ErrorCodeEnum {
     SERV0001("Serviço não encontrado", "SERV-0001"),
 
     WORK0001("Ordem de serviço não encontrada", "WORK-0001"),
-    WORK0002("É necessário inserir pelo menos um peça ou serviço para a criação da ordem de serviço.", "WORK-0002");
+    WORK0002("É necessário inserir pelo menos um peça ou serviço para a criação da ordem de serviço.", "WORK-0002"),
+    WORK0003("Status informado é inválido ou não permitido para a ordem de serviço.", "WORK-0003");
 
 
     private String message;

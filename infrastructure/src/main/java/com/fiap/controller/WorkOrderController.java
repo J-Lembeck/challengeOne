@@ -4,10 +4,12 @@ import com.fiap.core.exception.BadRequestException;
 import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.dto.workorder.CreateWorkOrderRequest;
+import com.fiap.dto.workorder.UpdateStatusWorkOrderRequest;
 import com.fiap.dto.workorder.WorkOrderResponse;
 import com.fiap.mapper.workorder.WorkOrderMapper;
 import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
 import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
+import com.fiap.usecase.workorder.UpdateStatusWorkOrderUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -24,11 +26,13 @@ public class WorkOrderController {
     private final CreateWorkOrderUseCase createWorkOrderUseCase;
     private final FindWorkOrderByIdUseCase findWorkOrderByIdUseCase;
     private final WorkOrderMapper workOrderMapper;
+    private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, WorkOrderMapper workOrderMapper) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.workOrderMapper = workOrderMapper;
+        this. updateStatusWorkOrderUseCase = updateStatusWorkOrderUseCase;
     }
 
     @Operation(
@@ -84,16 +88,24 @@ public class WorkOrderController {
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }*/
 
-    /*@Operation(
-            summary = "Altera o status de uma ordem de serviço",
-            description = "Endpoint para alterar o status de uma ordem de serviço pelo ID")
-    @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Status alterado com sucesso.") })
+    @Operation(
+            summary = "Atualiza o status de uma ordem de serviço",
+            description = "Endpoint para alterar o status de uma ordem de serviço pelo ID."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status atualizado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "Ordem de serviço não encontrada."),
+            @ApiResponse(responseCode = "400", description = "Status inválido informado.")
+    })
     @PatchMapping("/{id}/status")
-    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> updateStatus(@PathVariable UUID id, @RequestBody String status) {
-        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = updateStatusWorkOrderUseCase.execute(id, status);
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
+    public ResponseEntity<WorkOrderResponse> updateStatus(
+            @PathVariable UUID id,
+            @RequestBody UpdateStatusWorkOrderRequest request
+    ) throws NotFoundException, BadRequestException {
+        var workOrder = updateStatusWorkOrderUseCase.execute(id, request.status());
+        return ResponseEntity.ok(workOrderMapper.toResponse(workOrder));
+    }
+
 
     /*@Operation(
             summary = "Aceita ou recusa uma ordem de serviço",

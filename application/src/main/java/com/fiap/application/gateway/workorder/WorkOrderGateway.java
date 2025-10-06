@@ -9,4 +9,5 @@ public interface WorkOrderGateway {
 
     WorkOrder create(WorkOrder workOrder);
     Optional<WorkOrder> findById(UUID customerId);
+    WorkOrder update(WorkOrder workOrder);
 }
