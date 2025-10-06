@@ -105,7 +105,7 @@ public class WorkOrderController {
         ResponseApi<StatusWorkOrderRespondeDTO> responseApi = aceptedOrRefuseWorkOrderUseCase.execute(id, decision);
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }*/
-    
+
     /*@PatchMapping("/{id}/delivered")
     @Operation(
             summary = "Marca uma ordem de serviço como entregue",
@@ -128,10 +128,6 @@ public class WorkOrderController {
         ResponseApi<Void> responseApi = finalizeWorkOrderUseCase.execute(id);
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }*/
-
-
-
-
 
     /*@Operation(
             summary = "Adiciona novos itens para a Ordem de Serviço",
