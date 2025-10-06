@@ -21,4 +21,8 @@ public class Vehicle {
     private Integer year;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
+
+    public Vehicle(UUID vehicleId) {
+        this.id = vehicleId;
+    }
 }

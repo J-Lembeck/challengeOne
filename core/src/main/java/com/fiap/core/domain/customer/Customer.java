@@ -33,7 +33,6 @@ public class Customer {
     }
 
     public Customer(String name, DocumentNumber documentNumber, String phone, String email) {
-        this.id = UUID.randomUUID();
         this.name = name;
         this.documentNumber = documentNumber;
         this.phone = phone;

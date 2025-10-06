@@ -21,12 +21,12 @@ public enum WorkOrderStatus {
 
     public static WorkOrderStatus fromString(String status) {
         if (status == null) {
-            throw new IllegalArgumentException("Status cannot be null.");
+            throw new IllegalArgumentException("Status não pode ser nulo.");
         }
         try {
             return WorkOrderStatus.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid status: " + status);
+            throw new IllegalArgumentException("Status inválido: " + status);
         }
     }
 }

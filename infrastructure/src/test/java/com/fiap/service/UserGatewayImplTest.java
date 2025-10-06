@@ -30,12 +30,13 @@ class UserGatewayImplTest {
 
     @Test
     void shouldCreateUserSuccessfully() throws EmailException {
-        var user = new User(UUID.randomUUID(),"Test User", "teste@gmail.com", "Password@123", LocalDateTime.now(), LocalDateTime.now());
+        var user = new User(UUID.randomUUID(),"Test User", "teste@gmail.com", "MECHANIC", "Password@123", LocalDateTime.now(), LocalDateTime.now());
 
         var userEntity = new UserEntity().builder()
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
+                .role(user.getRole())
                 .passwordHash(user.getPassword())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())

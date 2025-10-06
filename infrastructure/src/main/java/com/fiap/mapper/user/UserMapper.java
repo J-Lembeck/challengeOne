@@ -37,8 +37,8 @@ public class UserMapper {
         return new User(
                 request.id(),
                 request.name(),
-                request.role(),
                 request.email(),
+                request.role(),
                 request.password()
         );
     }

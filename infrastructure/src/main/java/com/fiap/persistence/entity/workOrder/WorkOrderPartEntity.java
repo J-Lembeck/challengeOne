@@ -1,7 +1,6 @@
 package com.fiap.persistence.entity.workOrder;
 
 import com.fiap.persistence.entity.part.PartEntity;
-import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

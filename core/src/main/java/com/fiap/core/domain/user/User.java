@@ -43,6 +43,10 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
+    public User(UUID createdById) {
+        this.id = createdById;
+    }
+
     public UUID getId() {
         return id;
     }
