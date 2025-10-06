@@ -25,10 +25,10 @@ public class Stock {
 
     public void subtract(int quantity) throws BusinessRuleException {
         if (quantity <= 0) {
-            throw new BusinessRuleException("Quantity to subtract must be positive.", "STOCK-002");
+            throw new BusinessRuleException("Quantidade de peças deve ser um número positivo.", "STOCK-002");
         }
         if (this.stockQuantity < quantity) {
-            throw new BusinessRuleException("Insufficient stock.", "STOCK-003");
+            throw new BusinessRuleException("Estoque insuficiente.", "STOCK-003");
         }
         this.stockQuantity -= quantity;
         this.reservedStock += quantity;

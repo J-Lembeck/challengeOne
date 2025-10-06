@@ -48,10 +48,10 @@ public class WorkOrderEntity {
     private UserEntity assignedMechanic;
 
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    List<WorkOrderPartEntity> workOrderPartModels;
+    List<WorkOrderPartEntity> workOrderPartEntities;
 
     @OneToMany(mappedBy = "workOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    List<WorkOrderServiceEntity> workOrderServices;
+    List<WorkOrderServiceEntity> workOrderServiceEntities;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

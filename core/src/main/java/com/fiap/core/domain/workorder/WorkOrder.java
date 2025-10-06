@@ -3,6 +3,9 @@ package com.fiap.core.domain.workorder;
 import com.fiap.core.domain.customer.Customer;
 import com.fiap.core.domain.user.User;
 import com.fiap.core.domain.vehicle.Vehicle;
+import com.fiap.core.exception.BadRequestException;
+import com.fiap.core.exception.BusinessRuleException;
+import com.fiap.core.exception.enums.ErrorCodeEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -23,14 +26,11 @@ public class WorkOrder {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public WorkOrder(UUID id, Customer customer, WorkOrderStatus status) {
-        this.id = id;
-        this.customer = customer;
-        this.status = status;
-        this.createdAt = LocalDateTime.now();
-    }
+    public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, UUID assignedMechanicId, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
 
-    public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, UUID assignedMechanicId, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) {
+        if ((workOrderParts == null || workOrderParts.isEmpty()) && (workOrderServices == null || workOrderServices.isEmpty())) {
+            throw new BadRequestException(ErrorCodeEnum.WORK0002.getMessage(), ErrorCodeEnum.WORK0002.getCode());
+        }
         this.customer = new Customer(customerId);
         this.vehicle = new Vehicle(vehicleId);
         this.createdBy = new User(createdById);
@@ -41,11 +41,13 @@ public class WorkOrder {
         this.createdAt = LocalDateTime.now();
     }
 
-    public WorkOrder(UUID id, Customer customer, Vehicle vehicle, User createdBy, WorkOrderStatus status, BigDecimal totalAmount) {
+    public WorkOrder(UUID id, Customer customer, Vehicle vehicle, User createdBy, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices, WorkOrderStatus status, BigDecimal totalAmount) {
         this.id = id;
         this.customer = customer;
         this.vehicle = vehicle;
         this.createdBy = createdBy;
+        this.workOrderParts = workOrderParts;
+        this.workOrderServices = workOrderServices;
         this.status = status;
         this.totalAmount = totalAmount;
     }
@@ -159,5 +161,14 @@ public class WorkOrder {
         }
 
         this.totalAmount = totalParts.add(totalServices);
+    }
+
+    public void reserveParts() throws BadRequestException, BusinessRuleException {
+        for (WorkOrderPart part : workOrderParts) {
+            if (part.getPart().getStock().getStockQuantity() < part.getQuantity()) {
+                throw new BadRequestException(ErrorCodeEnum.PART0002.getMessage(), ErrorCodeEnum.PART0002.getCode());
+            }
+            part.getPart().getStock().subtract(part.getQuantity());
+        }
     }
 }

@@ -26,6 +26,14 @@ public class WorkOrderPart {
         this.workOrder = workOrder;
     }
 
+    public WorkOrderPart(UUID partId, WorkOrder workOrder, Part part, Integer quantity, BigDecimal price) {
+        this.partId = partId;
+        this.quantity = quantity;
+        this.part = part;
+        this.appliedPrice = price;
+        this.workOrder = workOrder;
+    }
+
     public UUID getPartId() {
         return partId;
     }

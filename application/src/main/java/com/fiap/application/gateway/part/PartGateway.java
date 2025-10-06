@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public interface PartGateway {
     Part create(Part part);
+    void saveAll(List<Part> parts);
     Part update(Part part);
     Optional<Part> findById(UUID id);
     List<Part> findByIds(List<UUID> ids);

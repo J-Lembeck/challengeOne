@@ -14,6 +14,8 @@ import com.fiap.core.domain.vehicle.Vehicle;
 import com.fiap.core.domain.workorder.WorkOrder;
 import com.fiap.core.domain.workorder.WorkOrderPart;
 import com.fiap.core.domain.workorder.WorkOrderService;
+import com.fiap.core.exception.BadRequestException;
+import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.core.exception.enums.ErrorCodeEnum;
 import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
@@ -42,7 +44,7 @@ public class CreateWorkOrderUseCaseImpl implements CreateWorkOrderUseCase {
     }
 
     @Override
-    public WorkOrder execute(WorkOrder workOrder) throws NotFoundException {
+    public WorkOrder execute(WorkOrder workOrder) throws NotFoundException, BusinessRuleException, BadRequestException {
         Customer customer = customerGateway.findById(workOrder.getCustomer().getId())
                 .orElseThrow(() -> new NotFoundException(ErrorCodeEnum.CUST0001.getMessage(), ErrorCodeEnum.CUST0001.getCode()));
 
@@ -79,6 +81,8 @@ public class CreateWorkOrderUseCaseImpl implements CreateWorkOrderUseCase {
 
 
         workOrder.recalculateTotal();
+        workOrder.reserveParts();
+        partGateway.saveAll(parts);
         return workOrderGateway.create(workOrder);
     }
 

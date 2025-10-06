@@ -30,6 +30,12 @@ public class PartRepositoryGateway implements PartGateway {
     }
 
     @Override
+    public void saveAll(List<Part> parts) {
+        List<PartEntity> partEntities = parts.stream().map(partMapper::toEntity).toList();
+        partEntityRepository.saveAll(partEntities);
+    }
+
+    @Override
     public Part update(Part part) {
         PartEntity entity = partMapper.toEntity(part);
         PartEntity savedEntity = partEntityRepository.save(entity);
@@ -43,6 +49,7 @@ public class PartRepositoryGateway implements PartGateway {
 
     @Override
     public List<Part> findByIds(List<UUID> ids) {
+        System.out.println("quantidade de ids: " + ids.size());
         return partEntityRepository.findAllById(ids).stream()
                 .map(partMapper::toDomain)
                 .collect(Collectors.toList());
