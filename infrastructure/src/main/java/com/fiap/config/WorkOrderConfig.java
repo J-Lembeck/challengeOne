@@ -6,8 +6,10 @@ import com.fiap.application.gateway.service.ServiceGateway;
 import com.fiap.application.gateway.user.UserGateway;
 import com.fiap.application.gateway.vehicle.VehicleGateway;
 import com.fiap.application.gateway.workorder.WorkOrderGateway;
+import com.fiap.application.usecaseimpl.workorder.AssignedMechanicUseCaseImpl;
 import com.fiap.application.usecaseimpl.workorder.CreateWorkOrderUseCaseImpl;
 import com.fiap.application.usecaseimpl.workorder.FindWorkOrderByIdUseCaseImpl;
+import com.fiap.usecase.workorder.AssignedMechanicUseCase;
 import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
 import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
 import org.springframework.context.annotation.Bean;
@@ -25,5 +27,10 @@ public class WorkOrderConfig {
     public FindWorkOrderByIdUseCase findWorkOrderByIdUseCase(WorkOrderGateway workOrderGateway) {
         return new FindWorkOrderByIdUseCaseImpl(workOrderGateway);
 
+    }
+
+    @Bean
+    public AssignedMechanicUseCase assignedMechanicUseCase(WorkOrderGateway workOrderGateway, UserGateway userGateway) {
+        return new AssignedMechanicUseCaseImpl(workOrderGateway, userGateway);
     }
 }

@@ -1,5 +1,6 @@
 package com.fiap.mapper.workorder;
 
+import com.fiap.core.domain.user.User;
 import com.fiap.core.domain.workorder.WorkOrder;
 import com.fiap.core.domain.workorder.WorkOrderPart;
 import com.fiap.core.domain.workorder.WorkOrderService;
@@ -11,6 +12,7 @@ import com.fiap.dto.workorder.WorkOrderServiceResponse;
 import com.fiap.mapper.customer.CustomerMapper;
 import com.fiap.mapper.user.UserMapper;
 import com.fiap.mapper.vehicle.VehicleMapper;
+import com.fiap.persistence.entity.user.UserEntity;
 import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
 import com.fiap.persistence.entity.workOrder.WorkOrderPartEntity;
 import com.fiap.persistence.entity.workOrder.WorkOrderServiceEntity;
@@ -44,12 +46,14 @@ public class WorkOrderMapper {
                 .map(workOrderServiceMapper::toEntity)
                 .toList();
 
+        UserEntity mechanic = workOrder.getAssignedMechanic() != null ? userMapper.toEntity(workOrder.getAssignedMechanic()) : null;
+
         WorkOrderEntity workOrderEntity = new WorkOrderEntity(
                 workOrder.getId(),
                 customerMapper.toEntity(workOrder.getCustomer()),
                 vehicleMapper.toEntity(workOrder.getVehicle()),
                 userMapper.toEntity(workOrder.getCreatedBy()),
-                null,
+                mechanic,
                 workOrderPartEntities,
                 workOrderServiceEntities,
                 workOrder.getStatus(),
