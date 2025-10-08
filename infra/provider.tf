@@ -1,4 +1,3 @@
-# provider.tf
 terraform {
   required_providers {
     kubernetes = {
@@ -9,5 +8,5 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config" # ajusta se necessário
+  config_path = "~/.kube/config"
 }

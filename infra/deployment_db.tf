@@ -1,4 +1,3 @@
-# deployment_db.tf
 resource "kubernetes_deployment" "challengeone_db" {
   metadata {
     name      = "challengeone-db"

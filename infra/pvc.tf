@@ -1,4 +1,3 @@
-# pvc.tf
 resource "kubernetes_persistent_volume_claim" "pgdata" {
   metadata {
     name      = "pgdata-pvc"

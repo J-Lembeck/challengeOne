@@ -1,4 +1,3 @@
-# deployment_app.tf
 resource "kubernetes_deployment" "challengeone_app" {
 
   depends_on = [
@@ -43,7 +42,7 @@ resource "kubernetes_deployment" "challengeone_app" {
 
           liveness_probe {
             http_get {
-              path = "/actuator/health/liveness" # ou /health se usar Spring Boot padrão
+              path = "/api/actuator/health/liveness"
               port = 8080
             }
             initial_delay_seconds = 10
@@ -54,7 +53,7 @@ resource "kubernetes_deployment" "challengeone_app" {
 
           readiness_probe {
             http_get {
-              path = "/actuator/health/readiness" # ou /health
+              path = "/api/actuator/health/readiness"
               port = 8080
             }
             initial_delay_seconds = 5
