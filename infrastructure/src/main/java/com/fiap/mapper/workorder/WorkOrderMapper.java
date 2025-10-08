@@ -126,7 +126,7 @@ public class WorkOrderMapper {
                 workOrder.getTotalAmount(),
                 parts,
                 services,
-                workOrder.getStatus() != null ? workOrder.getStatus().name() : null // ← aqui
+                workOrder.getStatus() != null ? workOrder.getStatus().getDescription() : null
         );
     }
 }
