@@ -41,6 +41,9 @@ public class UpdateStatusWorkOrderUseCaseImpl implements UpdateStatusWorkOrderUs
             );
         }
 
+        if (workOrder.getStatus() == statusEnum) throw new BadRequestException(ErrorCodeEnum.WORK0004.getMessage(),
+                ErrorCodeEnum.WORK0004.getCode());
+
         if (statusEnum == WorkOrderStatus.DELIVERED || statusEnum == WorkOrderStatus.COMPLETED) {
             workOrder.setFinishedAt(LocalDateTime.now());
         }
