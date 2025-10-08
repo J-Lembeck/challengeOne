@@ -25,6 +25,7 @@ public class WorkOrder {
     private LocalDateTime finishedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime approvedAt;
 
     public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, UUID assignedMechanicId, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
 
@@ -142,6 +143,18 @@ public class WorkOrder {
 
     public void setWorkOrderServices(List<WorkOrderService> workOrderServices) {
         this.workOrderServices = workOrderServices;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getApprovedAt() {
+        return approvedAt;
+    }
+
+    public void setApprovedAt(LocalDateTime approvedAt) {
+        this.approvedAt = approvedAt;
     }
 
     public void recalculateTotal() {

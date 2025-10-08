@@ -31,6 +31,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="finished_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="approved_at" type="TIMESTAMP WITH TIME ZONE"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="work_orders"

@@ -60,7 +60,8 @@ public class WorkOrderMapper {
                 workOrder.getTotalAmount(),
                 workOrder.getFinishedAt(),
                 workOrder.getCreatedAt(),
-                workOrder.getUpdatedAt()
+                workOrder.getUpdatedAt(),
+                workOrder.getApprovedAt()
         );
 
         workOrderEntity.getWorkOrderPartEntities()

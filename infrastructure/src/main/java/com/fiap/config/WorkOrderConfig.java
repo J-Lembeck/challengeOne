@@ -6,16 +6,8 @@ import com.fiap.application.gateway.service.ServiceGateway;
 import com.fiap.application.gateway.user.UserGateway;
 import com.fiap.application.gateway.vehicle.VehicleGateway;
 import com.fiap.application.gateway.workorder.WorkOrderGateway;
-import com.fiap.application.usecaseimpl.workorder.AssignedMechanicUseCaseImpl;
-import com.fiap.application.usecaseimpl.workorder.CreateWorkOrderUseCaseImpl;
-import com.fiap.application.usecaseimpl.workorder.FindWorkOrderByIdUseCaseImpl;
-import com.fiap.usecase.workorder.AssignedMechanicUseCase;
-import com.fiap.application.usecaseimpl.workorder.GetWorkOrderStatusUseCaseImpl;
-import com.fiap.application.usecaseimpl.workorder.UpdateStatusWorkOrderUseCaseImpl;
-import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
-import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
-import com.fiap.usecase.workorder.GetWorkOrderStatusUseCase;
-import com.fiap.usecase.workorder.UpdateStatusWorkOrderUseCase;
+import com.fiap.application.usecaseimpl.workorder.*;
+import com.fiap.usecase.workorder.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -45,5 +37,10 @@ public class WorkOrderConfig {
     @Bean
     public GetWorkOrderStatusUseCase getWorkOrderStatusUseCase(WorkOrderGateway workOrderGateway) {
         return new GetWorkOrderStatusUseCaseImpl(workOrderGateway);
+    }
+
+    @Bean
+    public ApproveWorkOrderUseCase approveWorkOrderUseCase(WorkOrderGateway workOrderGateway) {
+        return new ApproveWorkOrderUseCaseImpl(workOrderGateway);
     }
 }
