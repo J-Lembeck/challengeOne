@@ -41,31 +41,28 @@ resource "kubernetes_deployment" "challengeone_app" {
             }
           }
 
-          # liveness_probe {
-          #   http_get {
-          #     path = "/actuator/health/liveness" # ou /health se usar Spring Boot padrão
-          #     port = 8080
-          #   }
-          #   initial_delay_seconds = 10
-          #   period_seconds        = 10
-          #   timeout_seconds       = 2
-          #   failure_threshold     = 3
-          # }
+          liveness_probe {
+            http_get {
+              path = "/actuator/health/liveness" # ou /health se usar Spring Boot padrão
+              port = 8080
+            }
+            initial_delay_seconds = 10
+            period_seconds        = 10
+            timeout_seconds       = 2
+            failure_threshold     = 3
+          }
 
-          # readiness_probe {
-          #   http_get {
-          #     path = "/actuator/health/readiness" # ou /health
-          #     port = 8080
-          #   }
-          #   initial_delay_seconds = 5
-          #   period_seconds        = 5
-          #   timeout_seconds       = 2
-          #   failure_threshold     = 3
-          # }
-
-          # =========================
-          # Requests e Limits
-          # =========================
+          readiness_probe {
+            http_get {
+              path = "/actuator/health/readiness" # ou /health
+              port = 8080
+            }
+            initial_delay_seconds = 5
+            period_seconds        = 5
+            timeout_seconds       = 2
+            failure_threshold     = 3
+          }
+          
           resources {
             requests = {
               cpu    = "200m"

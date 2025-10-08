@@ -9,6 +9,8 @@ resource "kubernetes_secret" "challengeone_db" {
     POSTGRES_PASSWORD = "123"
     POSTGRES_DB       = "challengeone"
     SPRING_DATASOURCE_URL = "jdbc:postgresql://challengeone-db:5432/challengeone"
+    SPRING_DATASOURCE_USERNAME = "postgres"
+    SPRING_DATASOURCE_PASSWORD = "123"
   }
 
   type = "Opaque"
