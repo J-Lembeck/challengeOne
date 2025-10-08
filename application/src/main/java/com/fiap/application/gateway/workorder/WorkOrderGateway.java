@@ -10,4 +10,5 @@ public interface WorkOrderGateway {
     void save(WorkOrder workOrder);
     WorkOrder create(WorkOrder workOrder);
     Optional<WorkOrder> findById(UUID workOrderId);
+    WorkOrder update(WorkOrder workOrder);
 }

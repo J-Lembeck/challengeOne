@@ -133,7 +133,6 @@ public class WorkOrderController {
     @GetMapping("/{id}")
     public ResponseEntity<ResponseApi<WorkOrderResponseDTO>> getWorkOrderById(@PathVariable UUID id) {
         ResponseApi<WorkOrderResponseDTO> responseApi = findWorkOrderByIdUseCase.executeToDTO(id);
-
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }
 
