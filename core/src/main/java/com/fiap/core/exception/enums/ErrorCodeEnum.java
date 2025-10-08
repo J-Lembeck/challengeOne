@@ -15,6 +15,7 @@ public enum ErrorCodeEnum {
     USE0006("A senha deve conter pelo menos um caractere especial (!@#$%^&*()-+)", "USE-0006"),
     USE0007("Usuário não encontrado", "USE-0007"),
     USE0008("Erro na criação do usuário", "USE-0008"),
+    USE0009("O mechanicId deve ser de um mecânico cadastrado no sistema", "USE-0009"),
 
     CUST0001("Cliente não encontrado", "CUST-0001"),
 
@@ -26,7 +27,8 @@ public enum ErrorCodeEnum {
     SERV0001("Serviço não encontrado", "SERV-0001"),
 
     WORK0001("Ordem de serviço não encontrada", "WORK-0001"),
-    WORK0002("É necessário inserir pelo menos um peça ou serviço para a criação da ordem de serviço.", "WORK-0002");
+    WORK0002("É necessário inserir pelo menos um peça ou serviço para a criação da ordem de serviço.", "WORK-0002"),
+    WORK0003("Ordem de serviço encontra-se indisponível para definição de mecânico", "WORK-0003");
 
 
     private String message;
