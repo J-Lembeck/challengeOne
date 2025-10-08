@@ -79,7 +79,6 @@ public class CreateWorkOrderUseCaseImpl implements CreateWorkOrderUseCase {
         workOrder.setWorkOrderParts(workOrderParts);
         workOrder.setWorkOrderServices(workOrderServices);
 
-
         workOrder.recalculateTotal();
         workOrder.reserveParts();
         partGateway.saveAll(parts);

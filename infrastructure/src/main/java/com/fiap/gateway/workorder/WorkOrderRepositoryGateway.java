@@ -43,4 +43,12 @@ public class WorkOrderRepositoryGateway implements WorkOrderGateway {
 
         return workOrderEntity.map(workOrderMapper::toDomain);
     }
+
+    @Transactional
+    @Override
+    public WorkOrder update(WorkOrder workOrder) {
+        WorkOrderEntity entity = workOrderMapper.toEntity(workOrder);
+        WorkOrderEntity saved = workOrderRepository.save(entity);
+        return workOrderMapper.toDomain(saved);
+    }
 }

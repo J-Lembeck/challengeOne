@@ -11,6 +11,7 @@ public record WorkOrderResponse(
         UUID createdById,
         BigDecimal totalAmount,
         List<WorkOrderPartResponse> parts,
-        List<WorkOrderServiceResponse> services
+        List<WorkOrderServiceResponse> services,
+        String status
 ) {
 }
