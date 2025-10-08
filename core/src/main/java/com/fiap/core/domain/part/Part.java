@@ -26,6 +26,10 @@ public class Part {
 		this.stock.subtract(quantity);
 	}
 
+	public void subtractFromReservedStock(int quantity) throws BusinessRuleException {
+		this.stock.subtractReservedStock(quantity);
+	}
+
 	public void returnToStock(int quantity) throws BusinessRuleException {
 		this.stock.restore(quantity);
 	}

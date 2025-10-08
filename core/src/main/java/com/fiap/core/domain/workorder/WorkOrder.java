@@ -171,4 +171,10 @@ public class WorkOrder {
             part.getPart().getStock().subtract(part.getQuantity());
         }
     }
+
+    public void approveStock() {
+        for (WorkOrderPart part : workOrderParts) {
+            part.getPart().getStock().subtractReservedStock(part.getQuantity());
+        }
+    }
 }
