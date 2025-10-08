@@ -30,6 +30,7 @@ public enum ErrorCodeEnum {
     WORK0003("Status informado é inválido ou não permitido para a ordem de serviço.", "WORK-0003");
 
 
+
     private String message;
     private String code;
 

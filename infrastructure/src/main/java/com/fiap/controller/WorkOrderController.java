@@ -6,9 +6,11 @@ import com.fiap.core.exception.NotFoundException;
 import com.fiap.dto.workorder.CreateWorkOrderRequest;
 import com.fiap.dto.workorder.UpdateStatusWorkOrderRequest;
 import com.fiap.dto.workorder.WorkOrderResponse;
+import com.fiap.dto.workorder.WorkOrderStatusResponse;
 import com.fiap.mapper.workorder.WorkOrderMapper;
 import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
 import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
+import com.fiap.usecase.workorder.GetWorkOrderStatusUseCase;
 import com.fiap.usecase.workorder.UpdateStatusWorkOrderUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -27,12 +29,15 @@ public class WorkOrderController {
     private final FindWorkOrderByIdUseCase findWorkOrderByIdUseCase;
     private final WorkOrderMapper workOrderMapper;
     private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
+    private final GetWorkOrderStatusUseCase getWorkOrderStatusUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase) {
+
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.workOrderMapper = workOrderMapper;
-        this. updateStatusWorkOrderUseCase = updateStatusWorkOrderUseCase;
+        this.updateStatusWorkOrderUseCase = updateStatusWorkOrderUseCase;
+        this.getWorkOrderStatusUseCase = getWorkOrderStatusUseCase;
     }
 
     @Operation(
@@ -105,6 +110,18 @@ public class WorkOrderController {
         var workOrder = updateStatusWorkOrderUseCase.execute(id, request.status());
         return ResponseEntity.ok(workOrderMapper.toResponse(workOrder));
     }
+
+    @Operation(
+            summary = "Consulta o status da ordem de serviço pelo ID",
+            description = "Endpoint para consultar apenas o status atual de uma ordem de serviço.")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Status da ordem de serviço obtido com sucesso.") })
+    @GetMapping("/{id}/status")
+    public ResponseEntity<WorkOrderStatusResponse> getWorkOrderStatus(@PathVariable UUID id) throws NotFoundException {
+        var status = getWorkOrderStatusUseCase.execute(id);
+        return ResponseEntity.ok().body(new WorkOrderStatusResponse(id, status.getDescription()));
+    }
+
 
 
     /*@Operation(
