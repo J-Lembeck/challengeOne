@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: challengeone
+  namespace: challengeone
   labels:
     app: challengeone
 spec:
@@ -25,6 +26,14 @@ spec:
                 name: challengeone-config
             - secretRef:
                 name: challengeone-db-secret
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 5
           resources:
             requests:
               cpu: "200m"
