@@ -4,10 +4,12 @@ import com.fiap.core.exception.BadRequestException;
 import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.dto.workorder.CreateWorkOrderRequest;
+import com.fiap.dto.workorder.WorkOrderAssignMechanicRequest;
 import com.fiap.dto.workorder.UpdateStatusWorkOrderRequest;
 import com.fiap.dto.workorder.WorkOrderResponse;
 import com.fiap.dto.workorder.WorkOrderStatusResponse;
 import com.fiap.mapper.workorder.WorkOrderMapper;
+import com.fiap.usecase.workorder.AssignedMechanicUseCase;
 import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
 import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
 import com.fiap.usecase.workorder.GetWorkOrderStatusUseCase;
@@ -27,14 +29,15 @@ public class WorkOrderController {
 
     private final CreateWorkOrderUseCase createWorkOrderUseCase;
     private final FindWorkOrderByIdUseCase findWorkOrderByIdUseCase;
+    private final AssignedMechanicUseCase assignedMechanicUseCase;
     private final WorkOrderMapper workOrderMapper;
     private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
     private final GetWorkOrderStatusUseCase getWorkOrderStatusUseCase;
 
-
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
+        this.assignedMechanicUseCase = assignedMechanicUseCase;
         this.workOrderMapper = workOrderMapper;
         this.updateStatusWorkOrderUseCase = updateStatusWorkOrderUseCase;
         this.getWorkOrderStatusUseCase = getWorkOrderStatusUseCase;
@@ -82,16 +85,16 @@ public class WorkOrderController {
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }*/
 
-    /*@Operation(
+    @Operation(
             summary = "Vincula um mecânico a uma ordem de serviço",
             description = "Endpoint para vincular um mecânico a uma ordem de serviço pelo ID da OS e do Mecânico")
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Mecânico vinculado com sucesso.") })
     @PatchMapping("/{id}/assign-mechanic")
-    public ResponseEntity<ResponseApi<AssignedMechanicResponseDTO>> assignMechanic(@PathVariable UUID id, @RequestBody InputAssignMechanicDTO inputAssignMechanicDTO) {
-        ResponseApi<AssignedMechanicResponseDTO> responseApi = assignedMechanicUseCase.execute(id, inputAssignMechanicDTO);
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
+    public ResponseEntity<Void> assignMechanic(@PathVariable UUID id, @RequestBody WorkOrderAssignMechanicRequest assignMechanicRequest) throws NotFoundException, BadRequestException {
+        assignedMechanicUseCase.execute(id, assignMechanicRequest.mechanicId());
+        return ResponseEntity.noContent().build();
+    }
 
     @Operation(
             summary = "Atualiza o status de uma ordem de serviço",

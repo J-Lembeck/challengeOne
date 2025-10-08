@@ -36,12 +36,12 @@ public class UpdateStatusWorkOrderUseCaseImpl implements UpdateStatusWorkOrderUs
             statusEnum = WorkOrderStatus.fromString(newStatus);
         } catch (Exception ex) {
             throw new BadRequestException(
-                    ErrorCodeEnum.WORK0003.getMessage(),
-                    ErrorCodeEnum.WORK0003.getCode()
+                    ErrorCodeEnum.WORK0004.getMessage(),
+                    ErrorCodeEnum.WORK0004.getCode()
             );
         }
 
-        if (workOrder.getStatus() == statusEnum) throw new BadRequestException(ErrorCodeEnum.WORK0004.getMessage(), ErrorCodeEnum.WORK0004.getCode());
+        if (workOrder.getStatus() == statusEnum) throw new BadRequestException(ErrorCodeEnum.WORK0005.getMessage(), ErrorCodeEnum.WORK0005.getCode());
 
         if (statusEnum == WorkOrderStatus.DELIVERED || statusEnum == WorkOrderStatus.COMPLETED) {
             workOrder.setFinishedAt(LocalDateTime.now());
