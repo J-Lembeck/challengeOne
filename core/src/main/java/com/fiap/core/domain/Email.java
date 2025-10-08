@@ -8,7 +8,6 @@ public class Email {
     private String value;
 
     public Email(String value) throws EmailException {
-        System.out.println("email valor: " + value);
         if (!isValidEmail(value)) {
       throw new EmailException("Formato de email inválido", "CAD0011");
         }

@@ -9,11 +9,7 @@ import com.fiap.dto.workorder.UpdateStatusWorkOrderRequest;
 import com.fiap.dto.workorder.WorkOrderResponse;
 import com.fiap.dto.workorder.WorkOrderStatusResponse;
 import com.fiap.mapper.workorder.WorkOrderMapper;
-import com.fiap.usecase.workorder.AssignedMechanicUseCase;
-import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
-import com.fiap.usecase.workorder.FindWorkOrderByIdUseCase;
-import com.fiap.usecase.workorder.GetWorkOrderStatusUseCase;
-import com.fiap.usecase.workorder.UpdateStatusWorkOrderUseCase;
+import com.fiap.usecase.workorder.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,14 +29,16 @@ public class WorkOrderController {
     private final WorkOrderMapper workOrderMapper;
     private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
     private final GetWorkOrderStatusUseCase getWorkOrderStatusUseCase;
+    private final ApproveWorkOrderUseCase approveWorkOrderUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.assignedMechanicUseCase = assignedMechanicUseCase;
         this.workOrderMapper = workOrderMapper;
         this.updateStatusWorkOrderUseCase = updateStatusWorkOrderUseCase;
         this.getWorkOrderStatusUseCase = getWorkOrderStatusUseCase;
+        this.approveWorkOrderUseCase = approveWorkOrderUseCase;
     }
 
     @Operation(
@@ -91,9 +89,9 @@ public class WorkOrderController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Mecânico vinculado com sucesso.") })
     @PatchMapping("/{id}/assign-mechanic")
-    public ResponseEntity<Void> assignMechanic(@PathVariable UUID id, @RequestBody WorkOrderAssignMechanicRequest assignMechanicRequest) throws NotFoundException, BadRequestException {
+    public ResponseEntity<String> assignMechanic(@PathVariable UUID id, @RequestBody WorkOrderAssignMechanicRequest assignMechanicRequest) throws NotFoundException, BadRequestException {
         assignedMechanicUseCase.execute(id, assignMechanicRequest.mechanicId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Mecânico vinculado.");
     }
 
     @Operation(
@@ -125,7 +123,16 @@ public class WorkOrderController {
         return ResponseEntity.ok().body(new WorkOrderStatusResponse(id, status.getDescription()));
     }
 
-
+    @Operation(
+            summary = "Aprova uma ordem de serviço",
+            description = "Endpoint para approvar uma ordem de serviço pelo ID")
+    @ApiResponses(
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço aceita com sucesso.") })
+    @PatchMapping("/{id}/approve")
+    public ResponseEntity<String> approveWorkOrder(@PathVariable UUID id) throws NotFoundException, BadRequestException {
+        approveWorkOrderUseCase.execute(id);
+        return ResponseEntity.ok("Ordem de Serviço aprovada.");
+    }
 
     /*@Operation(
             summary = "Aceita ou recusa uma ordem de serviço",

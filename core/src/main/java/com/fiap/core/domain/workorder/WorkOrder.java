@@ -25,8 +25,9 @@ public class WorkOrder {
     private LocalDateTime finishedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime approvedAt;
 
-    public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, UUID assignedMechanicId, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
+    public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
 
         if ((workOrderParts == null || workOrderParts.isEmpty()) && (workOrderServices == null || workOrderServices.isEmpty())) {
             throw new BadRequestException(ErrorCodeEnum.WORK0002.getMessage(), ErrorCodeEnum.WORK0002.getCode());
@@ -34,7 +35,6 @@ public class WorkOrder {
         this.customer = new Customer(customerId);
         this.vehicle = new Vehicle(vehicleId);
         this.createdBy = new User(createdById);
-        this.assignedMechanic = new User(assignedMechanicId);
         this.workOrderParts = workOrderParts;
         this.workOrderServices = workOrderServices;
         this.status = WorkOrderStatus.RECEIVED;
@@ -144,6 +144,18 @@ public class WorkOrder {
         this.workOrderServices = workOrderServices;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getApprovedAt() {
+        return approvedAt;
+    }
+
+    public void setApprovedAt(LocalDateTime approvedAt) {
+        this.approvedAt = approvedAt;
+    }
+
     public void recalculateTotal() {
         BigDecimal totalParts = BigDecimal.ZERO;
         BigDecimal totalServices = BigDecimal.ZERO;
@@ -169,6 +181,12 @@ public class WorkOrder {
                 throw new BadRequestException(ErrorCodeEnum.PART0002.getMessage(), ErrorCodeEnum.PART0002.getCode());
             }
             part.getPart().getStock().subtract(part.getQuantity());
+        }
+    }
+
+    public void approveStock() {
+        for (WorkOrderPart part : workOrderParts) {
+            part.getPart().getStock().subtractReservedStock(part.getQuantity());
         }
     }
 }

@@ -7,7 +7,6 @@ public record CreateWorkOrderRequest(
         UUID customerId,
         UUID vehicleId,
         UUID createdById,
-        UUID assignedMechanicId,
         List<WorkOrderPartRequest> parts,
         List<WorkOrderServiceRequest> services
         ){

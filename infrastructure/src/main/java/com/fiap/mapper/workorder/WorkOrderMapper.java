@@ -60,7 +60,8 @@ public class WorkOrderMapper {
                 workOrder.getTotalAmount(),
                 workOrder.getFinishedAt(),
                 workOrder.getCreatedAt(),
-                workOrder.getUpdatedAt()
+                workOrder.getUpdatedAt(),
+                workOrder.getApprovedAt()
         );
 
         workOrderEntity.getWorkOrderPartEntities()
@@ -105,7 +106,6 @@ public class WorkOrderMapper {
                 request.customerId(),
                 request.vehicleId(),
                 request.createdById(),
-                request.assignedMechanicId(),
                 parts,
                 services
         );

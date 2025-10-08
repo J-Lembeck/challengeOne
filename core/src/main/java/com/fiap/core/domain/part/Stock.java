@@ -44,4 +44,8 @@ public class Stock {
         this.stockQuantity += quantity;
         this.reservedStock -= quantity;
     }
+
+    public void subtractReservedStock(int quantity) {
+        this.reservedStock -= quantity;
+    }
 }
