@@ -5,8 +5,29 @@ public enum ErrorCodeEnum {
     CAD0001("Documento Inválido", "CAD-0001"),
     CAD0002("Documento já cadastrado!", "CAD-0002"),
     CAD0003("Email já cadastrado!", "CAD-0003"),
-    CAD0004("Erro na criação do cliente", "CAD-0004")
-    ;
+    CAD0004("Erro na criação do cliente", "CAD-0004"),
+
+    USE0001("A senha não pode ser nula", "USE-0001"),
+    USE0002("A senha deve ter pelo menos 8 caracteres", "USE-00022"),
+    USE0003("A senha deve conter pelo menos uma letra maiúscula", "USE-0003"),
+    USE0004("A senha deve conter pelo menos uma letra minúscula", "USE-0004"),
+    USE0005("A senha deve conter pelo menos um número", "USE-0005"),
+    USE0006("A senha deve conter pelo menos um caractere especial (!@#$%^&*()-+)", "USE-0006"),
+    USE0007("Usuário não encontrado", "USE-0007"),
+    USE0008("Erro na criação do usuário", "USE-0008"),
+
+    CUST0001("Cliente não encontrado", "CUST-0001"),
+
+    VEH0001("Veículo não encontrado", "VEH-0001"),
+
+    PART0001("Peça não encontrada", "PAR-0001"),
+    PART0002("Estoque de peças insuficiente", "PAR-0002"),
+
+    SERV0001("Serviço não encontrado", "SERV-0001"),
+
+    WORK0001("Ordem de serviço não encontrada", "WORK-0001"),
+    WORK0002("É necessário inserir pelo menos um peça ou serviço para a criação da ordem de serviço.", "WORK-0002");
+
 
     private String message;
     private String code;

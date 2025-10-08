@@ -1,0 +1,39 @@
+package com.fiap.gateway.workorder;
+
+import com.fiap.application.gateway.workorder.WorkOrderGateway;
+import com.fiap.core.domain.workorder.WorkOrder;
+import com.fiap.mapper.workorder.WorkOrderMapper;
+import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
+import com.fiap.persistence.repository.workorder.WorkOrderRepository;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.UUID;
+
+@Component
+public class WorkOrderRepositoryGateway implements WorkOrderGateway {
+
+    private final WorkOrderRepository workOrderRepository;
+    private final WorkOrderMapper workOrderMapper;
+
+    public WorkOrderRepositoryGateway(WorkOrderRepository workOrderRepository, WorkOrderMapper workOrderMapper) {
+        this.workOrderRepository = workOrderRepository;
+        this.workOrderMapper = workOrderMapper;
+    }
+
+    @Transactional
+    @Override
+    public WorkOrder create(WorkOrder workOrder) {
+        WorkOrderEntity workOrderEntity = workOrderRepository.save(workOrderMapper.toEntity(workOrder));
+        return workOrderMapper.toDomain(workOrderEntity);
+    }
+
+    @Transactional
+    @Override
+    public Optional<WorkOrder> findById(UUID customerId) {
+        Optional<WorkOrderEntity> workOrderEntity = workOrderRepository.findById(customerId);
+
+        return workOrderEntity.map(workOrderMapper::toDomain);
+    }
+}
