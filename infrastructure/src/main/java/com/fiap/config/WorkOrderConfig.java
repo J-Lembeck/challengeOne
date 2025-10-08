@@ -40,7 +40,7 @@ public class WorkOrderConfig {
     }
 
     @Bean
-    public ApproveWorkOrderUseCase approveWorkOrderUseCase(WorkOrderGateway workOrderGateway) {
-        return new ApproveWorkOrderUseCaseImpl(workOrderGateway);
+    public ApproveWorkOrderUseCase approveWorkOrderUseCase(WorkOrderGateway workOrderGateway, PartGateway partGateway) {
+        return new ApproveWorkOrderUseCaseImpl(workOrderGateway, partGateway);
     }
 }

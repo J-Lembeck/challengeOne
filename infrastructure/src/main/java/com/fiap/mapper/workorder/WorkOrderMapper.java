@@ -106,7 +106,6 @@ public class WorkOrderMapper {
                 request.customerId(),
                 request.vehicleId(),
                 request.createdById(),
-                request.assignedMechanicId(),
                 parts,
                 services
         );

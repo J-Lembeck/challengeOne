@@ -27,7 +27,7 @@ public class WorkOrder {
     private LocalDateTime updatedAt;
     private LocalDateTime approvedAt;
 
-    public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, UUID assignedMechanicId, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
+    public WorkOrder(UUID customerId, UUID vehicleId, UUID createdById, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
 
         if ((workOrderParts == null || workOrderParts.isEmpty()) && (workOrderServices == null || workOrderServices.isEmpty())) {
             throw new BadRequestException(ErrorCodeEnum.WORK0002.getMessage(), ErrorCodeEnum.WORK0002.getCode());
@@ -35,7 +35,6 @@ public class WorkOrder {
         this.customer = new Customer(customerId);
         this.vehicle = new Vehicle(vehicleId);
         this.createdBy = new User(createdById);
-        this.assignedMechanic = new User(assignedMechanicId);
         this.workOrderParts = workOrderParts;
         this.workOrderServices = workOrderServices;
         this.status = WorkOrderStatus.RECEIVED;
