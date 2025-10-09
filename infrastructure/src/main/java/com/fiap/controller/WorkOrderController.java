@@ -30,8 +30,9 @@ public class WorkOrderController {
     private final UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase;
     private final GetWorkOrderStatusUseCase getWorkOrderStatusUseCase;
     private final ApproveWorkOrderUseCase approveWorkOrderUseCase;
+    private final RefuseWorkOrderUseCase refuseWorkOrderUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.assignedMechanicUseCase = assignedMechanicUseCase;
@@ -39,6 +40,7 @@ public class WorkOrderController {
         this.updateStatusWorkOrderUseCase = updateStatusWorkOrderUseCase;
         this.getWorkOrderStatusUseCase = getWorkOrderStatusUseCase;
         this.approveWorkOrderUseCase = approveWorkOrderUseCase;
+        this.refuseWorkOrderUseCase = refuseWorkOrderUseCase;
     }
 
     @Operation(
@@ -125,25 +127,25 @@ public class WorkOrderController {
 
     @Operation(
             summary = "Aprova uma ordem de serviço",
-            description = "Endpoint para approvar uma ordem de serviço pelo ID")
+            description = "Endpoint para aprovar uma ordem de serviço pelo ID")
     @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço aceita com sucesso.") })
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço aprovada com sucesso.") })
     @PatchMapping("/{id}/approve")
     public ResponseEntity<String> approveWorkOrder(@PathVariable UUID id) throws NotFoundException, BadRequestException {
         approveWorkOrderUseCase.execute(id);
         return ResponseEntity.ok("Ordem de Serviço aprovada.");
     }
 
-    /*@Operation(
-            summary = "Aceita ou recusa uma ordem de serviço",
-            description = "Endpoint para aceitar ou recusar uma ordem de serviço pelo ID")
+    @Operation(
+            summary = "Reprova uma ordem de serviço",
+            description = "Endpoint para reprovar uma ordem de serviço pelo ID")
     @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço aceita ou recusada com sucesso.") })
-    @PatchMapping("/{id}/decision")
-    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> aceptedOrRefuse(@PathVariable UUID id, @RequestBody boolean decision) {
-        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = aceptedOrRefuseWorkOrderUseCase.execute(id, decision);
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
+            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço recusada com sucesso.") })
+    @PatchMapping("/{id}/refuse")
+    public ResponseEntity<String> refuseWorkOrder(@PathVariable UUID id) throws NotFoundException, BadRequestException, BusinessRuleException {
+        refuseWorkOrderUseCase.execute(id);
+        return ResponseEntity.ok("Ordem de Serviço recusada.");
+    }
 
     /*@PatchMapping("/{id}/delivered")
     @Operation(
