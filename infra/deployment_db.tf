@@ -5,6 +5,7 @@ resource "kubernetes_stateful_set" "challengeone_db" {
   }
 
   spec {
+    service_name = "challengeone-db"
     replicas = 1
 
     selector {
@@ -43,21 +44,21 @@ resource "kubernetes_stateful_set" "challengeone_db" {
       }
     }
     volume_claim_template {
-          metadata {
-            name = "pgdata"
-          }
+      metadata {
+        name = "pgdata"
+      }
 
-          spec {
-            access_modes = ["ReadWriteOnce"]
+      spec {
+        access_modes = ["ReadWriteOnce"]
 
-            resources {
-              requests = {
-                storage = "1Gi"
-              }
-            }
-
-            storage_class_name = "local-path"
+        resources {
+          requests = {
+            storage = "1Gi"
           }
         }
+
+        storage_class_name = "local-path"
+      }
+    }
   }
 }
