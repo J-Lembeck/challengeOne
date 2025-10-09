@@ -73,4 +73,8 @@ public class WorkOrderPart {
     public void setAppliedPrice(BigDecimal appliedPrice) {
         this.appliedPrice = appliedPrice;
     }
+
+    public void addQuantity(int amount) {
+        this.quantity += amount;
+    }
 }

@@ -3,11 +3,7 @@ package com.fiap.controller;
 import com.fiap.core.exception.BadRequestException;
 import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
-import com.fiap.dto.workorder.CreateWorkOrderRequest;
-import com.fiap.dto.workorder.WorkOrderAssignMechanicRequest;
-import com.fiap.dto.workorder.UpdateStatusWorkOrderRequest;
-import com.fiap.dto.workorder.WorkOrderResponse;
-import com.fiap.dto.workorder.WorkOrderStatusResponse;
+import com.fiap.dto.workorder.*;
 import com.fiap.mapper.workorder.WorkOrderMapper;
 import com.fiap.usecase.workorder.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +27,9 @@ public class WorkOrderController {
     private final GetWorkOrderStatusUseCase getWorkOrderStatusUseCase;
     private final ApproveWorkOrderUseCase approveWorkOrderUseCase;
     private final RefuseWorkOrderUseCase refuseWorkOrderUseCase;
+    private final AddItemsWorkOrderUseCase addItemsWorkOrderUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.assignedMechanicUseCase = assignedMechanicUseCase;
@@ -41,6 +38,7 @@ public class WorkOrderController {
         this.getWorkOrderStatusUseCase = getWorkOrderStatusUseCase;
         this.approveWorkOrderUseCase = approveWorkOrderUseCase;
         this.refuseWorkOrderUseCase = refuseWorkOrderUseCase;
+        this.addItemsWorkOrderUseCase = addItemsWorkOrderUseCase;
     }
 
     @Operation(
@@ -109,7 +107,7 @@ public class WorkOrderController {
     public ResponseEntity<WorkOrderResponse> updateStatus(
             @PathVariable UUID id,
             @RequestBody UpdateStatusWorkOrderRequest request
-    ) throws NotFoundException, BadRequestException {
+    ) throws NotFoundException, BadRequestException, BusinessRuleException {
         var workOrder = updateStatusWorkOrderUseCase.execute(id, request.status());
         return ResponseEntity.ok(workOrderMapper.toResponse(workOrder));
     }
@@ -147,39 +145,16 @@ public class WorkOrderController {
         return ResponseEntity.ok("Ordem de Serviço recusada.");
     }
 
-    /*@PatchMapping("/{id}/delivered")
     @Operation(
-            summary = "Marca uma ordem de serviço como entregue",
-            description = "Endpoint para marcar uma ordem de serviço como entregue pelo ID")
-    @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço marcada como entregue com sucesso.") })
-    public ResponseEntity<ResponseApi<StatusWorkOrderRespondeDTO>> markAsDelivered(@PathVariable UUID id) {
-        ResponseApi<StatusWorkOrderRespondeDTO> responseApi = updateStatusWorkOrderUseCase.execute(id, "DELIVERED");
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
-
-
-    /*@Operation(
-            summary = "Finaliza uma ordem de serviço",
-            description = "Endpoint para finalizar uma ordem de serviço pelo ID")
-    @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Ordem de serviço finalizada com sucesso.") })
-    @PatchMapping("/{id}/finalize")
-    public ResponseEntity<ResponseApi<Void>> finalizeWorkOrder(@PathVariable UUID id) {
-        ResponseApi<Void> responseApi = finalizeWorkOrderUseCase.execute(id);
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
-
-    /*@Operation(
             summary = "Adiciona novos itens para a Ordem de Serviço",
             description = "Endpoint para adicionar novas peças/insumos para a ordem de serviço")
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Itens adicionados com sucesso.") })
     @PatchMapping("/{id}/update-items")
-    public ResponseEntity<ResponseApi<WorkOrderResumeDTO>> updateItems(@PathVariable UUID id, @RequestBody WorkOrderItemDTO workOrderItemDTO) {
-        ResponseApi<WorkOrderResumeDTO> responseApi = updateWorkOrderItemsUseCase.execute(id, workOrderItemDTO);
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
+    public ResponseEntity<WorkOrderResponse> updateItems(@PathVariable UUID id, @RequestBody UpdateWorkOrderItemsRequest updateWorkOrderItemsRequest) throws BadRequestException, BusinessRuleException, NotFoundException {
+        var workOrder = addItemsWorkOrderUseCase.execute(id, workOrderMapper.toDomain(updateWorkOrderItemsRequest));
+        return ResponseEntity.status(HttpStatus.OK).body(workOrderMapper.toResponse(workOrder));
+    }
 
     /*@Operation(
             summary = "Busca o histórico de ordens de serviço por CPF",

@@ -3,6 +3,7 @@ package com.fiap.mapper.customer;
 import com.fiap.core.domain.customer.Customer;
 import com.fiap.core.domain.customer.DocumentNumber;
 import com.fiap.core.exception.DocumentNumberException;
+import com.fiap.core.exception.EmailException;
 import com.fiap.dto.customer.CreateCustomerRequest;
 import com.fiap.dto.customer.CustomerResponse;
 import com.fiap.dto.customer.UpdateCustomerRequest;
@@ -21,7 +22,7 @@ public class CustomerMapper {
                 customer.getName(),
                 customer.getDocumentNumber().getValue(),
                 customer.getPhone(),
-                customer.getEmail(),
+                customer.getEmail().getValue(),
                 new ArrayList<>(),
                 new ArrayList<>(),
                 customer.getCreatedAt(),
@@ -41,7 +42,7 @@ public class CustomerMapper {
         );
     }
 
-    public Customer toDomain(CreateCustomerRequest request) throws DocumentNumberException {
+    public Customer toDomain(CreateCustomerRequest request) throws DocumentNumberException, EmailException {
         return new Customer(
                 request.name(),
                 DocumentNumber.of(request.documentNumber()),
@@ -50,7 +51,7 @@ public class CustomerMapper {
         );
     }
 
-    public Customer toDomain(UUID id, UpdateCustomerRequest request) throws DocumentNumberException {
+    public Customer toDomain(UUID id, UpdateCustomerRequest request) throws DocumentNumberException, EmailException {
         return new Customer(
                 id,
                 request.name(),
@@ -67,6 +68,6 @@ public class CustomerMapper {
     }
 
     public CustomerResponse toResponse(Customer customer) {
-        return new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail(), customer.getDocumentNumber());
+        return new CustomerResponse(customer.getId(), customer.getName(), customer.getEmail().getValue(), customer.getDocumentNumber());
     }
 }

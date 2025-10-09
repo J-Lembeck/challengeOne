@@ -1,5 +1,8 @@
 package com.fiap.core.domain.customer;
 
+import com.fiap.core.domain.Email;
+import com.fiap.core.exception.EmailException;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -9,7 +12,7 @@ public class Customer {
     private String name;
     private DocumentNumber documentNumber;
     private String phone;
-    private String email;
+    private Email email;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -18,25 +21,25 @@ public class Customer {
         this.name = name;
         this.documentNumber = documentNumber;
         this.phone = phone;
-        this.email = email;
+        this.email = new Email(email);
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
-    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email) {
+    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email) throws EmailException {
         this.id = id;
         this.name = name;
         this.documentNumber = documentNumber;
         this.phone = phone;
-        this.email = email;
+        this.email = Email.of(email);
         this.updatedAt = LocalDateTime.now();
     }
 
-    public Customer(String name, DocumentNumber documentNumber, String phone, String email) {
+    public Customer(String name, DocumentNumber documentNumber, String phone, String email) throws EmailException {
         this.name = name;
         this.documentNumber = documentNumber;
         this.phone = phone;
-        this.email = email;
+        this.email = Email.of(email);
         this.createdAt = LocalDateTime.now();
     }
 
@@ -79,11 +82,11 @@ public class Customer {
         this.phone = phone;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(Email email) {
         this.email = email;
     }
 

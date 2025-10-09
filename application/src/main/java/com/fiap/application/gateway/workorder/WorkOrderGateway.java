@@ -7,8 +7,7 @@ import java.util.UUID;
 
 public interface WorkOrderGateway {
 
-    void save(WorkOrder workOrder);
-    WorkOrder create(WorkOrder workOrder);
+    WorkOrder save(WorkOrder workOrder);
     Optional<WorkOrder> findById(UUID workOrderId);
     WorkOrder update(WorkOrder workOrder);
 }

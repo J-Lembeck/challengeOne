@@ -36,7 +36,7 @@ public class RefuseWorkOrderUseCaseImpl implements RefuseWorkOrderUseCase {
             throw new BadRequestException(ErrorCodeEnum.WORK0006.getMessage(), ErrorCodeEnum.WORK0006.getCode());
 
         workOrder.restoreStock();
-        workOrder.setStatus(WorkOrderStatus.REFUSED);
+        workOrder.setStatus(WorkOrderStatus.COMPLETED);
         workOrder.setFinishedAt(LocalDateTime.now());
 
         List<Part> parts = workOrder.getWorkOrderParts().stream()

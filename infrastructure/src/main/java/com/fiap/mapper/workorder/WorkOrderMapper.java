@@ -1,14 +1,10 @@
 package com.fiap.mapper.workorder;
 
-import com.fiap.core.domain.user.User;
 import com.fiap.core.domain.workorder.WorkOrder;
 import com.fiap.core.domain.workorder.WorkOrderPart;
 import com.fiap.core.domain.workorder.WorkOrderService;
 import com.fiap.core.exception.BadRequestException;
-import com.fiap.dto.workorder.CreateWorkOrderRequest;
-import com.fiap.dto.workorder.WorkOrderPartResponse;
-import com.fiap.dto.workorder.WorkOrderResponse;
-import com.fiap.dto.workorder.WorkOrderServiceResponse;
+import com.fiap.dto.workorder.*;
 import com.fiap.mapper.customer.CustomerMapper;
 import com.fiap.mapper.user.UserMapper;
 import com.fiap.mapper.vehicle.VehicleMapper;
@@ -18,7 +14,9 @@ import com.fiap.persistence.entity.workOrder.WorkOrderPartEntity;
 import com.fiap.persistence.entity.workOrder.WorkOrderServiceEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class WorkOrderMapper {
@@ -40,11 +38,11 @@ public class WorkOrderMapper {
     public WorkOrderEntity toEntity(WorkOrder workOrder) {
         List<WorkOrderPartEntity> workOrderPartEntities = workOrder.getWorkOrderParts().stream()
                 .map(workOrderPartMapper::toEntity)
-                .toList();
+                .collect(Collectors.toList());
 
         List<WorkOrderServiceEntity> workOrderServiceEntities = workOrder.getWorkOrderServices().stream()
                 .map(workOrderServiceMapper::toEntity)
-                .toList();
+                .collect(Collectors.toList());
 
         UserEntity mechanic = workOrder.getAssignedMechanic() != null ? userMapper.toEntity(workOrder.getAssignedMechanic()) : null;
 
@@ -75,11 +73,11 @@ public class WorkOrderMapper {
     public WorkOrder toDomain(WorkOrderEntity workOrderEntity) {
         List<WorkOrderPart> workOrderParts = workOrderEntity.getWorkOrderPartEntities().stream()
                 .map(workOrderPartMapper::toDomain)
-                .toList();
+                .collect(Collectors.toList());
 
         List<WorkOrderService> workOrderServices = workOrderEntity.getWorkOrderServiceEntities().stream()
                 .map(workOrderServiceMapper::toDomain)
-                .toList();
+                .collect(Collectors.toList());
 
         return new WorkOrder(
                 workOrderEntity.getId(),
@@ -96,11 +94,11 @@ public class WorkOrderMapper {
     public WorkOrder toDomain(CreateWorkOrderRequest request) throws BadRequestException {
         List<WorkOrderService> services = request.services() != null && !request.services().isEmpty() ? request.services()
                 .stream().map(workOrderServiceMapper::toDomain)
-                .toList() : List.of();
+                .collect(Collectors.toList()) : new ArrayList<>();
 
         List<WorkOrderPart> parts = request.parts() != null && !request.parts().isEmpty() ? request.parts()
                 .stream().map(workOrderPartMapper::toDomain)
-                .toList() : List.of();
+                .collect(Collectors.toList()) : new ArrayList<>();
 
         return new WorkOrder(
                 request.customerId(),
@@ -111,14 +109,29 @@ public class WorkOrderMapper {
         );
     }
 
+    public WorkOrder toDomain(UpdateWorkOrderItemsRequest request) throws BadRequestException {
+        List<WorkOrderService> services = request.services() != null && !request.services().isEmpty() ? request.services()
+                .stream().map(workOrderServiceMapper::toDomain)
+                .collect(Collectors.toList()) : new ArrayList<>();
+
+        List<WorkOrderPart> parts = request.parts() != null && !request.parts().isEmpty() ? request.parts()
+                .stream().map(workOrderPartMapper::toDomain)
+                .collect(Collectors.toList()) : new ArrayList<>();
+
+        return new WorkOrder(
+                parts,
+                services
+        );
+    }
+
     public WorkOrderResponse toResponse(WorkOrder workOrder) {
         List<WorkOrderServiceResponse> services = workOrder.getWorkOrderServices() != null && !workOrder.getWorkOrderServices().isEmpty()
-                        ? workOrder.getWorkOrderServices().stream().map(workOrderServiceMapper::toResponse).toList()
-                        : List.of();
+                        ? workOrder.getWorkOrderServices().stream().map(workOrderServiceMapper::toResponse).collect(Collectors.toList())
+                        : new ArrayList<>();
 
         List<WorkOrderPartResponse> parts = workOrder.getWorkOrderParts() != null && !workOrder.getWorkOrderParts().isEmpty()
-                        ? workOrder.getWorkOrderParts().stream().map(workOrderPartMapper::toResponse).toList()
-                        : List.of();
+                        ? workOrder.getWorkOrderParts().stream().map(workOrderPartMapper::toResponse).collect(Collectors.toList())
+                        : new ArrayList<>();
 
         return new WorkOrderResponse(
                 workOrder.getId(),

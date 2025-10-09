@@ -37,7 +37,7 @@ public class UpdateCustomerUseCaseImpl implements UpdateCustomerUseCase {
         }
 
         if (!oldCustomer.getEmail().equals(customer.getEmail()) &&
-                !emailAvailableUseCase.emailAvailable(customer.getEmail())) {
+                !emailAvailableUseCase.emailAvailable(customer.getEmail().getValue())) {
             throw new EmailException(ErrorCodeEnum.CAD0003.getMessage(), ErrorCodeEnum.CAD0003.getCode());
         }
 

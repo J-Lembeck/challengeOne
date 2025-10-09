@@ -1,6 +1,7 @@
 package com.fiap.core.domain.workorder;
 
 import com.fiap.core.domain.customer.Customer;
+import com.fiap.core.domain.part.Stock;
 import com.fiap.core.domain.user.User;
 import com.fiap.core.domain.vehicle.Vehicle;
 import com.fiap.core.exception.BadRequestException;
@@ -10,7 +11,9 @@ import com.fiap.core.exception.enums.ErrorCodeEnum;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class WorkOrder {
     private UUID id;
@@ -50,6 +53,15 @@ public class WorkOrder {
         this.workOrderServices = workOrderServices;
         this.status = status;
         this.totalAmount = totalAmount;
+    }
+
+    public WorkOrder(List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
+        if ((workOrderParts == null || workOrderParts.isEmpty()) && (workOrderServices == null || workOrderServices.isEmpty())) {
+            throw new BadRequestException(ErrorCodeEnum.WORK0002.getMessage(), ErrorCodeEnum.WORK0002.getCode());
+        }
+
+        this.workOrderParts = workOrderParts;
+        this.workOrderServices = workOrderServices;
     }
 
     public UUID getId() {
@@ -185,8 +197,28 @@ public class WorkOrder {
     }
 
     public void approveStock() {
-        for (WorkOrderPart part : workOrderParts) {
-            part.getPart().getStock().subtractReservedStock(part.getQuantity());
+        Map<UUID, Integer> totalQuantityByPart = workOrderParts.stream()
+                .collect(Collectors.toMap(
+                        part -> part.getPart().getId(),
+                        WorkOrderPart::getQuantity,
+                        Integer::sum
+                ));
+
+        for (Map.Entry<UUID, Integer> entry : totalQuantityByPart.entrySet()) {
+            UUID partId = entry.getKey();
+            int totalQuantity = entry.getValue();
+
+            List<WorkOrderPart> samePartsId = workOrderParts.stream()
+                    .filter(p -> p.getPart().getId().equals(partId))
+                    .toList();
+
+            Stock stock = samePartsId.getFirst().getPart().getStock();
+
+            stock.subtractReservedStock(totalQuantity);
+
+            for (WorkOrderPart p : samePartsId) {
+                p.getPart().setStock(stock);
+            }
         }
     }
 

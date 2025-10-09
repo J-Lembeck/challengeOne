@@ -31,7 +31,7 @@ public class CreateCustomerUseCaseImpl implements CreateCustomerUseCase {
             throw new DocumentNumberException(ErrorCodeEnum.CAD0002.getMessage(), ErrorCodeEnum.CAD0002.getCode());
         }
 
-        if (!emailAvailableUseCase.emailAvailable(customer.getEmail())) {
+        if (!emailAvailableUseCase.emailAvailable(customer.getEmail().getValue())) {
             throw new EmailException(ErrorCodeEnum.CAD0003.getMessage(), ErrorCodeEnum.CAD0003.getCode());
         }
 
