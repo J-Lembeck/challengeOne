@@ -189,4 +189,10 @@ public class WorkOrder {
             part.getPart().getStock().subtractReservedStock(part.getQuantity());
         }
     }
+
+    public void restoreStock() throws BusinessRuleException {
+        for (WorkOrderPart part : workOrderParts) {
+            part.getPart().getStock().restore(part.getQuantity());
+        }
+    }
 }
