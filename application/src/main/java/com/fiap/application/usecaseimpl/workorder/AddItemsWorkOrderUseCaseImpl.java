@@ -1,16 +1,10 @@
 package com.fiap.application.usecaseimpl.workorder;
 
-import com.fiap.application.gateway.customer.CustomerGateway;
 import com.fiap.application.gateway.part.PartGateway;
 import com.fiap.application.gateway.service.ServiceGateway;
-import com.fiap.application.gateway.user.UserGateway;
-import com.fiap.application.gateway.vehicle.VehicleGateway;
 import com.fiap.application.gateway.workorder.WorkOrderGateway;
-import com.fiap.core.domain.customer.Customer;
 import com.fiap.core.domain.part.Part;
 import com.fiap.core.domain.service.Service;
-import com.fiap.core.domain.user.User;
-import com.fiap.core.domain.vehicle.Vehicle;
 import com.fiap.core.domain.workorder.WorkOrder;
 import com.fiap.core.domain.workorder.WorkOrderPart;
 import com.fiap.core.domain.workorder.WorkOrderService;
@@ -18,66 +12,56 @@ import com.fiap.core.exception.BadRequestException;
 import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.core.exception.enums.ErrorCodeEnum;
-import com.fiap.usecase.workorder.CreateWorkOrderUseCase;
+import com.fiap.usecase.workorder.AddItemsWorkOrderUseCase;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public class CreateWorkOrderUseCaseImpl implements CreateWorkOrderUseCase {
+public class AddItemsWorkOrderUseCaseImpl implements AddItemsWorkOrderUseCase {
 
     private final WorkOrderGateway workOrderGateway;
-    private final CustomerGateway customerGateway;
-    private final VehicleGateway vehicleGateway;
-    private final UserGateway userGateway;
-    private final PartGateway partGateway;
-    private final ServiceGateway serviceGateway;
 
-    public CreateWorkOrderUseCaseImpl(WorkOrderGateway workOrderGateway, CustomerGateway customerGateway, VehicleGateway vehicleGateway, UserGateway userGateway, PartGateway partGateway, ServiceGateway serviceGateway) {
+    public AddItemsWorkOrderUseCaseImpl(WorkOrderGateway workOrderGateway, PartGateway partGateway, ServiceGateway serviceGateway) {
         this.workOrderGateway = workOrderGateway;
-        this.customerGateway = customerGateway;
-        this.vehicleGateway = vehicleGateway;
-        this.userGateway = userGateway;
         this.partGateway = partGateway;
         this.serviceGateway = serviceGateway;
     }
 
+    private final PartGateway partGateway;
+    private final ServiceGateway serviceGateway;
+
     @Override
-    public WorkOrder execute(WorkOrder workOrder) throws NotFoundException, BusinessRuleException, BadRequestException {
-        Customer customer = customerGateway.findById(workOrder.getCustomer().getId())
-                .orElseThrow(() -> new NotFoundException(ErrorCodeEnum.CUST0001.getMessage(), ErrorCodeEnum.CUST0001.getCode()));
+    public WorkOrder execute(UUID workOrderId, WorkOrder increaseWorkOrder) throws NotFoundException, BusinessRuleException, BadRequestException {
 
-        Vehicle vehicle = vehicleGateway.findById(workOrder.getVehicle().getId())
-                .orElseThrow(() -> new NotFoundException(ErrorCodeEnum.VEH0001.getMessage(), ErrorCodeEnum.VEH0001.getCode()));
+        WorkOrder workOrder = workOrderGateway.findById(workOrderId)
+                .orElseThrow(() -> new NotFoundException(ErrorCodeEnum.WORK0001.getMessage(), ErrorCodeEnum.WORK0001.getCode()));
 
-        User createdBy = userGateway.findById(workOrder.getCreatedBy().getId())
-                .orElseThrow(() -> new NotFoundException(ErrorCodeEnum.USE0007.getMessage(), ErrorCodeEnum.USE0007.getCode()));
+        workOrder.restoreStock();
 
-        List<UUID> partIds = workOrder.getWorkOrderParts().stream()
+        List<UUID> partIds = increaseWorkOrder.getWorkOrderParts().stream()
                 .map(WorkOrderPart::getPartId)
                 .toList();
 
-        List<UUID> servicesIds = workOrder.getWorkOrderServices().stream()
+        List<UUID> servicesIds = increaseWorkOrder.getWorkOrderServices().stream()
                 .map(WorkOrderService::getServiceId)
                 .toList();
 
         List<Part> parts = partGateway.findByIds(partIds);
         List<Service> services = serviceGateway.findByIds(servicesIds);
 
-        Map<UUID, WorkOrderPart> workOrderPartMap = workOrder.getWorkOrderParts().stream()
-                        .collect(Collectors.toMap(WorkOrderPart::getPartId, p -> p));
+        Map<UUID, WorkOrderPart> workOrderPartMap = increaseWorkOrder.getWorkOrderParts().stream()
+                .collect(Collectors.toMap(WorkOrderPart::getPartId, p -> p));
 
-        Map<UUID, WorkOrderService> workOrderServiceMap = workOrder.getWorkOrderServices().stream()
+        Map<UUID, WorkOrderService> workOrderServiceMap = increaseWorkOrder.getWorkOrderServices().stream()
                 .collect(Collectors.toMap(WorkOrderService::getServiceId, s -> s));
 
-        List<WorkOrderPart> workOrderParts = populateParts(parts,workOrderPartMap, workOrder);
-        List<WorkOrderService> workOrderServices = populateServices(services, workOrderServiceMap, workOrder);
-        workOrder.setCustomer(customer);
-        workOrder.setVehicle(vehicle);
-        workOrder.setCreatedBy(createdBy);
-        workOrder.setWorkOrderParts(workOrderParts);
-        workOrder.setWorkOrderServices(workOrderServices);
+        List<WorkOrderPart> workOrderParts = populateParts(parts,workOrderPartMap, increaseWorkOrder);
+        List<WorkOrderService> workOrderServices = populateServices(services, workOrderServiceMap, increaseWorkOrder);
+
+        workOrder.getWorkOrderServices().addAll(workOrderServices);
+        workOrder.getWorkOrderParts().addAll(workOrderParts);
 
         workOrder.recalculateTotal();
         workOrder.reserveParts();

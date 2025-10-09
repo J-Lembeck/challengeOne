@@ -24,14 +24,7 @@ public class WorkOrderRepositoryGateway implements WorkOrderGateway {
 
     @Transactional
     @Override
-    public void save(WorkOrder workOrder) {
-        WorkOrderEntity workOrderEntity = workOrderRepository.save(workOrderMapper.toEntity(workOrder));
-        workOrderMapper.toDomain(workOrderEntity);
-    }
-
-    @Transactional
-    @Override
-    public WorkOrder create(WorkOrder workOrder) {
+    public WorkOrder save(WorkOrder workOrder) {
         WorkOrderEntity workOrderEntity = workOrderRepository.save(workOrderMapper.toEntity(workOrder));
         return workOrderMapper.toDomain(workOrderEntity);
     }

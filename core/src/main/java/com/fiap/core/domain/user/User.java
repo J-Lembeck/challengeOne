@@ -30,14 +30,14 @@ public class User {
     public User(UUID id, String name, String email, String role, String password) throws EmailException {
         this.id = id;
         this.name = name;
-        this.email = new Email(email);
+        this.email = Email.of(email);
         this.role = UserRole.valueOf(role);
         this.password = password != null ? new Password(password) : null;
         this.updatedAt = LocalDateTime.now();
     }
     public User(String name, String email, String role, String password) throws EmailException {
         this.name = name;
-        this.email = new Email(email);
+        this.email = Email.of(email);
         this.role = UserRole.valueOf(role);
         this.password = new Password(password);
         this.createdAt = LocalDateTime.now();

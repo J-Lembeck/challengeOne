@@ -48,4 +48,9 @@ public class WorkOrderConfig {
     public RefuseWorkOrderUseCase refuseWorkOrderUseCase(WorkOrderGateway workOrderGateway, PartGateway partGateway) {
         return new RefuseWorkOrderUseCaseImpl(workOrderGateway, partGateway);
     }
+
+    @Bean
+    public AddItemsWorkOrderUseCase addItemsWorkOrderUseCase(WorkOrderGateway workOrderGateway, PartGateway partGateway, ServiceGateway serviceGateway) {
+        return new AddItemsWorkOrderUseCaseImpl(workOrderGateway,partGateway,serviceGateway);
+    }
 }

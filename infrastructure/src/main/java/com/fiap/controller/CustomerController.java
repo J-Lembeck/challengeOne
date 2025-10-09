@@ -66,7 +66,7 @@ public class CustomerController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Cliente encontrado com sucesso.") })
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponse> findCustomerById(@PathVariable UUID id) throws DocumentNumberException, NotFoundException {
+    public ResponseEntity<CustomerResponse> findCustomerById(@PathVariable UUID id) throws NotFoundException {
         Customer customer = findCustomerByIdUseCase.execute(id);
         return ResponseEntity.ok().body(customerMapper.toResponse(customer));
     }

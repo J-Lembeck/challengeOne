@@ -64,4 +64,8 @@ public class WorkOrderService {
     public void setAppliedPrice(BigDecimal appliedPrice) {
         this.appliedPrice = appliedPrice;
     }
+
+    public void addQuantity(int amount) {
+        this.quantity += amount;
+    }
 }
