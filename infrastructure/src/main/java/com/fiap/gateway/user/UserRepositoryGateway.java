@@ -51,4 +51,9 @@ public class UserRepositoryGateway implements UserGateway {
         userEntityRepository.delete(userEntity);
 
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userEntityRepository.findByEmail(email).map(userMapper::toDomain);
+    }
 }

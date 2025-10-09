@@ -11,4 +11,5 @@ public interface UserGateway {
     User update(User user);
     Optional<User> findById(UUID userId) throws NotFoundException;
     void delete(User user);
+    Optional<User> findByEmail(String email);
 }
