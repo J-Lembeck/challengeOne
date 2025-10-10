@@ -44,7 +44,7 @@ public class WorkOrder {
         this.createdAt = LocalDateTime.now();
     }
 
-    public WorkOrder(UUID id, Customer customer, Vehicle vehicle, User createdBy, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices, WorkOrderStatus status, BigDecimal totalAmount) {
+    public WorkOrder(UUID id, Customer customer, Vehicle vehicle, User createdBy, List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices, WorkOrderStatus status, BigDecimal totalAmount, LocalDateTime createdAt, LocalDateTime approvedAt, LocalDateTime finishedAt) {
         this.id = id;
         this.customer = customer;
         this.vehicle = vehicle;
@@ -53,6 +53,9 @@ public class WorkOrder {
         this.workOrderServices = workOrderServices;
         this.status = status;
         this.totalAmount = totalAmount;
+        this.createdAt = createdAt;
+        this.approvedAt = approvedAt;
+        this.finishedAt = finishedAt;
     }
 
     public WorkOrder(List<WorkOrderPart> workOrderParts, List<WorkOrderService> workOrderServices) throws BadRequestException {
