@@ -2,14 +2,17 @@ package com.fiap.gateway.workorder;
 
 import com.fiap.application.gateway.workorder.WorkOrderGateway;
 import com.fiap.core.domain.workorder.WorkOrder;
+import com.fiap.core.domain.workorder.WorkOrderStatus;
 import com.fiap.mapper.workorder.WorkOrderMapper;
 import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
 import com.fiap.persistence.repository.workorder.WorkOrderRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Component
 public class WorkOrderRepositoryGateway implements WorkOrderGateway {
@@ -43,5 +46,12 @@ public class WorkOrderRepositoryGateway implements WorkOrderGateway {
         WorkOrderEntity entity = workOrderMapper.toEntity(workOrder);
         WorkOrderEntity saved = workOrderRepository.save(entity);
         return workOrderMapper.toDomain(saved);
+    }
+
+    @Transactional
+    @Override
+    public List<WorkOrder> findByStatus(WorkOrderStatus workOrderStatus) {
+        List<WorkOrderEntity> workOrderEntities = workOrderRepository.findByStatus(workOrderStatus);
+        return workOrderEntities.stream().map(workOrderMapper::toDomain).collect(Collectors.toList());
     }
 }

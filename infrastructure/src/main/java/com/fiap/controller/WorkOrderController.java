@@ -28,8 +28,9 @@ public class WorkOrderController {
     private final ApproveWorkOrderUseCase approveWorkOrderUseCase;
     private final RefuseWorkOrderUseCase refuseWorkOrderUseCase;
     private final AddItemsWorkOrderUseCase addItemsWorkOrderUseCase;
+    private final CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase, CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.assignedMechanicUseCase = assignedMechanicUseCase;
@@ -39,6 +40,7 @@ public class WorkOrderController {
         this.approveWorkOrderUseCase = approveWorkOrderUseCase;
         this.refuseWorkOrderUseCase = refuseWorkOrderUseCase;
         this.addItemsWorkOrderUseCase = addItemsWorkOrderUseCase;
+        this.calculateAverageTimeWorkOrderUseCase = calculateAverageTimeWorkOrderUseCase;
     }
 
     @Operation(
@@ -167,26 +169,15 @@ public class WorkOrderController {
         return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
     }*/
 
-    /*@Operation(
+    @Operation(
             summary = "Calcula o tempo médio de conclusão das ordens de serviço",
             description = "Endpoint para calcular o tempo médio de conclusão das ordens de serviço")
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Tempo médio calculado com sucesso.") })
-    @GetMapping("/calculate-avarage-time")
-    public ResponseEntity<String> calculateAvarageTime() {
-        ResponseApi<List<WorkOrderAvarageTime>> responseApi = findAvarageTimeWorkOrderUseCase.executeList();
-        HttpStatus status = HttpStatus.valueOf(responseApi.getStatus().name());
-        if (responseApi.getStatus().is4xxClientError()) return ResponseEntity.status(status).body(responseApi.getMessage());
-        List<WorkOrderAvarageTime> allAvarageTimes  = responseApi.getData();
-        Duration avarageTimeMessage = allAvarageTimes.stream()
-                .map(WorkOrderAvarageTime::avarageTime)
-                .reduce(Duration.ZERO, Duration::plus)
-                .dividedBy(allAvarageTimes.size());
+    @GetMapping("/calculate-average-time")
+    public ResponseEntity<String> calculateAverageTime() {
+        String average = calculateAverageTimeWorkOrderUseCase.execute();
+        return ResponseEntity.ok(average);
 
-        return ResponseEntity.ok(
-                String.format("%02d:%02d",
-                        avarageTimeMessage.toHoursPart(),
-                        avarageTimeMessage.toMinutesPart())
-        );
-    }*/
+    }
 }

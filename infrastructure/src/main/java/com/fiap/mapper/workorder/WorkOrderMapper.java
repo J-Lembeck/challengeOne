@@ -87,7 +87,10 @@ public class WorkOrderMapper {
                 workOrderParts,
                 workOrderServices,
                 workOrderEntity.getStatus(),
-                workOrderEntity.getTotalAmount()
+                workOrderEntity.getTotalAmount(),
+                workOrderEntity.getCreatedAt(),
+                workOrderEntity.getApprovedAt(),
+                workOrderEntity.getFinishedAt()
         );
     }
 
