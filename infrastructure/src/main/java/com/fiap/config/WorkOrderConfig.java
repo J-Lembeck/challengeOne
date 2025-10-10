@@ -53,4 +53,9 @@ public class WorkOrderConfig {
     public AddItemsWorkOrderUseCase addItemsWorkOrderUseCase(WorkOrderGateway workOrderGateway, PartGateway partGateway, ServiceGateway serviceGateway) {
         return new AddItemsWorkOrderUseCaseImpl(workOrderGateway,partGateway,serviceGateway);
     }
+
+    @Bean
+    public ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase(WorkOrderGateway workOrderGateway) {
+        return new ListWorkOrdersByStatusUseCaseImpl(workOrderGateway);
+    }
 }

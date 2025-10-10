@@ -144,7 +144,8 @@ public class WorkOrderMapper {
                 workOrder.getTotalAmount(),
                 parts,
                 services,
-                workOrder.getStatus() != null ? workOrder.getStatus().getDescription() : null
+                workOrder.getStatus() != null ? workOrder.getStatus().getDescription() : null,
+                workOrder.getCreatedAt()
         );
     }
 }

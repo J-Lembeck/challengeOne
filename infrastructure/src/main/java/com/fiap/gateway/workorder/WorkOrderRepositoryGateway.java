@@ -54,4 +54,11 @@ public class WorkOrderRepositoryGateway implements WorkOrderGateway {
         List<WorkOrderEntity> workOrderEntities = workOrderRepository.findByStatus(workOrderStatus);
         return workOrderEntities.stream().map(workOrderMapper::toDomain).collect(Collectors.toList());
     }
+
+    @Transactional
+    @Override
+    public List<WorkOrder> findAllOrdered(List<WorkOrderStatus> workOrderStatuses) {
+        List<WorkOrderEntity> workOrderEntities = workOrderRepository.findAllOrdered(workOrderStatuses);
+        return workOrderEntities.stream().map(workOrderMapper::toDomain).collect(Collectors.toList());
+    }
 }
