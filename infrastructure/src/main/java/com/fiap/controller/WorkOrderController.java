@@ -1,5 +1,6 @@
 package com.fiap.controller;
 
+import com.fiap.core.domain.workorder.WorkOrder;
 import com.fiap.core.exception.BadRequestException;
 import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
@@ -13,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("v1/work-orders")
@@ -29,8 +32,9 @@ public class WorkOrderController {
     private final RefuseWorkOrderUseCase refuseWorkOrderUseCase;
     private final AddItemsWorkOrderUseCase addItemsWorkOrderUseCase;
     private final CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase;
+    private final ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase, CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase, CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase, ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.assignedMechanicUseCase = assignedMechanicUseCase;
@@ -41,6 +45,7 @@ public class WorkOrderController {
         this.refuseWorkOrderUseCase = refuseWorkOrderUseCase;
         this.addItemsWorkOrderUseCase = addItemsWorkOrderUseCase;
         this.calculateAverageTimeWorkOrderUseCase = calculateAverageTimeWorkOrderUseCase;
+        this.listWorkOrdersByStatusUseCase = listWorkOrdersByStatusUseCase;
     }
 
     @Operation(
@@ -65,25 +70,17 @@ public class WorkOrderController {
         return ResponseEntity.ok().body(workOrderMapper.toResponse(workOrder));
     }
 
-    /*@Operation(
+    @Operation(
             summary = "Retorna Lista de Ordem de Serviço",
-            description = "Endpoint para retornar OS, podendo filtrar pelo status")
+            description = "Endpoint para retornar OS, ordenadas por status")
     @ApiResponses(
             value = { @ApiResponse(responseCode = "200", description = "Ordens de Serviço retornadas com sucesso.") })
     @GetMapping("/list")
-    public ResponseEntity<ResponseApi<List<WorkOrderResumeDTO>>> getWorkOrders(
-            @RequestParam(required = false) String status,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "DESC") String sortDirection
-    ) {
-        WorkOrderFilterDTO filter = new WorkOrderFilterDTO();
+    public ResponseEntity<List<WorkOrderResponse>> getWorkOrders() {
+        List<WorkOrder> workOrders = listWorkOrdersByStatusUseCase.execute();
 
-        if (status != null) filter.setStatus(WorkOrderStatus.fromString(status));
-
-        ResponseApi<List<WorkOrderResumeDTO>> responseApi = findWorkOrdersByFilterUseCase.execute(filter);
-
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
+        return ResponseEntity.ok().body(workOrders.stream().map(workOrderMapper::toResponse).collect(Collectors.toList()));
+    }
 
     @Operation(
             summary = "Vincula um mecânico a uma ordem de serviço",

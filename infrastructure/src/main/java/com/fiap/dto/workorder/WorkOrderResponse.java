@@ -1,6 +1,7 @@
 package com.fiap.dto.workorder;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +13,7 @@ public record WorkOrderResponse(
         BigDecimal totalAmount,
         List<WorkOrderPartResponse> parts,
         List<WorkOrderServiceResponse> services,
-        String status
+        String status,
+        LocalDateTime createdAt
 ) {
 }
