@@ -2,6 +2,7 @@ package com.fiap.core.domain.user;
 
 import com.fiap.core.domain.Email;
 import com.fiap.core.exception.EmailException;
+import com.fiap.core.exception.PasswordException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -18,7 +19,7 @@ public class User {
 
     public User() { }
 
-    public User(UUID id, String name, String email, String role, String password, LocalDateTime createdAt, LocalDateTime updatedAt) throws EmailException {
+    public User(UUID id, String name, String email, String role, String password, LocalDateTime createdAt, LocalDateTime updatedAt) throws EmailException, PasswordException {
         this.id = id;
         this.name = name;
         this.email = new Email(email);
@@ -27,7 +28,7 @@ public class User {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
-    public User(UUID id, String name, String email, String role, String password) throws EmailException {
+    public User(UUID id, String name, String email, String role, String password) throws EmailException, PasswordException {
         this.id = id;
         this.name = name;
         this.email = Email.of(email);
@@ -35,7 +36,7 @@ public class User {
         this.password = password != null ? new Password(password) : null;
         this.updatedAt = LocalDateTime.now();
     }
-    public User(String name, String email, String role, String password) throws EmailException {
+    public User(String name, String email, String role, String password) throws EmailException, PasswordException {
         this.name = name;
         this.email = Email.of(email);
         this.role = UserRole.valueOf(role);
@@ -75,7 +76,7 @@ public class User {
         return password.getValue();
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password) throws PasswordException {
         this.password = new Password(password);
     }
 

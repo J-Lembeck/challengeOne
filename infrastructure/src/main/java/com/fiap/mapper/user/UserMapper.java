@@ -3,6 +3,7 @@ package com.fiap.mapper.user;
 import com.fiap.core.domain.user.User;
 import com.fiap.core.domain.user.UserRole;
 import com.fiap.core.exception.EmailException;
+import com.fiap.core.exception.PasswordException;
 import com.fiap.dto.user.CreateUserRequest;
 import com.fiap.dto.user.UpdateUserRequest;
 import com.fiap.dto.user.UserResponse;
@@ -24,7 +25,7 @@ public class UserMapper {
         );
     }
 
-    public User toDomain(CreateUserRequest request) throws EmailException {
+    public User toDomain(CreateUserRequest request) throws EmailException, PasswordException {
         return new User(
                 request.name(),
                 request.email(),
@@ -33,7 +34,7 @@ public class UserMapper {
         );
     }
 
-    public User toDomainUpdate(UpdateUserRequest request) throws EmailException {
+    public User toDomainUpdate(UpdateUserRequest request) throws EmailException, PasswordException {
         return new User(
                 request.id(),
                 request.name(),
@@ -55,7 +56,7 @@ public class UserMapper {
                     entity.getCreatedAt(),
                     entity.getUpdatedAt()
             );
-        } catch (RuntimeException | EmailException e) {
+        } catch (RuntimeException | EmailException | PasswordException e) {
             new EmailException("Error mapping UserEntity to User", "COD21");
         }
         return user;
