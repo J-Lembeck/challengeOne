@@ -1,11 +1,8 @@
 package com.fiap.core.exception;
 
-public class NotFoundException extends Exception {
-
-    private String code;
+public class NotFoundException extends DomainException {
 
     public NotFoundException(String message, String code) {
-        super(message);
-        this.code = code;
+        super(message, code);
     }
 }

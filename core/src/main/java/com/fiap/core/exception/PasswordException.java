@@ -1,10 +1,8 @@
 package com.fiap.core.exception;
 
-public class PasswordException extends RuntimeException {
-    private String code;
+public class PasswordException extends DomainException {
 
     public PasswordException(String message, String code) {
-    super(message);
-    this.code = code;
+    super(message, code);
   }
 }
