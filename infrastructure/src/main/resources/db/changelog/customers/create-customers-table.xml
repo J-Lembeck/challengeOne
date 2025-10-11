@@ -13,7 +13,7 @@
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cpf_cnpj" type="VARCHAR(255)">
+            <column name="document_number" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="phone" type="VARCHAR(255)"/>
@@ -22,7 +22,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="TIMESTAMP WITH TIME ZONE" defaultValueComputed="now()">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
         </createTable>
     </changeSet>
