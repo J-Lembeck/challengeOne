@@ -31,9 +31,9 @@ public enum ErrorCodeEnum {
     WORK0003("Ordem de serviço encontra-se indisponível para definição de mecânico", "WORK-0003"),
     WORK0004("Status informado é inválido ou não permitido para a ordem de serviço.", "WORK-0004"),
     WORK0005("Status informado já foi atribuído para a ordem de serviço.", "WORK-0005"),
-    WORK0006("Ordem de serviço não se encontra pendente de aprovação", "WORK-0006");
+    WORK0006("Ordem de serviço não se encontra pendente de aprovação", "WORK-0006"),
 
-
+    HIST0001("Histórico de ordens de serviço não encontrado para o CPF/CNPJ informado.", "HIST-0001");
 
     private String message;
     private String code;

@@ -2,10 +2,13 @@ package com.fiap.gateway.workorder;
 
 import com.fiap.application.gateway.workorder.WorkOrderGateway;
 import com.fiap.core.domain.workorder.WorkOrder;
+import com.fiap.core.domain.workorder.WorkOrderHistory;
 import com.fiap.core.domain.workorder.WorkOrderStatus;
+import com.fiap.mapper.workorder.WorkOrderHistoryMapper;
 import com.fiap.mapper.workorder.WorkOrderMapper;
 import com.fiap.persistence.entity.workOrder.WorkOrderEntity;
 import com.fiap.persistence.repository.workorder.WorkOrderRepository;
+import com.fiap.persistence.repository.workorder.WorkOrderHistoryRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +21,20 @@ import java.util.stream.Collectors;
 public class WorkOrderRepositoryGateway implements WorkOrderGateway {
 
     private final WorkOrderRepository workOrderRepository;
+    private final WorkOrderHistoryRepository workOrderHistoryRepository;
     private final WorkOrderMapper workOrderMapper;
+    private final WorkOrderHistoryMapper workOrderHistoryMapper;
 
-    public WorkOrderRepositoryGateway(WorkOrderRepository workOrderRepository, WorkOrderMapper workOrderMapper) {
+    public WorkOrderRepositoryGateway(
+            WorkOrderRepository workOrderRepository,
+            WorkOrderHistoryRepository workOrderHistoryRepository,
+            WorkOrderMapper workOrderMapper,
+            WorkOrderHistoryMapper workOrderHistoryMapper
+    ) {
         this.workOrderRepository = workOrderRepository;
+        this.workOrderHistoryRepository = workOrderHistoryRepository;
         this.workOrderMapper = workOrderMapper;
+        this.workOrderHistoryMapper = workOrderHistoryMapper;
     }
 
     @Transactional
@@ -60,5 +72,13 @@ public class WorkOrderRepositoryGateway implements WorkOrderGateway {
     public List<WorkOrder> findAllOrdered(List<WorkOrderStatus> workOrderStatuses) {
         List<WorkOrderEntity> workOrderEntities = workOrderRepository.findAllOrdered(workOrderStatuses);
         return workOrderEntities.stream().map(workOrderMapper::toDomain).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<WorkOrderHistory> getHistoryByCustomerCpfCnpj(String cpfCnpj) {
+        String cleaned = cpfCnpj.replaceAll("\\D", "");
+        var orders = workOrderHistoryRepository.findByCustomerDocumentNumberOrderByCreatedAtAsc(cleaned);
+        return workOrderHistoryMapper.fromWorkOrders(orders);
     }
 }

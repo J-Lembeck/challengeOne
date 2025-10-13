@@ -5,7 +5,9 @@ import com.fiap.core.exception.BadRequestException;
 import com.fiap.core.exception.BusinessRuleException;
 import com.fiap.core.exception.NotFoundException;
 import com.fiap.dto.workorder.*;
+import com.fiap.mapper.workorder.WorkOrderHistoryMapper;
 import com.fiap.mapper.workorder.WorkOrderMapper;
+import com.fiap.dto.workorder.GetWorkOrderHistoryResponse;
 import com.fiap.usecase.workorder.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,8 +35,11 @@ public class WorkOrderController {
     private final AddItemsWorkOrderUseCase addItemsWorkOrderUseCase;
     private final CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase;
     private final ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase;
+    private final GetWorkOrderHistoryUseCase getWorkOrderHistoryUseCase;
+    private final WorkOrderHistoryMapper workOrderHistoryMapper;
 
-    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase, CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase, ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase) {
+    public WorkOrderController(CreateWorkOrderUseCase createWorkOrderUseCase, FindWorkOrderByIdUseCase findWorkOrderByIdUseCase, AssignedMechanicUseCase assignedMechanicUseCase, WorkOrderMapper workOrderMapper, UpdateStatusWorkOrderUseCase updateStatusWorkOrderUseCase, GetWorkOrderStatusUseCase getWorkOrderStatusUseCase, ApproveWorkOrderUseCase approveWorkOrderUseCase, RefuseWorkOrderUseCase refuseWorkOrderUseCase, AddItemsWorkOrderUseCase addItemsWorkOrderUseCase, CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase, ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase, GetWorkOrderHistoryUseCase getWorkOrderHistoryUseCase,
+                               WorkOrderHistoryMapper workOrderHistoryMapper) {
         this.createWorkOrderUseCase = createWorkOrderUseCase;
         this.findWorkOrderByIdUseCase = findWorkOrderByIdUseCase;
         this.assignedMechanicUseCase = assignedMechanicUseCase;
@@ -46,6 +51,8 @@ public class WorkOrderController {
         this.addItemsWorkOrderUseCase = addItemsWorkOrderUseCase;
         this.calculateAverageTimeWorkOrderUseCase = calculateAverageTimeWorkOrderUseCase;
         this.listWorkOrdersByStatusUseCase = listWorkOrdersByStatusUseCase;
+        this.getWorkOrderHistoryUseCase = getWorkOrderHistoryUseCase;
+        this.workOrderHistoryMapper = workOrderHistoryMapper;
     }
 
     @Operation(
@@ -155,16 +162,19 @@ public class WorkOrderController {
         return ResponseEntity.status(HttpStatus.OK).body(workOrderMapper.toResponse(workOrder));
     }
 
-    /*@Operation(
-            summary = "Busca o histórico de ordens de serviço por CPF",
-            description = "Endpoint para buscar o histórico de ordens de serviço pelo CPF do cliente")
-    @ApiResponses(
-            value = { @ApiResponse(responseCode = "200", description = "Histórico de ordens de serviço encontrado com sucesso.") })
-    @GetMapping("/cpf/{cpf}/latest-work-order-history")
-    public ResponseEntity<ResponseApi<List<WorkOrderWithHistoryResponseDTO>>> getHistoryByCpf(@PathVariable String cpf) {
-        ResponseApi<List<WorkOrderWithHistoryResponseDTO>> responseApi = getWorkOrderHistoryByCpfUseCase.execute(cpf);
-        return ResponseEntity.status(responseApi.getStatus()).body(responseApi);
-    }*/
+    @Operation(
+            summary = "Busca o histórico de ordens de serviço por CPF/CNPJ",
+            description = "Retorna a linha do tempo de status de todas as OS do cliente (ordenado por data)."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Histórico obtido com sucesso.")
+    })
+    @GetMapping("/history/by-cpf/{cpfCnpj}")
+    public ResponseEntity<List<GetWorkOrderHistoryResponse>> getHistoryByCpf(@PathVariable String cpfCnpj) throws NotFoundException {
+        var histories = getWorkOrderHistoryUseCase.execute(cpfCnpj);
+        return ResponseEntity.ok(workOrderHistoryMapper.toResponse(histories));
+    }
+
 
     @Operation(
             summary = "Calcula o tempo médio de conclusão das ordens de serviço",
