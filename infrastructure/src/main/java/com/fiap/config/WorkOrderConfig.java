@@ -58,4 +58,10 @@ public class WorkOrderConfig {
     public ListWorkOrdersByStatusUseCase listWorkOrdersByStatusUseCase(WorkOrderGateway workOrderGateway) {
         return new ListWorkOrdersByStatusUseCaseImpl(workOrderGateway);
     }
+
+    @Bean
+    public GetWorkOrderHistoryUseCase getWorkOrderHistoryUseCase(WorkOrderGateway workOrderGateway) {
+        return new GetWorkOrderHistoryUseCaseImpl(workOrderGateway);
+    }
+
 }
