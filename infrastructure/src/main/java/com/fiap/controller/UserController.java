@@ -3,6 +3,7 @@ package com.fiap.controller;
 import com.fiap.core.exception.EmailException;
 import com.fiap.core.exception.InternalServerErrorException;
 import com.fiap.core.exception.NotFoundException;
+import com.fiap.core.exception.PasswordException;
 import com.fiap.dto.user.CreateUserRequest;
 import com.fiap.dto.user.UpdateUserRequest;
 import com.fiap.dto.user.UserResponse;
@@ -44,7 +45,7 @@ public class UserController {
     @ApiResponses(
             value = { @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso.") })
     @PostMapping("/create")
-    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) throws EmailException, InternalServerErrorException {
+    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) throws EmailException, InternalServerErrorException, PasswordException {
         var user = createUserUseCase.execute(userMapper.toDomain(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toResponse(user));
     }
@@ -56,7 +57,7 @@ public class UserController {
             value = { @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso."),
                       @ApiResponse(responseCode = "404", description = "Usuário não encontrado.") })
     @PutMapping("/update")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest request) throws EmailException, InternalServerErrorException, NotFoundException {
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest request) throws EmailException, InternalServerErrorException, NotFoundException, PasswordException {
         var user = updateUserUseCase.execute(userMapper.toDomainUpdate(request));
         return ResponseEntity.ok().body(userMapper.toResponse(user));
     }

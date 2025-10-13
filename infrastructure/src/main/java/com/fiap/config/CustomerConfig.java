@@ -3,8 +3,11 @@ package com.fiap.config;
 import com.fiap.application.gateway.customer.CustomerGateway;
 import com.fiap.application.gateway.customer.DocumentNumberAvailableGateway;
 import com.fiap.application.gateway.customer.EmailAvailableGateway;
+import com.fiap.application.gateway.workorder.WorkOrderGateway;
 import com.fiap.application.usecaseimpl.customer.*;
+import com.fiap.application.usecaseimpl.workorder.CalculateAverageTimeWorkOrderUseCaseImpl;
 import com.fiap.usecase.customer.*;
+import com.fiap.usecase.workorder.CalculateAverageTimeWorkOrderUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,5 +47,10 @@ public class CustomerConfig {
     @Bean
     public DeleteCustomerUseCase deleteCustomerUseCase(CustomerGateway customerGateway){
         return new DeleteCustomerUseCaseImpl(customerGateway);
+    }
+
+    @Bean
+    public CalculateAverageTimeWorkOrderUseCase calculateAverageTimeWorkOrderUseCase(WorkOrderGateway workOrderGateway) {
+        return new CalculateAverageTimeWorkOrderUseCaseImpl(workOrderGateway);
     }
 }

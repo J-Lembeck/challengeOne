@@ -1,11 +1,8 @@
 package com.fiap.core.exception;
 
-public class EmailException extends Exception {
-
-    private String code;
+public class EmailException extends DomainException {
 
     public EmailException(String message, String code) {
-        super(message);
-        this.code = code;
+        super(message, code);
     }
 }

@@ -87,7 +87,10 @@ public class WorkOrderMapper {
                 workOrderParts,
                 workOrderServices,
                 workOrderEntity.getStatus(),
-                workOrderEntity.getTotalAmount()
+                workOrderEntity.getTotalAmount(),
+                workOrderEntity.getCreatedAt(),
+                workOrderEntity.getApprovedAt(),
+                workOrderEntity.getFinishedAt()
         );
     }
 
@@ -141,7 +144,8 @@ public class WorkOrderMapper {
                 workOrder.getTotalAmount(),
                 parts,
                 services,
-                workOrder.getStatus() != null ? workOrder.getStatus().getDescription() : null
+                workOrder.getStatus() != null ? workOrder.getStatus().getDescription() : null,
+                workOrder.getCreatedAt()
         );
     }
 }

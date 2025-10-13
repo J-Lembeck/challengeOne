@@ -1,11 +1,8 @@
 package com.fiap.core.exception;
 
-public class BadRequestException extends Exception {
-
-    private String code;
+public class BadRequestException extends DomainException {
 
     public BadRequestException(String message, String code) {
-        super(message);
-        this.code = code;
+        super(message, code);
     }
 }

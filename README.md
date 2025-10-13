@@ -19,11 +19,13 @@ O projeto foi construído com as seguintes tecnologias e bibliotecas:
 * **Migrations de Banco:** Liquibase
 * **Segurança:** Spring Security com autenticação JWT
 * **Documentação da API:** SpringDoc (Swagger/OpenAPI)
-* **Containerização:** Docker e Docker Compose
-* **Testes:** JUnit 5, Mockito e Testcontainers para testes de integração
-* **Validação:** Jakarta Bean Validation (com validadores customizados para CPF/CNPJ)
-* **Utilitários:** Lombok
-* **Build Tool:** Maven
+* **Containerização:** Docker e Docker Compose  
+* **Orquestração:** Kubernetes  
+* **Infraestrutura como Código:** Terraform  
+* **Testes:** JUnit 5, Mockito e Testcontainers para testes de integração  
+* **Validação:** Jakarta Bean Validation  
+* **Utilitários:** Lombok  
+* **Build Tool:** Maven  
 
 ---
 
@@ -81,6 +83,86 @@ docker-compose down
 
 ---
 
+## ☸️ Deploy em Kubernetes
+
+A aplicação também pode ser executada em um cluster Kubernetes, permitindo maior portabilidade e escalabilidade.
+
+### 1. Pré-requisitos
+
+* Cluster Kubernetes local ativo (recomendado Rancher Desktop / k3s)
+
+* kubectl configurado e autenticado
+
+### 2. Aplicar os Manifests
+
+Manifestos estão em challengeone/k8s/
+
+```bash
+kubectl apply -f k8s/challengeone-namespace.yaml
+kubectl apply -f k8s/ -R
+```
+
+### 3. Verificar os Recursos
+```bash
+kubectl get pods -n challengeone
+kubectl get svc -n challengeone
+```
+Exemplo de saída esperada:
+
+```bash
+NAME                   TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+challengeone-db        ClusterIP   10.43.209.56   <none>        5432/TCP         1m
+challengeone-service   NodePort    10.43.254.49   <none>        8080:30080/TCP   1m
+```
+
+### 4. Acesso à Aplicação
+
+A aplicação ficará disponível em:
+
+**[http://localhost:30080/api](http://localhost:30080/api)**
+
+* Todos os outros endpoints poderão ser acessados somente via porta 30080 se a aplicação estiver rodando em cluster Kubernetes.
+
+---
+
+### 🌍 Provisionamento da Infraestrutura com Terraform
+
+A infraestrutura Kubernetes (namespace, secrets, banco, service e deployment) pode ser criada via Terraform.
+
+#### 1. Pré-requisitos
+
+* Terraform >= 1.5
+
+* kubectl configurado (contexto ativo)
+
+#### 2. Inicializar o Terraform
+
+Na raiz dos arquivos Terraform (infra/):
+```bash
+terraform init
+```
+
+#### 3. Visualizar o Plano
+
+```bash
+terraform plan
+```
+
+#### 4. Aplicar as Mudanças
+```bash
+terraform apply -auto-approve
+```
+
+Isso criará e aplicará todos os recursos definidos.
+
+#### 5. Resetar Infraestrutura (caso necessário)
+```bash
+terraform destroy -auto-approve
+terraform init -reconfigure
+terraform apply -auto-approve
+```
+
+---
 ## 📄 Documentação da API (Swagger)
 
 A API possui uma documentação interativa gerada com Swagger (OpenAPI). Após iniciar a aplicação, pode aceder à interface do Swagger no seguinte URL:

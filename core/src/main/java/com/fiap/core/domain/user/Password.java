@@ -15,7 +15,7 @@ public class Password {
         return value;
     }
 
-    public void isValidPassword(String password) {
+    public void isValidPassword(String password) throws PasswordException {
         if (password == null) {
             throw new PasswordException(ErrorCodeEnum.USE0001.getMessage(), ErrorCodeEnum.USE0001.getCode());
         }

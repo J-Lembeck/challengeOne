@@ -28,7 +28,7 @@ public class CustomerEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "documentNumber", nullable = false)
+    @Column(name = "document_number", nullable = false)
     private String documentNumber;
 
     @Column(name = "phone")
