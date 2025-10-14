@@ -209,3 +209,9 @@ Todos os endpoints, exceto `/auth/login` e os de consulta pública, requerem um 
 * `PATCH /{id}/finalize`: Finaliza uma OS (muda o status para `COMPLETED`).
 * `PATCH /{id}/delivered`: Marca uma OS como entregue ao cliente.
 * `GET /calculate-avarage-time`: Retorna o tempo médio de conclusão das Ordens de Serviço.
+
+---
+
+## 📄 Desenho de arquitetura do sistema
+
+![desenho de arquitetura do sistema](/documentation/arq-challengeone.jpg)
