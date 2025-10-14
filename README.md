@@ -215,3 +215,21 @@ Todos os endpoints, exceto `/auth/login` e os de consulta pública, requerem um 
 ## 📄 Desenho de arquitetura do sistema
 
 ![desenho de arquitetura do sistema](/documentation/arq-challengeone.jpg)
+
+## Desenho de Fluxo de Deploy
+![desenho de fluxo de deploy](/documentation/pipeline.png)
+
+## Descrição da solução e dos objetivos desta fase
+
+A Segunda Fase do TechChallenge tem como objetivo evoluir a aplicação desenvolvida na Fase 1, implementando novas funcionalidades e aprimorando a arquitetura do sistema. A seguir estão os principais objetivos e melhorias realizadas:
+1. **Evolução da Aplicação:**
+   - **Refatorar Codido aplicando Clean Architecture e Clean Code**.
+   
+2. **Infraestrutura:**
+   - **Garantir a aplicação containerizada via Docker**.
+   - **Orquestração com Kubernetes (K8s)**.
+   - **Criar manifestos YAML separados para deploy em Kubernetes**.
+   - **Provisionamento da infraestrutura via Terraform**.
+   - **Integração Contínua e Entrega Contínua (CI/CD)**: Configurar pipelines de CI/CD para automação do build, testes e deploy da aplicação.
+
+A implementação dessas melhorias visa garantir que a aplicação seja robusta, escalável e fácil de manter, atendendo aos requisitos do desafio técnico proposto. A solução foi desenvolvida aplicando os objetivos propostos no desafio da Fase 2, garantindo uma aplicação de alta qualidade, com infraestrutura moderna e processos automatizados de desenvolvimento e deploy, melhorias de organização de código e arquitetura, mantendo a evolução sustentável e preparada com escalabilidade dinâmica para grandes volumes de dados.
