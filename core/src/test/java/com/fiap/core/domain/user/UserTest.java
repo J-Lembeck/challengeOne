@@ -1,6 +1,5 @@
 package com.fiap.core.domain.user;
 
-import com.fiap.core.domain.Email;
 import com.fiap.core.exception.EmailException;
 import com.fiap.core.exception.PasswordException;
 import org.junit.jupiter.api.Test;
