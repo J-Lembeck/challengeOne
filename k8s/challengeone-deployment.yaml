@@ -5,6 +5,11 @@ metadata:
   namespace: challengeone
   labels:
     app: challengeone
+
+    # --- Datadog Labels ---
+    tags.datadoghq.com/env: dev
+    tags.datadoghq.com/service: challengeone
+    tags.datadoghq.com/version: "1.0.0"
 spec:
   replicas: 2
   selector:
@@ -14,11 +19,34 @@ spec:
     metadata:
       labels:
         app: challengeone
+
+        # --- Datadog Labels ---
+        tags.datadoghq.com/env: dev
+        tags.datadoghq.com/service: challengeone
+        tags.datadoghq.com/version: "1.0.0"
+
+        # --- Datadog Auto-Instrumentation ---
+        admission.datadoghq.com/enabled: "true"
+
     spec:
       containers:
         - name: challengeone
           image: luigigb/challengeone-image:1.0
           imagePullPolicy: Always
+
+          # --- Datadog Runtime Features ---
+          env:
+            - name: DD_PROFILING_ENABLED
+              value: "true"
+            - name: DD_LOGS_INJECTION
+              value: "true"
+            - name: DD_APPSEC_ENABLED
+              value: "true"
+            - name: DD_IAST_ENABLED
+              value: "true"
+            - name: DD_APPSEC_SCA_ENABLED
+              value: "true"
+
           ports:
             - containerPort: 8080
           envFrom:
@@ -26,6 +54,7 @@ spec:
                 name: challengeone-config
             - secretRef:
                 name: challengeone-db-secret
+
           readinessProbe:
             httpGet:
               path: /api/actuator/health
@@ -34,6 +63,7 @@ spec:
             periodSeconds: 5
             timeoutSeconds: 2
             failureThreshold: 5
+
           resources:
             requests:
               cpu: "200m"
