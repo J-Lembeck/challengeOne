@@ -14,3 +14,12 @@ spec:
   features:
     apm:
       enabled: true
+
+    admissionController:
+      enabled: true
+
+    apmInstrumentation:
+      enabled: true
+      languages:
+        java:
+          enabled: true
