@@ -13,15 +13,17 @@ public class Customer {
     private DocumentNumber documentNumber;
     private String phone;
     private Email email;
+    private Boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Customer(UUID id, String name, DocumentNumber documentNumber, String phone, String email, Boolean isActive, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.name = name;
         this.documentNumber = documentNumber;
         this.phone = phone;
         this.email = new Email(email);
+        this.isActive = isActive;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -41,6 +43,7 @@ public class Customer {
         this.phone = phone;
         this.email = Email.of(email);
         this.createdAt = LocalDateTime.now();
+        this.isActive = true;
     }
 
     public Customer(UUID id) {
@@ -100,6 +103,21 @@ public class Customer {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Boolean getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    public void updateFrom(Customer changes) {
+        this.name = changes.getName();
+        this.email = changes.getEmail();
+        this.phone = changes.getPhone();
+        this.documentNumber = changes.getDocumentNumber();
     }
 
     @Override
