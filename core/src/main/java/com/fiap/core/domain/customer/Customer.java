@@ -125,11 +125,27 @@ public class Customer {
         if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
 
-        return Objects.equals(this.id, customer.id);
+        return Objects.equals(id, customer.id)
+                && Objects.equals(name, customer.name)
+                && Objects.equals(documentNumber, customer.documentNumber)
+                && Objects.equals(phone, customer.phone)
+                && Objects.equals(email, customer.email)
+                && Objects.equals(isActive, customer.isActive)
+                && Objects.equals(createdAt, customer.createdAt)
+                && Objects.equals(updatedAt, customer.updatedAt);
     }
 
     @Override
     public final int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(
+                id,
+                name,
+                documentNumber,
+                phone,
+                email,
+                isActive,
+                createdAt,
+                updatedAt
+        );
     }
 }
