@@ -23,7 +23,7 @@ class CustomerTest {
         LocalDateTime createdAt = LocalDateTime.of(2024, 1, 10, 12, 30);
         LocalDateTime updatedAt = LocalDateTime.of(2024, 1, 11, 8, 0);
 
-        Customer c = new Customer(id, name, document, phone, email, createdAt, updatedAt);
+        Customer c = new Customer(id, name, document, phone, email, true, createdAt, updatedAt);
 
         assertEquals(id, c.getId());
         assertEquals(name, c.getName());
@@ -74,8 +74,8 @@ class CustomerTest {
         LocalDateTime created = LocalDateTime.of(2024, 2, 1, 9, 0);
         LocalDateTime updated = LocalDateTime.of(2024, 2, 2, 10, 0);
 
-        Customer a = new Customer(id, "Frank", d, "11444444444", "frank@example.com", created, updated);
-        Customer b = new Customer(id, "Frank", d, "11444444444", "frank@example.com", created, updated);
+        Customer a = new Customer(id, "Frank", d, "11444444444", "frank@example.com", true, created, updated);
+        Customer b = new Customer(id, "Frank", d, "11444444444", "frank@example.com", true, created, updated);
 
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
@@ -88,8 +88,8 @@ class CustomerTest {
         LocalDateTime created = LocalDateTime.of(2024, 3, 1, 9, 0);
         LocalDateTime updated = LocalDateTime.of(2024, 3, 2, 10, 0);
 
-        Customer base = new Customer(id, "Gina", d, "11333333333", "gina@example.com", created, updated);
-        Customer differentPhone = new Customer(id, "Gina", d, "11000000000", "gina@example.com", created, updated);
+        Customer base = new Customer(id, "Gina", d, "11333333333", "gina@example.com", true, created, updated);
+        Customer differentPhone = new Customer(id, "Gina", d, "11000000000", "gina@example.com", true, created, updated);
 
         assertNotEquals(base, differentPhone);
     }

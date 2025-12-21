@@ -122,20 +122,14 @@ public class Customer {
 
     @Override
     public final boolean equals(Object o) {
+        if (this == o) return true;
         if (!(o instanceof Customer customer)) return false;
 
-        return getId().equals(customer.getId()) && getName().equals(customer.getName()) && getDocumentNumber().equals(customer.getDocumentNumber()) && getPhone().equals(customer.getPhone()) && getEmail().equals(customer.getEmail()) && getCreatedAt().equals(customer.getCreatedAt()) && Objects.equals(getUpdatedAt(), customer.getUpdatedAt());
+        return Objects.equals(this.id, customer.id);
     }
 
     @Override
-    public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getName().hashCode();
-        result = 31 * result + getDocumentNumber().hashCode();
-        result = 31 * result + getPhone().hashCode();
-        result = 31 * result + getEmail().hashCode();
-        result = 31 * result + getCreatedAt().hashCode();
-        result = 31 * result + Objects.hashCode(getUpdatedAt());
-        return result;
+    public final int hashCode() {
+        return Objects.hash(id);
     }
 }
